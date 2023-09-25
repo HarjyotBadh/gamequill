@@ -1,0 +1,75 @@
+.game-card {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    max-width: 250px;
+    text-align: center;
+}
+
+.game-card img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.game-card h2 {
+    font-weight: 700;
+    text-align: left;
+}
+
+.game-card p {
+    text-align: left;
+}
+
+.game-card .numericRating {
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    color: #618edb;
+}
+
+.fullStar, .emptyStar, .halfStar {
+    font-size: 20px;
+    margin-right: 2px;
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    vertical-align: middle;
+}
+
+.fullStar {
+    color: #618edb;  /* Color for the filled star */
+}
+
+.halfStar {
+    color: #bbbac0;  /* Color for the empty part of star */
+}
+
+.halfStar::before {
+    content: "★";
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #618edb;  /* Color for the filled part of star */
+    clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+}
+
+.emptyStar {
+    color: #bbbac0; /* Color for the truly empty star */
+}
+
+
+
+
+
+  
