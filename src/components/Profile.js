@@ -1,4 +1,6 @@
-import React from "react";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import React, { useState } from "react";
 import NavBar from "./NavBar";
 import DefaultProfilePicture from "../images/defaultProfilePicture.png";
 function Profile() {
@@ -12,6 +14,14 @@ function Profile() {
     "Red Dead Redemption 2",
   ];
   const favoriteGenres = ["Adventure", "FPS", "RPG", "Strategy"];
+  const [name, setName] = useState("");
+  const submit = (e) => {
+    e.preventDefault();
+    db.collection("profileData").add({
+      name: name,
+    });
+    setName("");
+  };
   return (
     <div class="bg-white dark:bg-gray-500 h-screen">
       <NavBar />
@@ -65,6 +75,13 @@ function Profile() {
         >
           {pronouns}
         </div>
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <button onClick={submit}>Submit</button>
       </div>
       <div style={{ marginLeft: "100px", color: "white" }}>Favorite Games</div>
       <div
