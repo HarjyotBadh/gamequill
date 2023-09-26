@@ -1,27 +1,45 @@
 .game-card {
     border: 1px solid #ddd;
-    padding: 20px;
-    margin: 20px;
-    border-radius: 10px;
-    max-width: 250px;
+    padding: 2%; /* relative padding based on parent width */
+    margin: 1%; /* relative margin */
+    border-radius: 20px;
+    width: 90%; /* width is now relative to its container */
+    max-width: 250px; /* keep the original max-width as a constraint */
     text-align: center;
+    box-sizing: border-box; /* ensures that padding and border are included in the total width */
 }
+
+/* Media queries for larger screens */
+@media (min-width: 768px) {
+    .game-card {
+        width: 70%; /* maybe a bit wider on medium screens */
+    }
+}
+
+@media (min-width: 992px) {
+    .game-card {
+        width: 50%; /* and even wider on large screens */
+    }
+}
+
+/* Feel free to add more breakpoints if necessary */
+
 
 .game-card img {
     width: 100%;
     max-height: 300px;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 20px;
     margin-bottom: 20px;
 }
 
 .game-card h2 {
     font-weight: 700;
-    text-align: left;
+    text-align: center;
 }
 
 .game-card p {
-    text-align: left;
+    text-align: center;
 }
 
 .game-card .numericRating {
