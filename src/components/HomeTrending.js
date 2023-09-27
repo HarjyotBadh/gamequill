@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import NavBar from "../components/NavBar";
 import TitleCard from "../components/TitleCard";
 
 function App() {
     const [gameData, setGameData] = useState(null);
-    const game_id = 472;
+    const game_id = [2239, 2240, 2241];
 
     useEffect(() => {
         const corsAnywhereUrl = "http://localhost:8080/";
@@ -20,7 +19,7 @@ function App() {
                 },
                 body: `
                     fields name,cover.url,involved_companies.company.name,rating,aggregated_rating;
-                    where id = ${game_id};
+                    where id = ${game_id[0]};
                 `
             })
             .then(response => response.json())
@@ -30,7 +29,7 @@ function App() {
             .catch(err => {
                 console.error(err);
             });
-    }, [game_id]);
+    }, [game_id[0]]);
 
     return (
         <div>
