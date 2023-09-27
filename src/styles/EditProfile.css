@@ -1,0 +1,32 @@
+
+.button {
+    border: 1px solid white;
+    color: white;
+    width: 280px;
+    height: 50px;
+  }
+  
+  .modal {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 10px;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .inputField {
+    width: 280px;
+    height: 50px;
+    background-color: darkgray;
+    color: white;
+  }
+  
+  .inputField::placeholder {
+    color: white;
+  }
+  
+  .doneButton {
+    border: 1px solid white;
+  }
+  

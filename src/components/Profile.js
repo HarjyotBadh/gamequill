@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-function Profile({ profileData }) {
+import Popup from "reactjs-popup";
+import EditProfile from "./EditProfile";
+function Profile({ profileData, setProfileData }) {
   return (
     <div class="bg-white dark:bg-gray-500 h-screen">
       <div
@@ -13,7 +15,7 @@ function Profile({ profileData }) {
           flexDirection: "row",
           justifyContent: "flex-start",
           flexWrap: "wrap",
-          width: 600,
+          width: "100%",
           height: 250,
           marginLeft: "100px",
         }}
@@ -63,6 +65,23 @@ function Profile({ profileData }) {
           }}
         >
           {profileData.bio}
+        </div>
+        <div
+          className="menuButtons"
+          style={{
+            border: "2px solid white",
+            width: 300,
+            height: 600,
+            marginLeft: 100,
+            padding: 10,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <EditProfile
+            profileData={profileData}
+            setProfileData={setProfileData}
+          />
         </div>
       </div>
       <div style={{ marginLeft: "100px", color: "white" }}>Favorite Games</div>
