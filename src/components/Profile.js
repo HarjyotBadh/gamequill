@@ -1,30 +1,7 @@
-import { collection, addDoc } from "firebase/firestore";
-import { db } from "../firebase";
-import React, { useState } from "react";
-import NavBar from "./NavBar";
-import DefaultProfilePicture from "../images/defaultProfilePicture.png";
-function Profile() {
-  const profilePicture = DefaultProfilePicture;
-  const bio = "test";
-  const pronouns = "he/him";
-  const favoriteGames = [
-    "Halo",
-    "God of War",
-    "Spider-Man",
-    "Red Dead Redemption 2",
-  ];
-  const favoriteGenres = ["Adventure", "FPS", "RPG", "Strategy"];
-  const [name, setName] = useState("");
-  const submit = (e) => {
-    e.preventDefault();
-    db.collection("profileData").add({
-      name: name,
-    });
-    setName("");
-  };
+import React, { useState, useEffect } from "react";
+function Profile({ profileData }) {
   return (
     <div class="bg-white dark:bg-gray-500 h-screen">
-      <NavBar />
       <div
         class="bg-white dark:bg-gray-500"
         className="formattingBox"
@@ -37,24 +14,47 @@ function Profile() {
           justifyContent: "flex-start",
           flexWrap: "wrap",
           width: 600,
-          height: 150,
+          height: 250,
           marginLeft: "100px",
         }}
       >
-        <div className="Profile Picture">
-          <img
-            class="rounded-full"
-            width={100}
-            height={100}
-            src={profilePicture}
-          ></img>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            textAlign: "center",
+            color: "white",
+            height: 75,
+          }}
+        >
+          <div className="Profile Picture">
+            <img
+              class="rounded-full"
+              width={100}
+              height={100}
+              src={profileData.profilePicture}
+            ></img>
+          </div>
+          <div className="name" style={{ width: 100, height: 25 }}>
+            {profileData.name}
+          </div>
+          <div
+            className="Pronouns"
+            style={{
+              width: 100,
+              height: 50,
+              textAlign: "center",
+            }}
+          >
+            {profileData.pronouns}
+          </div>
         </div>
         <div
           className="Bio"
           style={{
             border: "2px solid white",
-            width: 400,
-            height: 100,
+            width: 475,
+            height: 200,
             alignContent: "center",
             marginLeft: "10px",
             color: "white",
@@ -62,26 +62,8 @@ function Profile() {
             padding: "10px",
           }}
         >
-          {bio}
+          {profileData.bio}
         </div>
-        <div
-          className="Pronouns"
-          style={{
-            color: "white",
-            width: 100,
-            height: 100,
-            textAlign: "center",
-          }}
-        >
-          {pronouns}
-        </div>
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <button onClick={submit}>Submit</button>
       </div>
       <div style={{ marginLeft: "100px", color: "white" }}>Favorite Games</div>
       <div
@@ -95,6 +77,7 @@ function Profile() {
           height: 150,
           padding: 10,
           gap: 10,
+          color: "white",
         }}
         className="FavoriteGames"
       >
@@ -107,7 +90,7 @@ function Profile() {
             textAlign: "center",
           }}
         >
-          {favoriteGames[0]}
+          {profileData.favoriteGames[0]}
         </div>
         <div
           className="Game2"
@@ -118,7 +101,7 @@ function Profile() {
             textAlign: "center",
           }}
         >
-          {favoriteGames[1]}
+          {profileData.favoriteGames[1]}
         </div>
         <div
           className="Game3"
@@ -129,7 +112,7 @@ function Profile() {
             textAlign: "center",
           }}
         >
-          {favoriteGames[2]}
+          {profileData.favoriteGames[2]}
         </div>
         <div
           className="Game4"
@@ -140,7 +123,7 @@ function Profile() {
             textAlign: "center",
           }}
         >
-          {favoriteGames[3]}
+          {profileData.favoriteGames[3]}
         </div>
       </div>
       <div style={{ marginLeft: "100px", color: "white" }}>Favorite Genres</div>
@@ -155,6 +138,7 @@ function Profile() {
           height: 150,
           padding: 10,
           gap: 10,
+          color: "white",
         }}
         className="FavoriteGenres"
       >
@@ -167,7 +151,7 @@ function Profile() {
             textAlign: "center",
           }}
         >
-          {favoriteGenres[0]}
+          {profileData.favoriteGenres[0]}
         </div>
         <div
           className="Genre2"
@@ -178,7 +162,7 @@ function Profile() {
             textAlign: "center",
           }}
         >
-          {favoriteGenres[1]}
+          {profileData.favoriteGenres[1]}
         </div>
         <div
           className="Genre3"
@@ -189,7 +173,7 @@ function Profile() {
             textAlign: "center",
           }}
         >
-          {favoriteGenres[2]}
+          {profileData.favoriteGenres[2]}
         </div>
         <div
           className="Genre4"
@@ -200,7 +184,7 @@ function Profile() {
             textAlign: "center",
           }}
         >
-          {favoriteGenres[3]}
+          {profileData.favoriteGenres[3]}
         </div>
       </div>
     </div>
