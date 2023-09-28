@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import TitleCard from "../components/TitleCard";
+import TitleCard from "./TitleCard";
+import TitleCard2x from "./TitleCard2x";
 
 function App() {
     const [gameData0, setGameData0] = useState(null);
+    const [screenshots, setScreenshots] = useState([]);
     const [gameData1, setGameData1] = useState(null);
     const game_id = [2239, 2240, 2241];
 
@@ -25,7 +27,14 @@ function App() {
             })
             .then(response => response.json())
             .then(data => {
-                if (data.length) setGameData0(data[0]);
+                if (data.length) {
+                    const game = data[0];
+                    setGameData0(game);
+
+                    const screenshotUrls = game.screenshots ? game.screenshots.map(s => s.url.replace('t_thumb', 't_1080p')) : [];
+                    setScreenshots(screenshotUrls);
+                    console.log(screenshotUrls);
+                }
             })
             .catch(err => {
                 console.error(err);
@@ -63,7 +72,7 @@ function App() {
             <p>Trending section</p>
             <p>yeah</p>
             <div style={{ display: 'flex' }}>
-                <TitleCard gameData={gameData0} />
+                <TitleCard2x gameData={gameData0} screenshots={screenshots} />
                 <TitleCard gameData={gameData1} />
             </div>
         </div>

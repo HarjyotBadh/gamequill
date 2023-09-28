@@ -1,7 +1,7 @@
 import React from 'react';
-import '../styles/TitleCard.css';
+import '../styles/TitleCard2x.css';
 
-export default function TitleCard({ gameData }) {
+export default function TitleCard2x({ gameData, screenshots }) {
     if (!gameData) return <div>Loading...</div>;
 
     const bigCoverUrl = gameData.cover ? gameData.cover.url.replace("/t_thumb/", "/t_cover_big/") : null;
