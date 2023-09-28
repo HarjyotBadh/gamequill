@@ -7,7 +7,10 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<NavBar />} />
-      <Route path="/Profile" element={<ProfilePage />} />
+      <Route
+        path="/Profile"
+        element={<ProfilePage accountNumber="GPiU3AHpvyOhnbsVSzap" />}
+      />
       {/* <Route path="/login" element={<Login />} />   If you are url /login -> This will bring you to the Login Page
     <Route path="*" element={<ErrorPage />} />        If you are at any other URL -> Bring you to 404 Error*/}
       <Route path="/test" element={<h1>Test</h1>} />{" "}

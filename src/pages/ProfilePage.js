@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import Profile from "../components/Profile";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import DefaultProfilePicture from "../images/defaultProfilePicture.png";
 export default function ProfilePage({ accountNumber }) {
@@ -23,10 +23,15 @@ export default function ProfilePage({ accountNumber }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const snapshot = await getDocs(collection(db, "profileData"));
+      const docRef = doc(db, "profileData", accountNumber);
+      // const snapshot = await getDocs(
+      //   collection(db, "profileData", accountNumber)
+      // );
+      const snapshot = await getDoc(docRef);
+      //console.log("print");
 
       if (!snapshot.empty) {
-        const docData = snapshot.docs[0].data();
+        const docData = snapshot.data();
         const data = {
           profilePicture:
             docData.profilePicture || defaultProfileData.profilePicture,
@@ -41,6 +46,11 @@ export default function ProfilePage({ accountNumber }) {
         setProfileData(data);
       } else {
         setProfileData(defaultProfileData);
+      }
+      if (snapshot.exists()) {
+        console.log("Doc data", snapshot.data());
+      } else {
+        console.log("Doc does not exist");
       }
     };
 

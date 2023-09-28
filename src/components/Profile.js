@@ -70,6 +70,7 @@ function Profile({ profileData, setProfileData }) {
           className="menuButtons"
           style={{
             border: "2px solid white",
+            color: "white",
             width: 300,
             height: 600,
             marginLeft: 100,

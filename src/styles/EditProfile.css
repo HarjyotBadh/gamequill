@@ -1,32 +1,111 @@
+.modal {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  color: white;
+}
 
+.modal form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal input {
+  margin: 10px 0;
+  padding: 8px;
+  width: 80%;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #333;
+  color: white;
+}
+
+.modal input[type="file"] {
+  margin: 10px 0;
+  width: 80%;
+}
+
+.modal button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal button.button {
+  background-color: #007bff;
+  color: white;
+}
+
+.modal button.button:hover {
+  background-color: #0056b3;
+}
+
+.modal button.button:focus {
+  outline: none;
+}
+
+.modal button.button:active {
+  background-color: #004080;
+}
+
+.modal button.button.secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.modal button.button.secondary:hover {
+  background-color: #5a6268;
+}
+
+.modal button.button.secondary:focus {
+  outline: none;
+}
+
+.modal button.button.secondary:active {
+  background-color: #495057;
+}
+
+/* Additional styling for buttons inside the modal */
+.modal button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.modal button[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+/* Style the "Close" button */
+.modal button[type="close"] {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.modal button[type="close"]:hover {
+  background-color: #5a6268;
+}
+
+/* Style the "Edit Profile" button */
 .button {
-    border: 1px solid white;
-    color: white;
-    width: 280px;
-    height: 50px;
-  }
-  
-  .modal {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    padding: 10px;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .inputField {
-    width: 280px;
-    height: 50px;
-    background-color: darkgray;
-    color: white;
-  }
-  
-  .inputField::placeholder {
-    color: white;
-  }
-  
-  .doneButton {
-    border: 1px solid white;
-  }
-  
+  background-color: #ccc; /* Use a lighter grey background color */
+  color: black; /* Change text color to black */
+  border: 2px solid #ccc; /* Use a lighter grey border color */
+}
+
+.button:hover {
+  background-color: #bbb; /* Use a slightly darker grey on hover */
+}
+
+.button:focus {
+  outline: none;
+}
+
+.button:active {
+  background-color: #aaa; /* Use an even darker grey when active */
+}
