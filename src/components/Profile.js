@@ -2,33 +2,38 @@ import React, { useState, useEffect } from "react";
 import EditProfile from "./EditProfile";
 import TitleCard from "./ProfileTitleCard";
 function Profile({ profileData, setProfileData }) {
-  const [gameData0, setGameData0] = useState(null);
+  const [gameCovers, setGameCovers] = useState([]);
+
   useEffect(() => {
     const corsAnywhereUrl = "http://localhost:8080/";
-    const apiUrl = "https://api.igdb.com/v4/games";
-    fetch(corsAnywhereUrl + apiUrl, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-        Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
-      },
-      body: `
-                fields name,cover.url;
-                where id = ${19565};
-            `,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.length) {
-          const game = data[0];
-          setGameData0(game);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
+    const apiUrl = "https://api.igdb.com/v4/covers";
+
+    const gameIds = [19565, 19560, 1519, 25076]; // List of game IDs
+
+    const fetchCovers = async () => {
+      const coverPromises = gameIds.map(async (id) => {
+        const response = await fetch(corsAnywhereUrl + apiUrl, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+            Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
+          },
+          body: `
+            fields url;
+            where game = ${id};
+          `,
+        });
+        const data = await response.json();
+        return data[0]?.url || null;
       });
-  }, 19565);
+
+      const covers = await Promise.all(coverPromises);
+      setGameCovers(covers);
+    };
+
+    fetchCovers();
+  }, []);
   return (
     <div class="bg-white dark:bg-gray-500 h-screen">
       <div
@@ -138,7 +143,7 @@ function Profile({ profileData, setProfileData }) {
           }}
         >
           {/* {profileData.favoriteGames[0]} */}
-          <TitleCard gameData={gameData0} />
+          <TitleCard gameData={gameCovers[0]} />
         </div>
         <div
           className="Game2"
@@ -149,7 +154,8 @@ function Profile({ profileData, setProfileData }) {
             textAlign: "center",
           }}
         >
-          {profileData.favoriteGames[1]}
+          {/* {profileData.favoriteGames[1]} */}
+          <TitleCard gameData={gameCovers[1]} />
         </div>
         <div
           className="Game3"
@@ -160,7 +166,8 @@ function Profile({ profileData, setProfileData }) {
             textAlign: "center",
           }}
         >
-          {profileData.favoriteGames[2]}
+          {/* {profileData.favoriteGames[2]} */}
+          <TitleCard gameData={gameCovers[2]} />
         </div>
         <div
           className="Game4"
@@ -171,7 +178,8 @@ function Profile({ profileData, setProfileData }) {
             textAlign: "center",
           }}
         >
-          {profileData.favoriteGames[3]}
+          {/* {profileData.favoriteGames[3]} */}
+          <TitleCard gameData={gameCovers[3]} />
         </div>
       </div>
       <div style={{ marginLeft: "100px", color: "white" }}>Favorite Genres</div>
