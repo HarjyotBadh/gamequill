@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import TitleCardPlus from "./TitleCardPlus";
 import TitleCard from "./TitleCard";
-import TitleCard2x from "./TitleCard2x";
 
 function App() {
     const [gameData0, setGameData0] = useState(null);
     const [screenshots, setScreenshots] = useState([]);
     const [gameData1, setGameData1] = useState(null);
-    const game_id = [2239, 2240, 2241];
+    const game_id = [2239   , 2240, 2241];
 
     useEffect(() => {
         const corsAnywhereUrl = "http://localhost:8080/";
@@ -21,7 +21,7 @@ function App() {
                     'Authorization': 'Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp',
                 },
                 body: `
-                    fields name,cover.url,involved_companies.company.name,rating,aggregated_rating;
+                    fields name,screenshots.url,cover.url,involved_companies.company.name,rating,aggregated_rating;
                     where id = ${game_id[0]};
                 `
             })
@@ -69,11 +69,10 @@ function App() {
 
     return (
         <div>
-            <p>Trending section</p>
-            <p>yeah</p>
-            <div style={{ display: 'flex' }}>
-                <TitleCard2x gameData={gameData0} screenshots={screenshots} />
-                <TitleCard gameData={gameData1} />
+            <div>
+                <div>
+                    <TitleCardPlus gameData={gameData0} screenshots={screenshots} />
+                </div>
             </div>
         </div>
     );

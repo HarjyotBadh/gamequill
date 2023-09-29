@@ -5,7 +5,6 @@ export default function TitleCard({ gameData }) {
     if (!gameData) return <div>Loading...</div>;
 
     const bigCoverUrl = gameData.cover ? gameData.cover.url.replace("/t_thumb/", "/t_cover_big/") : null;
-    // console.log("this - " + bigCoverUrl);
 
     // @TODO: Replace rating with our rating system.
     var rating = gameData.aggregated_rating;

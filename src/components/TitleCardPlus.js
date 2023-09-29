@@ -1,11 +1,20 @@
 import React from 'react';
-import '../styles/TitleCard2x.css';
+import '../styles/TitleCardPlus.css';
 
-export default function TitleCard2x({ gameData, screenshots }) {
+export default function TitleCardPlus({ gameData, screenshots }) {
     if (!gameData) return <div>Loading...</div>;
 
     const bigCoverUrl = gameData.cover ? gameData.cover.url.replace("/t_thumb/", "/t_cover_big/") : null;
-    // console.log("this - " + bigCoverUrl);
+    // Declare your variable containing the image URL
+    var imageUrl = screenshots[0];
+    console.log("imageUrl: " + imageUrl);
+
+    // Find the image element with the id "game-screenshot"
+    var imageElement = document.getElementById("game-screenshot");
+
+    // Set the src attribute of the image element to your variable
+    // imageElement.src = imageUrl;
+
 
     // @TODO: Replace rating with our rating system.
     var rating = gameData.aggregated_rating;
@@ -37,12 +46,15 @@ export default function TitleCard2x({ gameData, screenshots }) {
     // Rating logic ends
 
     return (
-        <div className="game-card">
-            {bigCoverUrl && <img src={bigCoverUrl} alt={gameData.name} />}
-            <h2>{gameData.name}</h2>
-            <p>{gameData.involved_companies?.[0]?.company?.name || "N/A"}</p>
-            <p className="numericRating">{starAverage.toFixed(1)}</p>
-            <div className="rating">{stars}</div>
+        <div class="image-cont rounded-corners">
+            <div class="image-container">
+                <img src="https://images.igdb.com/igdb/image/upload/t_original/gsheqjbqnt71evl1aqmh.png" alt="Pikmin Test"/>
+            </div>
+            <div class="overlay"></div>
+            <div class="text-overlay">
+                <div class="game-name">Pikmin</div>
+                <div class="developer">Nintendo</div>
+            </div>
         </div>
     );
 }
