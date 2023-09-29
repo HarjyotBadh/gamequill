@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import TitleCardPlus from "./TitleCardPlus";
-import TitleCard from "./TitleCard";
+import "../styles/HomeTrending.css";
+import Featured1 from "./Featured1";
+import Featured2 from "./Featured2";
 
 function App() {
     const [gameData0, setGameData0] = useState(null);
     const [screenshots, setScreenshots] = useState([]);
     const [gameData1, setGameData1] = useState(null);
-    const game_id = [2239   , 2240, 2241];
+    const game_id = [7346, 2240, 2241];
 
     useEffect(() => {
         const corsAnywhereUrl = "http://localhost:8080/";
@@ -33,7 +34,6 @@ function App() {
 
                     const screenshotUrls = game.screenshots ? game.screenshots.map(s => s.url.replace('t_thumb', 't_1080p')) : [];
                     setScreenshots(screenshotUrls);
-                    console.log(screenshotUrls);
                 }
             })
             .catch(err => {
@@ -68,12 +68,13 @@ function App() {
     }, [game_id[1]]);
 
     return (
-        <div>
-            <div>
-                <div>
-                    <TitleCardPlus gameData={gameData0} screenshots={screenshots} />
-                </div>
-            </div>
+        <div class="trending-container">
+            <h1>Trending Games</h1>
+            <div class="trending-featured1"><Featured1 gameData={gameData0} screenshots={screenshots} /></div>
+            <Featured2 gameData={gameData0} screenshots={screenshots} />
+            <Featured2 gameData={gameData1} screenshots={screenshots} />
+            <Featured2 gameData={gameData0} screenshots={screenshots} />
+            <Featured2 gameData={gameData0} screenshots={screenshots} />
         </div>
     );
   }

@@ -5,7 +5,6 @@
 }
   
 .grid-pad {
-    background-color: #ccc;
     padding: 10px;
 }
   
@@ -16,4 +15,7 @@
 .grid-activity {
     background-color: #ccc;
     grid-column: 8 / span 4;
+    padding: 30px;
+    border-radius: 25px;
+    height: 700px;
 }

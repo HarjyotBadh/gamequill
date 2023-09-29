@@ -25,13 +25,14 @@ img {
     z-index: 1;
 }
 
-.game-name {
+.game-name2 {
     font-size: 1.2rem;
     font-weight: bold;
 }
 
 .developer {
     font-size: 0.9rem;
+    margin-right: 3px;
 }
 
 

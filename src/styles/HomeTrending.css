@@ -1,0 +1,14 @@
+.trending-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Create a 12-column grid */
+    gap: 10px; /* Adjust the gap between grid items as needed */
+    margin-bottom: 50px;
+}
+
+.trending-featured1 {
+    grid-column: 1 / span 2;
+}
+
+h1 {
+    font-size: 30px;
+}
