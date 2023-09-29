@@ -25,12 +25,15 @@ export default function EditProfile({ profileData, setProfileData }) {
     profilePicture: "",
   });
 
+  const [hasChanges, setHasChanges] = useState(false);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
+    setHasChanges(true);
   };
 
   const handleFileUpload = async (e) => {
@@ -115,7 +118,15 @@ export default function EditProfile({ profileData, setProfileData }) {
               />
             </div>
             <button type="submit">Save</button>
-            <button type="close" onClick={close}>
+            <button
+              type="close"
+              onClick={() => {
+                close();
+                if (hasChanges) {
+                  window.location.reload();
+                }
+              }}
+            >
               Close
             </button>
           </form>

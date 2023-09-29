@@ -1,7 +1,34 @@
 import React, { useState, useEffect } from "react";
-import Popup from "reactjs-popup";
 import EditProfile from "./EditProfile";
+import TitleCard from "./ProfileTitleCard";
 function Profile({ profileData, setProfileData }) {
+  const [gameData0, setGameData0] = useState(null);
+  useEffect(() => {
+    const corsAnywhereUrl = "http://localhost:8080/";
+    const apiUrl = "https://api.igdb.com/v4/games";
+    fetch(corsAnywhereUrl + apiUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
+      },
+      body: `
+                fields name,cover.url;
+                where id = ${19565};
+            `,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.length) {
+          const game = data[0];
+          setGameData0(game);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, 19565);
   return (
     <div class="bg-white dark:bg-gray-500 h-screen">
       <div
@@ -110,7 +137,8 @@ function Profile({ profileData, setProfileData }) {
             textAlign: "center",
           }}
         >
-          {profileData.favoriteGames[0]}
+          {/* {profileData.favoriteGames[0]} */}
+          <TitleCard gameData={gameData0} />
         </div>
         <div
           className="Game2"

@@ -96,6 +96,7 @@
   background-color: #ccc; /* Use a lighter grey background color */
   color: black; /* Change text color to black */
   border: 2px solid #ccc; /* Use a lighter grey border color */
+  height: 50px;
 }
 
 .button:hover {

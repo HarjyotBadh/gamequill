@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import Profile from "../components/Profile";
-import { collection, getDoc, doc } from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import DefaultProfilePicture from "../images/defaultProfilePicture.png";
 export default function ProfilePage({ accountNumber }) {
   const defaultProfileData = {
     profilePicture: DefaultProfilePicture,
-    bio: "test",
+    bio: "my bio",
     pronouns: "",
     favoriteGames: [
-      "Halo",
-      "God of War",
       "Spider-Man",
+      "God of War",
+      "Pokemon Platinum",
       "Red Dead Redemption 2",
     ],
     favoriteGenres: ["Adventure", "FPS", "RPG", "Strategy"],
