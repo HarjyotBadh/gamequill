@@ -11,6 +11,8 @@ export default function ProfileTitleCard({ gameData }) {
   // console.log("this - " + bigCoverUrl);
 
   return (
-    <div>{bigCoverUrl && <img src={bigCoverUrl} alt={gameData.name} />}</div>
+    <div className="profile-game-card">
+      {bigCoverUrl && <img src={bigCoverUrl} alt={gameData.name} />}
+    </div>
   );
 }
