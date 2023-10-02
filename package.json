@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@firebase/storage": "^0.11.2",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@testing-library/jest-dom": "^5.17.0",
@@ -16,6 +17,7 @@
     "react-slick": "^0.29.0",
     "react-youtube": "^10.1.0",
     "slick-carousel": "^1.8.1",
+    "reactjs-popup": "^2.0.6",
     "styled-components": "^6.0.8",
     "web-vitals": "^2.1.4"
   },
@@ -45,5 +47,10 @@
   },
   "devDependencies": {
     "tailwindcss": "^3.3.3"
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "tailwind.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
