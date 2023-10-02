@@ -1,0 +1,83 @@
+.media-slider-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid red;
+    margin-bottom: 30px;
+    display: inline-block;
+    /* max-height: 500px; */
+    /* border-radius: 20px; */
+}
+
+.youtube-video-wrapper {
+    position: relative; 
+    width: 100%; 
+    overflow: hidden;
+    padding-top: 56.25%; /* This gives the 16:9 ratio */
+}
+
+.youtube-video-wrapper::before {
+    content: "";
+    display: block;
+    padding-top: 0%; /* 16:9 ratio */
+}
+
+.youtube-video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.slick-slide img {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    margin: auto;
+}
+
+.slick-slide iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    margin: auto;
+}
+
+.slick-dots li button:before {
+    color: white; 
+    content: ' ';
+}
+
+.slick-prev, .slick-next {
+    color: white;
+    content: ' ';
+    /* font-size: 30px; */
+    z-index: 10;
+}
+
+.slick-prev {
+    left: 10px;
+}
+
+.slick-next {
+    right: 10px;
+} 
+
+.slick-next:before, .slick-prev:before {
+    content: ' '; 
+}
+
+.slick-prev:before {
+    content: '←';
+    color: white;
+    font-size: 25px;
+}
+
+.slick-next:before {
+    content: '→'; 
+    color: white;
+    font-size: 25px;
+}
+
+
