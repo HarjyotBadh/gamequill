@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import EditProfile from "./EditProfile";
 import TitleCard from "./ProfileTitleCard";
+import EditGames from "./EditGames";
+
 function Profile({ profileData, setProfileData }) {
   const [gameCovers, setGameCovers] = useState([]);
 
@@ -117,7 +119,22 @@ function Profile({ profileData, setProfileData }) {
           />
         </div>
       </div>
-      <div style={{ marginLeft: "100px", color: "white" }}>Favorite Games</div>
+      <div
+        style={{
+          marginLeft: "100px",
+          color: "white",
+          display: "flex",
+          gap: 20,
+        }}
+      >
+        Favorite Games
+        <EditGames
+          profileData={profileData}
+          setProfileData={setProfileData}
+          gameCovers={gameCovers}
+          setGameCovers={setGameCovers}
+        />
+      </div>
       <div
         style={{
           display: "flex",
