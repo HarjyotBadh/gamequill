@@ -1,20 +1,83 @@
-.slick-slide {
-    display: flex;
-    justify-content: center;  /* Horizontal centering */
-    align-items: center;      /* Vertical centering */
-    height: 100%;             /* Or a fixed value like 400px */
+.media-slider-container {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border: 1px solid red;
+    margin-bottom: 30px;
+    display: inline-block;
+    /* max-height: 500px; */
+    /* border-radius: 20px; */
+}
+
+.youtube-video-wrapper {
+    position: relative; 
+    width: 100%; 
+    overflow: hidden;
+    padding-top: 56.25%; /* This gives the 16:9 ratio */
+}
+
+.youtube-video-wrapper::before {
+    content: "";
+    display: block;
+    padding-top: 0%; /* 16:9 ratio */
+}
+
+.youtube-video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .slick-slide img {
-    max-width: 100%;  /* Ensures the image doesn't overflow */
-    max-height: 100%; /* Ensures the image doesn't overflow */
-    display: block;
-    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    margin: auto;
 }
 
 .slick-slide iframe {
-    margin: 0 auto;   /* Horizontal centering */
-    display: block;  /* To make margin auto work for horizontal centering */
-    /* max-width: 100%;
-    max-height: 100%; */
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    margin: auto;
 }
+
+.slick-dots li button:before {
+    color: white; 
+    content: ' ';
+}
+
+.slick-prev, .slick-next {
+    color: white;
+    content: ' ';
+    /* font-size: 30px; */
+    z-index: 10;
+}
+
+.slick-prev {
+    left: 10px;
+}
+
+.slick-next {
+    right: 10px;
+} 
+
+.slick-next:before, .slick-prev:before {
+    content: ' '; 
+}
+
+.slick-prev:before {
+    content: '←';
+    color: white;
+    font-size: 25px;
+}
+
+.slick-next:before {
+    content: '→'; 
+    color: white;
+    font-size: 25px;
+}
+
+

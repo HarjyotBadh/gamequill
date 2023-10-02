@@ -1,11 +1,11 @@
 import React from 'react';
 import '../styles/DescriptionBox.css';
-import xboxLogo from '../images/Xbox_logo.png';
-import playstationLogo from '../images/PlayStation_Logo.png';
-import nintendoLogo from '../images/Nintendo_logo.png';
-import steamLogo from '../images/PC_logo.png';
-import appleLogo from '../images/Apple_logo.png';
-import androidLogo from '../images/Android_logo.png';
+import xboxLogo from '../images/platform_logos/Xbox_logo.png';
+import playstationLogo from '../images/platform_logos/PlayStation_Logo.png';
+import nintendoLogo from '../images/platform_logos/Nintendo_logo.png';
+import steamLogo from '../images/platform_logos/PC_logo.png';
+import appleLogo from '../images/platform_logos/Apple_logo.png';
+import androidLogo from '../images/platform_logos/Android_logo.png'
 
 export default function DescriptionBox({ gameData }) {
   if (!gameData) return <div>Loading...</div>;

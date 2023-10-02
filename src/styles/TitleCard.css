@@ -1,45 +1,54 @@
 .game-card {
+    background-color: #fafafa; /* Consistent with the previous background color */
     border: 1px solid #ddd;
-    padding: 2%; /* relative padding based on parent width */
-    margin: 1%; /* relative margin */
-    border-radius: 20px;
-    width: 90%; /* width is now relative to its container */
-    max-width: 250px; /* keep the original max-width as a constraint */
+    padding: 2% 4%; 
+    margin: 1% 2%;
+    border-radius: 20px; /* Rounded Corners */
+    width: 90%;
+    max-width: 250px;
     text-align: center;
-    box-sizing: border-box; /* ensures that padding and border are included in the total width */
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
 }
 
-/* Media queries for larger screens */
+.game-card:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); 
+}
+
+/* Adjusted media queries */
 @media (min-width: 768px) {
     .game-card {
-        width: 70%; /* maybe a bit wider on medium screens */
+        width: 70%; 
     }
 }
 
 @media (min-width: 992px) {
     .game-card {
-        width: 50%; /* and even wider on large screens */
+        width: 50%; 
     }
 }
-
-/* Feel free to add more breakpoints if necessary */
-
 
 .game-card img {
     width: 100%;
     max-height: 300px;
     object-fit: cover;
-    border-radius: 20px;
+    border-radius: 20px 20px 20px 20px;
     margin-bottom: 20px;
 }
 
 .game-card h2 {
     font-weight: 700;
-    text-align: center;
+    color: #333; 
+    margin-bottom: 16px;
+    font-size: 2.5rem;
 }
 
 .game-card p {
-    text-align: center;
+    color: #555; 
+    line-height: 1.5; 
+    margin-bottom: 16px;
 }
 
 .game-card .numericRating {
@@ -47,11 +56,19 @@
     font-weight: bold;
     text-align: center;
     color: #618edb;
+    margin-bottom: 8px; /* Add some spacing before the stars */
+}
+
+.rating {
+    white-space: nowrap;  /* Ensure stars don't wrap */
+    overflow: hidden;  /* Hide any overflowing content */
+    text-align: center;
+    margin-bottom: 16px; /* Added some space below the stars */
 }
 
 .fullStar, .emptyStar, .halfStar {
     font-size: 20px;
-    margin-right: 2px;
+    margin: 0 1px;  /* Slight margin on each side */
     position: relative;
     display: inline-block;
     width: 20px;
@@ -62,11 +79,11 @@
 }
 
 .fullStar {
-    color: #618edb;  /* Color for the filled star */
+    color: #618edb;
 }
 
 .halfStar {
-    color: #bbbac0;  /* Color for the empty part of star */
+    color: #bbbac0;  
 }
 
 .halfStar::before {
@@ -74,7 +91,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    color: #618edb;  /* Color for the filled part of star */
+    color: #618edb;  
     clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
     width: 20px;
     height: 20px;
@@ -83,11 +100,5 @@
 }
 
 .emptyStar {
-    color: #bbbac0; /* Color for the truly empty star */
+    color: #bbbac0; 
 }
-
-
-
-
-
-  

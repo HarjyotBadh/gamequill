@@ -5,14 +5,14 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import '../styles/MediaPlayer.css';
 
-
 const MediaPlayer = ({ screenshots, youtubeLinks }) => {
     const opts = {
-        height: '390',
-        width: '640',
+        height: '100%',
+        width: '100%',
         playerVars: {
             autoplay: 0,
         },
+        
     };
 
     const settings = {
@@ -24,21 +24,22 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
 
       };
 
-    return (
-        <Slider {...settings}>
+      return (
+        <Slider className='media-slider-container img'{...settings}>
             {screenshots.map((screenshotURL, index) => (
                 <div key={index}>
-                    <img src={screenshotURL} alt={`screenshot-${index}`} width="50%" />
+                    <img src={screenshotURL} alt={`screenshot-${index}`} />
                 </div>
             ))}
-
+    
             {youtubeLinks.map((videoId, index) => (
-                <div key={videoId}>
+                <div key={videoId} className="youtube-video-wrapper">
                     <YouTube videoId={videoId} opts={opts} />
                 </div>
             ))}
         </Slider>
     );
+    
 };
 
 export default MediaPlayer;
