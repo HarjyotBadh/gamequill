@@ -1,0 +1,53 @@
+.description-box {
+    background-color: #fafafa; /* A subtle light gray background */
+    border: 1px solid #ddd;
+    padding: 2% 4%; /* Increased horizontal padding */
+    margin: 1% 2%; /* Slightly increased margin for better spacing */
+    border-radius: 20px;
+    width: 95%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    box-sizing: border-box;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animation for hover effect */
+}
+
+.description-box:hover {
+    transform: translateY(-5px); /* Moves the box slightly up when hovered */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Increase shadow on hover for a 'lifting' effect */
+}
+
+.description-box h1 {
+    font-weight: 700;
+    color: #333; /* Dark gray for better readability */
+    margin-bottom: 16px; /* Space below headings for better structure */
+    border-bottom: 2px solid #e0e0e0; /* Subtle line below headings for visual separation */
+    padding-bottom: 8px; /* Padding so the line doesn't touch the text */
+}
+
+.description-box p {
+    color: #555; /* Dark gray for the content */
+    line-height: 1.5; /* Improved readability */
+    margin-bottom: 16px; /* Space between paragraphs */
+}
+
+.platform-logo {
+    width: 50px;
+    height: auto;
+    transition: transform 0.3s ease; /* Animation for hover effect */
+}
+
+.platform-logo:hover {
+    transform: scale(1.1); /* Slightly increase the size of logo when hovered */
+}
+
+.platform-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Extra style for anchor links, to remove underlines and default color */
+.platform-container a {
+    text-decoration: none;
+    color: inherit; /* Inherits color from parent, in this case, the description box */
+}
