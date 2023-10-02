@@ -66,9 +66,9 @@ function Profile({ profileData, setProfileData }) {
           <div className="Profile Picture">
             <img
               class="rounded-full"
-              width={100}
-              height={100}
+              style={{ width: 100, height: 100 }}
               src={profileData.profilePicture}
+              alt="Profile Picture"
             ></img>
           </div>
           <div className="name" style={{ width: 100, height: 25 }}>
@@ -159,7 +159,6 @@ function Profile({ profileData, setProfileData }) {
             textAlign: "center",
           }}
         >
-          {/* {profileData.favoriteGames[0]} */}
           <TitleCard gameData={gameCovers[0]} />
         </div>
         <div
@@ -171,7 +170,6 @@ function Profile({ profileData, setProfileData }) {
             textAlign: "center",
           }}
         >
-          {/* {profileData.favoriteGames[1]} */}
           <TitleCard gameData={gameCovers[1]} />
         </div>
         <div
@@ -183,7 +181,6 @@ function Profile({ profileData, setProfileData }) {
             textAlign: "center",
           }}
         >
-          {/* {profileData.favoriteGames[2]} */}
           <TitleCard gameData={gameCovers[2]} />
         </div>
         <div
@@ -195,7 +192,6 @@ function Profile({ profileData, setProfileData }) {
             textAlign: "center",
           }}
         >
-          {/* {profileData.favoriteGames[3]} */}
           <TitleCard gameData={gameCovers[3]} />
         </div>
       </div>
