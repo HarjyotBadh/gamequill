@@ -5,6 +5,9 @@ export default function TitleCard({ gameData }) {
     if (!gameData) return <div>Loading...</div>;
 
     const bigCoverUrl = gameData.cover ? gameData.cover.url.replace("/t_thumb/", "/t_cover_big/") : null;
+    const textSizeClass = gameData.name.length > 25 ? 'text-xl' : 'text-4xl';
+    // const esrbRating = gameData.age_ratings?.[0]?.rating;
+    // const esrbDetails = getESRBDetails(esrbRating);    
 
     // @TODO: Replace rating with our rating system.
     var rating = gameData.aggregated_rating;
@@ -37,11 +40,12 @@ export default function TitleCard({ gameData }) {
 
     return (
         <div className="game-card">
-            {bigCoverUrl && <img src={bigCoverUrl} alt={gameData.name} />}
-            <h2>{gameData.name}</h2>
-            <p>{gameData.involved_companies?.[0]?.company?.name || "N/A"}</p>
-            <p className="numericRating">{starAverage.toFixed(1)}</p>
-            <div className="rating">{stars}</div>
-        </div>
+        {bigCoverUrl && <img src={bigCoverUrl} alt={gameData.name} />}
+        <h2 className={textSizeClass}>{gameData.name}</h2>
+        <p>{gameData.involved_companies?.[0]?.company?.name || "N/A"}</p>
+        <p className="numericRating">{starAverage.toFixed(1)}</p>
+        <div className="rating">{stars}</div>
+    </div>
+    
     );
 }

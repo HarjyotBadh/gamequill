@@ -6,6 +6,13 @@ import nintendoLogo from '../images/platform_logos/Nintendo_logo.png';
 import steamLogo from '../images/platform_logos/PC_logo.png';
 import appleLogo from '../images/platform_logos/Apple_logo.png';
 import androidLogo from '../images/platform_logos/Android_logo.png'
+import RP_Image from '../images/esrb_logos/esrb_rp.png';
+import EC_Image from '../images/esrb_logos/esrb_ec.png';
+import E_Image from '../images/esrb_logos/esrb_everyone.png';
+import E10_Image from '../images/esrb_logos/esrb_e10.png';
+import T_Image from '../images/esrb_logos/esrb_t.png';
+import M_Image from '../images/esrb_logos/esrb_m.png';
+import AO_Image from '../images/esrb_logos/esrb_ao.png';
 
 export default function DescriptionBox({ gameData }) {
   if (!gameData) return <div>Loading...</div>;
@@ -13,6 +20,34 @@ export default function DescriptionBox({ gameData }) {
   const summary = gameData.summary;
   const storyline = gameData.storyline;
   const genres = gameData.genres?.map((genre) => genre.name).join(", ");
+
+  const esrbAgeRating = gameData.age_ratings?.find(rating => rating.category === 1);
+    const esrbRatingValue = esrbAgeRating?.rating;
+    const esrbDetails = getESRBDetails(esrbRatingValue);
+    // I want to get the description from the age_ratings.content_descriptions array, each one separated by a comma.
+    const esrbDescription = esrbAgeRating?.content_descriptions?.map(description => description.description).join(", ");
+
+
+    function getESRBDetails(esrbRating) {
+        switch (esrbRating) {
+            case 6:
+                return { image: RP_Image, description: "Rating Pending" };
+            case 7:
+                return { image: EC_Image, description: "Early Childhood" };
+            case 8:
+                return { image: E_Image, description: "Everyone" };
+            case 9:
+                return { image: E10_Image, description: "Everyone 10+" };
+            case 10:
+                return { image: T_Image, description: "Teen" };
+            case 11:
+                return { image: M_Image, description: "Mature 17+" };
+            case 12:
+                return { image: AO_Image, description: "Adults Only 18+" };
+            default:
+                return null;
+        }
+    }
 
   // Variables to help check if we've already added the platform logo.
   var inXbox = false;
@@ -76,6 +111,13 @@ export default function DescriptionBox({ gameData }) {
         {storyline && <p>{storyline}</p>}
         <h1> Platforms </h1>
         <div className="platform-container">{platforms}</div>
+        <h1> Age Rating </h1>
+        {esrbDetails && (
+            <>
+                <img src={esrbDetails.image} alt={gameData.esrb_rating} className="esrb-image"/>
+                <p className="esrb-description">{esrbDescription}</p>
+            </>
+        )}
     </div>
 )
 }

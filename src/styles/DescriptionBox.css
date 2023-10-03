@@ -33,6 +33,7 @@
     width: 50px;
     height: auto;
     transition: transform 0.3s ease; /* Animation for hover effect */
+    margin-bottom: 50px;
 }
 
 .platform-logo:hover {
@@ -50,4 +51,10 @@
 .platform-container a {
     text-decoration: none;
     color: inherit; /* Inherits color from parent, in this case, the description box */
+}
+
+.esrb-image {
+    width: 75px;
+    height: auto;
+    margin-bottom: 16px;
 }
