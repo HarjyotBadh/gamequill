@@ -20,6 +20,7 @@ function App() {
     <Route path="/login" element={<Login />} /> {/* This will render the Login component */}
     <Route path="/register" element={<Register />} /> {/* This will take you to register page*/}
     <Route path="/home" element = {<HomePage />} />
+    <Route path="/game" element = {<GamePage />} />
   </Routes>;
 }
 export default App;
