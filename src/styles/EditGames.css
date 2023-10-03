@@ -8,19 +8,23 @@
   }
 
   
-  .GameCard {
+  .EditGameCard {
     border: 1px solid white;
     width: 100;
     height: 125;
     text-align: center;
     cursor: pointer;
   }
-  .GameCard .SelectedGame{
+  .EditGameCard .SelectedGame{
     border: 1px solid white;
     width: 100;
     height: 125;
     text-align: center;
     cursor: pointer;
+  }
+  .selected {
+    border-width: 10;
+    border: 2px solid red;
   }
   
   .ModalContent {
@@ -37,3 +41,4 @@
         width: 500;
         background-color: "grey",
   }
+  

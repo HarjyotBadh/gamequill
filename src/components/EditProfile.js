@@ -33,7 +33,7 @@ export default function EditProfile({ profileData, setProfileData }) {
       ...formData,
       [name]: value,
     });
-    setHasChanges(true);
+    //setHasChanges(true);
   };
 
   const handleFileUpload = async (e) => {
@@ -117,13 +117,16 @@ export default function EditProfile({ profileData, setProfileData }) {
                 name="profile picture"
               />
             </div>
-            <button type="submit">Save</button>
+            <button type="submit" onClick={setHasChanges(true)}>
+              Save
+            </button>
             <button
               type="close"
               onClick={() => {
                 close();
                 if (hasChanges) {
                   window.location.reload();
+                  setHasChanges(false);
                 }
               }}
             >
