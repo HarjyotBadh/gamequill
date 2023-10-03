@@ -6,6 +6,7 @@ import "slick-carousel/slick/slick-theme.css";
 import '../styles/MediaPlayer.css';
 
 const MediaPlayer = ({ screenshots, youtubeLinks }) => {
+    // Options for the YouTube player
     const opts = {
         height: '100%',
         width: '100%',
@@ -15,6 +16,7 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
         
     };
 
+    // Options for the image slider
     const settings = {
         dots: true,
         infinite: true,

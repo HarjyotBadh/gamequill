@@ -1,5 +1,29 @@
+:root {
+    /* Light theme */
+    --background-light: #fafafa;
+    --text-color-light: #333;
+    --secondary-text-color-light: #555;
+
+    /* Dark theme */
+    --background-dark: #4b5563;
+    --text-color-dark: #f5f5f5;
+    --secondary-text-color-dark: #CAC7C7;
+}
+
+[data-theme="dark"] {
+    --background: var(--background-dark);
+    --text-color: var(--text-color-dark);
+    --secondary-text-color: var(--secondary-text-color-dark);
+}
+
+[data-theme="light"] {
+    --background: var(--background-light);
+    --text-color: var(--text-color-light);
+    --secondary-text-color: var(--secondary-text-color-light);
+}
+
 .description-box {
-    background-color: #fafafa; /* A subtle light gray background */
+    background-color: var(--background); /* A subtle light gray background */
     border: 1px solid #ddd;
     padding: 2% 4%; /* Increased horizontal padding */
     margin: 1% 2%; /* Slightly increased margin for better spacing */
@@ -17,14 +41,14 @@
 
 .description-box h1 {
     font-weight: 700;
-    color: #333; /* Dark gray for better readability */
+    color: var(--text-color); /* Dark gray for better readability */
     margin-bottom: 16px; /* Space below headings for better structure */
     border-bottom: 2px solid #e0e0e0; /* Subtle line below headings for visual separation */
     padding-bottom: 8px; /* Padding so the line doesn't touch the text */
 }
 
 .description-box p {
-    color: #555; /* Dark gray for the content */
+    color: var(--secondary-text-color); /* Dark gray for the content */
     line-height: 1.5; /* Improved readability */
     margin-bottom: 16px; /* Space between paragraphs */
 }

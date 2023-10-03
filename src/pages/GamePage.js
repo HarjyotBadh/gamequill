@@ -18,7 +18,25 @@ export default function GamePage({game_id}) {
     // Skyrim: 165192
 
     game_id = sample_id;
+
+    const [darkMode, setDarkMode] = React.useState(
+        () =>
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+    );
+
+    React.useEffect(() => {
+        const matcher = window.matchMedia("(prefers-color-scheme: dark)");
+        const onChange = (e) => setDarkMode(e.matches);
+
+        matcher.addListener(onChange);
+
+        return () => {
+            matcher.removeListener(onChange);
+        };
+    }, []);
     
+    // Fetch game data from IGDB API
     useEffect(() => {
         const corsAnywhereUrl = "http://localhost:8080/";
         const apiUrl = "https://api.igdb.com/v4/games";
@@ -64,7 +82,10 @@ export default function GamePage({game_id}) {
 
 
     return (
-        <div className="game-page-wrapper">
+        <div
+        className={`game-page-wrapper ${darkMode ? "dark" : "light"}`}
+        data-theme={darkMode ? "dark" : "light"}
+    >
             <NavBar />
     
             <div className="game-content-container">
@@ -79,8 +100,5 @@ export default function GamePage({game_id}) {
             </div>
         </div>
     );
-    
-    
-    
-    
+
 }
