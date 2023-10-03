@@ -9,6 +9,44 @@ export default function EditGames({
   setGameCovers,
 }) {
   const [selectedGame, setSelectedGame] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [gameData, setGameData] = useState([]);
+  const search = (e) => {
+    e.preventDefault();
+    const corsAnywhereUrl = "http://localhost:8080/";
+    const apiUrl = "https://api.igdb.com/v4/games";
+    console.log("Search: ", searchQuery);
+
+    fetch(corsAnywhereUrl + apiUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
+      },
+      body: `search "${searchQuery}";fields name,cover.url; limit:5; where version_parent = null;`,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.length) {
+          const gamesData = data.map((game) => ({
+            name: game.name,
+            coverUrl: game.cover.url,
+          }));
+          setGameData(gamesData); // Assuming setGamesData is a function to update the state
+          console.log("gamesData", gamesData);
+          // const game = data[0];
+          // setGameData(game);
+          // console.log("gameData", game.name);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+  const handleSubmit = (e) => {
+    search(e);
+  };
   return (
     <Popup
       trigger={
@@ -41,82 +79,181 @@ export default function EditGames({
     >
       {(close) => (
         <div className="modal">
-          Choose Game To Replace
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              marginLeft: 175,
-              width: 450,
-              height: 150,
-              padding: 10,
-              gap: 10,
-              color: "white",
-            }}
-            className="FavoriteGames"
-          >
+          <form onSubmit={handleSubmit}>
+            Choose Game To Replace
             <div
-              className="GameCard Game1"
-              onClick={() => {
-                console.log("clicked");
-                setSelectedGame(gameCovers[0]);
-              }}
-            >
-              <ProfileTitleCard gameData={gameCovers[0]} />
-            </div>
-            <div
-              className="GameCard Game2"
-              onClick={() => {
-                console.log("clicked");
-                setSelectedGame(gameCovers[1]);
-              }}
-            >
-              <ProfileTitleCard gameData={gameCovers[1]} />
-            </div>
-            <div
-              className="GameCard Game3"
-              onClick={() => {
-                console.log("clicked");
-                setSelectedGame(gameCovers[2]);
-              }}
-            >
-              <ProfileTitleCard gameData={gameCovers[2]} />
-            </div>
-            <div
-              className="GameCard Game4"
-              onClick={() => {
-                console.log("clicked");
-                setSelectedGame(gameCovers[3]);
-              }}
-            >
-              <ProfileTitleCard gameData={gameCovers[3]} />
-            </div>
-          </div>
-          <div>
-            Selected Game:
-            <div
-              className="GameCard SelectedGame"
               style={{
-                border: "1px solid white",
-                width: 100,
-                height: 125,
-                textAlign: "center",
-                cursor: "pointer",
-                marginLeft: 350,
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                width: 450,
+                height: 150,
+                marginRight: 100,
+                color: "white",
+              }}
+              className="FavoriteGames"
+            >
+              <div
+                className="GameCard Game1"
+                onClick={() => {
+                  console.log("clicked");
+                  setSelectedGame(gameCovers[0]);
+                }}
+              >
+                <ProfileTitleCard gameData={gameCovers[0]} />
+              </div>
+              <div
+                className="GameCard Game2"
+                onClick={() => {
+                  console.log("clicked");
+                  setSelectedGame(gameCovers[1]);
+                }}
+              >
+                <ProfileTitleCard gameData={gameCovers[1]} />
+              </div>
+              <div
+                className="GameCard Game3"
+                onClick={() => {
+                  console.log("clicked");
+                  setSelectedGame(gameCovers[2]);
+                }}
+              >
+                <ProfileTitleCard gameData={gameCovers[2]} />
+              </div>
+              <div
+                className="GameCard Game4"
+                onClick={() => {
+                  console.log("clicked");
+                  setSelectedGame(gameCovers[3]);
+                }}
+              >
+                <ProfileTitleCard gameData={gameCovers[3]} />
+              </div>
+            </div>
+            <div>
+              {selectedGame ? (
+                <div>
+                  Selected Game:
+                  <div
+                    className="GameCard SelectedGame"
+                    style={{
+                      border: "1px solid white",
+                      width: 100,
+                      height: 125,
+                      textAlign: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <ProfileTitleCard gameData={selectedGame} />
+                  </div>
+                </div>
+              ) : null}
+            </div>
+            <div className="SearchBar">
+              <input
+                type="text"
+                name="gameSearch"
+                placeholder="Enter Game"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{ width: 300 }}
+              />
+            </div>
+            <button type="submit">Search</button>
+            {gameData[0] ? (
+              <div
+                className="searchedGamesBox"
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  width: 500,
+                  height: 150,
+                  border: "1px solid white",
+                  padding: 10,
+                  gap: 10,
+                }}
+              >
+                {gameData[0] ? (
+                  <div
+                    className="GameCard SearchedGames"
+                    style={{
+                      border: "1px solid white",
+                      width: 100,
+                      height: 125,
+                      textAlign: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <ProfileTitleCard gameData={gameData[0].coverUrl} />
+                  </div>
+                ) : null}
+                {gameData[1] ? (
+                  <div
+                    className="GameCard SearchedGames"
+                    style={{
+                      border: "1px solid white",
+                      width: 100,
+                      height: 125,
+                      textAlign: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <ProfileTitleCard gameData={gameData[1].coverUrl} />
+                  </div>
+                ) : null}
+                {gameData[2] ? (
+                  <div
+                    className="GameCard SearchedGames"
+                    style={{
+                      border: "1px solid white",
+                      width: 100,
+                      height: 125,
+                      textAlign: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <ProfileTitleCard gameData={gameData[2].coverUrl} />
+                  </div>
+                ) : null}
+                {gameData[3] ? (
+                  <div
+                    className="GameCard SearchedGames"
+                    style={{
+                      border: "1px solid white",
+                      width: 100,
+                      height: 125,
+                      textAlign: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <ProfileTitleCard gameData={gameData[3].coverUrl} />
+                  </div>
+                ) : null}
+                {gameData[4] ? (
+                  <div
+                    className="GameCard SearchedGames"
+                    style={{
+                      border: "1px solid white",
+                      width: 100,
+                      height: 125,
+                      textAlign: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <ProfileTitleCard gameData={gameData[4].coverUrl} />
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+            <button
+              type="close"
+              onClick={() => {
+                close();
               }}
             >
-              <ProfileTitleCard gameData={selectedGame} />
-            </div>
-          </div>
-          <button
-            type="close"
-            onClick={() => {
-              close();
-            }}
-          >
-            Close
-          </button>
+              Close
+            </button>
+          </form>
         </div>
       )}
     </Popup>

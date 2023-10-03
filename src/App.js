@@ -10,7 +10,7 @@ import Register from "./components/Register"; // Import your Register componen
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<NavBar />} />
+      <Route path="/" element={<HomePage />} />
       <Route
         path="/Profile"
         element={<ProfilePage accountNumber="GPiU3AHpvyOhnbsVSzap" />}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import EditProfile from "./EditProfile";
 import TitleCard from "./ProfileTitleCard";
 import EditGames from "./EditGames";
-
+import "../styles/Profile.css";
 function Profile({ profileData, setProfileData }) {
   const [gameCovers, setGameCovers] = useState([]);
 
@@ -37,32 +37,14 @@ function Profile({ profileData, setProfileData }) {
     fetchCovers();
   }, []);
   return (
-    <div class="bg-white dark:bg-gray-500 h-screen">
+    <div class="bg-gray-500 h-screen">
       <div
-        class="bg-white dark:bg-gray-500"
+        class="bg-gray-500"
         className="formattingBox"
         style={{ height: "100px" }}
       ></div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "flex-start",
-          flexWrap: "wrap",
-          width: "100%",
-          height: 250,
-          marginLeft: "100px",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            textAlign: "center",
-            color: "white",
-            height: 75,
-          }}
-        >
+      <div className="ProfileBox">
+        <div>
           <div className="Profile Picture">
             <img
               class="rounded-full"
@@ -74,16 +56,7 @@ function Profile({ profileData, setProfileData }) {
           <div className="name" style={{ width: 100, height: 25 }}>
             {profileData.name}
           </div>
-          <div
-            className="Pronouns"
-            style={{
-              width: 100,
-              height: 50,
-              textAlign: "center",
-            }}
-          >
-            {profileData.pronouns}
-          </div>
+          <div className="Pronouns">{profileData.pronouns}</div>
         </div>
         <div
           className="Bio"
