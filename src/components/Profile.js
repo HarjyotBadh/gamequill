@@ -1,19 +1,26 @@
 import React, { useState, useEffect } from "react";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 import EditProfile from "./EditProfile";
 import TitleCard from "./ProfileTitleCard";
 import EditGames from "./EditGames";
 import "../styles/Profile.css";
+import { db } from "../firebase";
 function Profile({ profileData, setProfileData }) {
   const [gameCovers, setGameCovers] = useState([]);
+  const uid = "GPiU3AHpvyOhnbsVSzap";
+  const docRef = doc(db, "profileData", uid);
+  //var docSnapshot = await getDoc(docRef);
 
   useEffect(() => {
     const corsAnywhereUrl = "http://localhost:8080/";
     const apiUrl = "https://api.igdb.com/v4/covers";
 
-    const gameIds = [19565, 19560, 1519, 25076]; // List of game IDs
+    //const gameIds = [19565, 19560, 1519, 25076]; // List of game IDs
 
     const fetchCovers = async () => {
-      const coverPromises = gameIds.map(async (id) => {
+      const docSnapshot = await getDoc(docRef);
+      const favoriteGames = docSnapshot.data().favoriteGames || [];
+      const coverPromises = favoriteGames.map(async (id) => {
         const response = await fetch(corsAnywhereUrl + apiUrl, {
           method: "POST",
           headers: {
@@ -102,10 +109,9 @@ function Profile({ profileData, setProfileData }) {
       >
         Favorite Games
         <EditGames
-          profileData={profileData}
-          setProfileData={setProfileData}
           gameCovers={gameCovers}
           setGameCovers={setGameCovers}
+          gameIds={profileData.favoriteGames}
         />
       </div>
       <div

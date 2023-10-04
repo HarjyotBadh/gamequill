@@ -5,6 +5,7 @@
     width: 450px;
     height: 150px;
     color: white;
+    margin-right: 100px;
   }
 
   
@@ -15,6 +16,7 @@
     text-align: center;
     cursor: pointer;
   }
+  
   .EditGameCard .SelectedGame{
     border: 1px solid white;
     width: 100;
@@ -33,6 +35,17 @@
     width: 500px;
     background-color: grey;
     align-items: center;
+  }
+  .searchedGamesBox {
+    /* Styles for the container of searched games */
+    display: flex;
+    flex-direction: row;
+    width: 500px;
+    height: 150px;
+    border: 1px solid white;
+    padding: 10px;
+    gap: 10px;
+    justify-content: center;
   }
 
   .Popup  {
