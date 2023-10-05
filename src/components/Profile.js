@@ -1,21 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import EditProfile from "./EditProfile";
-import TitleCard from "./ProfileTitleCard";
+import ProfileTitleCard from "./ProfileTitleCard";
 import EditGames from "./EditGames";
 import "../styles/Profile.css";
 import { db } from "../firebase";
+
 function Profile({ profileData, setProfileData }) {
   const [gameCovers, setGameCovers] = useState([]);
   const uid = "GPiU3AHpvyOhnbsVSzap";
   const docRef = doc(db, "profileData", uid);
-  //var docSnapshot = await getDoc(docRef);
 
   useEffect(() => {
     const corsAnywhereUrl = "http://localhost:8080/";
     const apiUrl = "https://api.igdb.com/v4/covers";
-
-    //const gameIds = [19565, 19560, 1519, 25076]; // List of game IDs
 
     const fetchCovers = async () => {
       const docSnapshot = await getDoc(docRef);
@@ -43,70 +41,37 @@ function Profile({ profileData, setProfileData }) {
 
     fetchCovers();
   }, []);
+
   return (
-    <div class="bg-gray-500 h-screen">
-      <div
-        class="bg-gray-500"
-        className="formattingBox"
-        style={{ height: "100px" }}
-      ></div>
-      <div className="ProfileBox">
-        <div>
+    <div className="bg-white dark:bg-gray-500 h-screen">
+      <div className="formattingBox h-16 dark:bg-gray-500 bg-white"></div>
+      <div className="ProfileBox flex ml-20">
+        <div className="flex flex-col items-center">
           <div className="Profile Picture">
             <img
-              class="rounded-full"
-              style={{ width: 100, height: 100 }}
+              className="rounded-full w-32 h-32"
               src={profileData.profilePicture}
               alt="Profile Picture"
-            ></img>
+            />
           </div>
-          <div className="name" style={{ width: 100, height: 25 }}>
+          <div className="name dark:text-white text-black">
             {profileData.name}
           </div>
-          <div className="Pronouns">{profileData.pronouns}</div>
+          <div className="Pronouns dark:text-white text-black">
+            {profileData.pronouns}
+          </div>
         </div>
-        <div
-          className="Bio"
-          style={{
-            border: "2px solid white",
-            width: 475,
-            height: 200,
-            alignContent: "center",
-            marginLeft: "10px",
-            color: "white",
-            display: "block",
-            padding: "10px",
-          }}
-        >
+        <div className="Bio border-2 dark:border-white border-black w-96 h-48 mx-4 p-2 dark:text-white text-black">
           {profileData.bio}
         </div>
-        <div
-          className="menuButtons"
-          style={{
-            border: "2px solid white",
-            color: "white",
-            width: 300,
-            height: 600,
-            marginLeft: 100,
-            padding: 10,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+        <div className="menuButtons border-2 dark:border-white border-black w-72 h-60 ml-10 p-2 dark:text-white text-black flex flex-col">
           <EditProfile
             profileData={profileData}
             setProfileData={setProfileData}
           />
         </div>
       </div>
-      <div
-        style={{
-          marginLeft: "100px",
-          color: "white",
-          display: "flex",
-          gap: 20,
-        }}
-      >
+      <div className="ml-20 dark:text-white text-black flex gap-4">
         Favorite Games
         <EditGames
           gameCovers={gameCovers}
@@ -114,128 +79,33 @@ function Profile({ profileData, setProfileData }) {
           gameIds={profileData.favoriteGames}
         />
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "flex-start",
-          marginLeft: "100px",
-          border: "1px solid white",
-          width: 450,
-          height: 150,
-          padding: 10,
-          gap: 10,
-          color: "white",
-        }}
-        className="FavoriteGames"
-      >
-        <div
-          className="Game1"
-          style={{
-            border: "1px solid white",
-            width: 100,
-            height: 125,
-            textAlign: "center",
-          }}
-        >
-          <TitleCard gameData={gameCovers[0]} />
+      <div className="FavoriteGames flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-white text-black">
+        <div className="GameCover1 w-30 h-32 text-center border dark:border-white border-black">
+          <ProfileTitleCard gameData={gameCovers[0]} />
         </div>
-        <div
-          className="Game2"
-          style={{
-            border: "1px solid white",
-            width: 100,
-            height: 125,
-            textAlign: "center",
-          }}
-        >
-          <TitleCard gameData={gameCovers[1]} />
+        <div className="GameCover2 w-30 h-32 text-center border dark:border-white border-black">
+          <ProfileTitleCard gameData={gameCovers[1]} />
         </div>
-        <div
-          className="Game3"
-          style={{
-            border: "1px solid white",
-            width: 100,
-            height: 125,
-            textAlign: "center",
-          }}
-        >
-          <TitleCard gameData={gameCovers[2]} />
+        <div className="GameCover3 w-30 h-32 text-center border dark:border-white border-black">
+          <ProfileTitleCard gameData={gameCovers[2]} />
         </div>
-        <div
-          className="Game4"
-          style={{
-            border: "1px solid white",
-            width: 100,
-            height: 125,
-            textAlign: "center",
-          }}
-        >
-          <TitleCard gameData={gameCovers[3]} />
+        <div className="GameCover4 w-30 h-32 text-center border dark:border-white border-black">
+          <ProfileTitleCard gameData={gameCovers[3]} />
         </div>
       </div>
-      <div style={{ marginLeft: "100px", color: "white" }}>Favorite Genres</div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "flex-start",
-          marginLeft: "100px",
-          border: "1px solid white",
-          width: 450,
-          height: 150,
-          padding: 10,
-          gap: 10,
-          color: "white",
-        }}
-        className="FavoriteGenres"
-      >
-        <div
-          className="Genre1"
-          style={{
-            border: "1px solid white",
-            width: 100,
-            height: 125,
-            textAlign: "center",
-          }}
-        >
-          {profileData.favoriteGenres[0]}
-        </div>
-        <div
-          className="Genre2"
-          style={{
-            border: "1px solid white",
-            width: 100,
-            height: 125,
-            textAlign: "center",
-          }}
-        >
-          {profileData.favoriteGenres[1]}
-        </div>
-        <div
-          className="Genre3"
-          style={{
-            border: "1px solid white",
-            width: 100,
-            height: 125,
-            textAlign: "center",
-          }}
-        >
-          {profileData.favoriteGenres[2]}
-        </div>
-        <div
-          className="Genre4"
-          style={{
-            border: "1px solid white",
-            width: 100,
-            height: 125,
-            textAlign: "center",
-          }}
-        >
-          {profileData.favoriteGenres[3]}
-        </div>
+      <div className="ml-20 dark:text-white text-black">Favorite Genres</div>
+      <div className="FavoriteGenres flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-whitetext-black">
+        {profileData.favoriteGenres.map((genre, index) => (
+          <div
+            key={index}
+            className="w-24 h-32 text-center border dark:border-white border-black"
+          >
+            {genre}
+          </div>
+        ))}
       </div>
     </div>
   );
 }
+
 export default Profile;
