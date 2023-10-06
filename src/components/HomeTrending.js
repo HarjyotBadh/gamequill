@@ -22,7 +22,7 @@ function App() {
                     'Authorization': 'Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp',
                 },
                 body: `
-                    fields name,screenshots.url,cover.url,involved_companies.company.name,rating,aggregated_rating;
+                    fields name,screenshots.url,cover.url,rating,aggregated_rating;
                     where id = ${game_id[0]};
                 `
             })

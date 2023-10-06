@@ -4,10 +4,12 @@
 }
 
 .user-cover {
-    background: #999;
-    grid-column: 1 / span 12;
+    grid-column: 1 / span 8;
+}
+
+.user-rounded {
+    border-radius: 15px;
 }
 .user-cover2 {
-    background: #666;
-    grid-column: 13 / span 12;
+    grid-column: 10 / span 16;
 }
