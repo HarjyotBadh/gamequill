@@ -70,7 +70,7 @@ function App() {
     return (
         <div>
             <div class="activity-container">
-                <h1>Your friends have liked...</h1>
+                <h1 class="user-head">YOUR FRIENDS HAVE LIKED...</h1>
                 <div class="user-activity"><UserActivity cover={gameCover0}/></div>
                 <div class="user-activity"><UserActivity /></div>
                 <div class="user-activity"><UserActivity /></div>

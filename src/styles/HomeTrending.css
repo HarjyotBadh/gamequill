@@ -9,6 +9,7 @@
     grid-column: 1 / span 2;
 }
 
-h1 {
-    font-size: 30px;
+.trending-head {
+    font-size: 20px;
+    font-weight: bold;
 }

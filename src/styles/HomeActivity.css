@@ -11,6 +11,7 @@
     padding: 12px;
 }
 
-h1 {
-    font-size: 30px;
+.user-head {
+    font-size: 20px;
+    font-weight: bold;
 }

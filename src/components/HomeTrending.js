@@ -69,7 +69,7 @@ function App() {
 
     return (
         <div class="trending-container">
-            <h1>Trending Games</h1>
+            <h1 class="trending-head">TRENDING GAMES</h1>
             <div class="trending-featured1"><Featured1 gameData={gameData0} screenshots={screenshots} /></div>
             <Featured2 gameData={gameData0} screenshots={screenshots} />
             <Featured2 gameData={gameData1} screenshots={screenshots} />
