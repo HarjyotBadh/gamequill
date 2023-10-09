@@ -7,7 +7,7 @@ export default function Featured1({ gameData, screenshots }) {
     if (!gameData) {
         return (
             <div class="image-cont rounded-corners">
-                <div class="image-container">
+                <div class="image-container2">
                     <img src={tempscreenshot} alt="Pikmin Test"/>
                 </div>
             </div>
