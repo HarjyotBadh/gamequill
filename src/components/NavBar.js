@@ -1,7 +1,52 @@
 import { Link } from "react-router-dom";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../images/gamequill.png";
+import { getAuth, signOut } from "firebase/auth";
+
 function App() {
+
+  const [user, setUser] = useState(null);
+  const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
+
+  useEffect(() => {
+    const auth = getAuth();
+
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        // User is logged in
+        setUser(authUser);
+      } else {
+        // User is not logged in
+        setUser(null);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  const handleLogout = () => {
+    setShowLogoutConfirmation(true);
+  };
+
+  const confirmLogout = async () => {
+    const auth = getAuth();
+
+    try {
+      await signOut(auth);
+      setShowLogoutConfirmation(false);
+      // Redirect to the home page or another desired page after logging out.
+      window.location.href = "/home";
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutConfirmation(false);
+  };
+
   return (
     <nav class="bg-white border-gray-200 dark:bg-gray-600">
       <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -36,16 +81,32 @@ function App() {
               </Link>
             </li>
             <li>
-              <Link
-                to="/Login"
-                class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-500 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                Login/Sign Up
-              </Link>
+          {user ? (
+            <button
+              onClick={handleLogout}
+              class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-500 dark:hover:text-white md:dark:hover:bg-transparent"
+            >
+              Log Out
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              class="block py-2 pl-3 pr-4 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-500 dark:hover:text-white md:dark:hover:bg-transparent"
+            >
+              Login/Sign Up
+            </Link>
+          )}
             </li>
           </ul>
         </div>
       </div>
+      {showLogoutConfirmation && (
+    <div className="logout-confirmation-popup">
+      <p>Are you sure you want to log out?</p>
+      <button onClick={confirmLogout}>OK</button>
+      <button onClick={cancelLogout}>Cancel</button>
+    </div>
+  )}
     </nav>
   );
 }

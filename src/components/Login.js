@@ -16,7 +16,7 @@ function Login() {
 
   return (
     <div className="login-container">
-      <img src={gamequillLogo} alt="GameQuill Logo" className="logo" />
+      <img src={gamequillLogo} alt="GameQuill Logo" className="image-container" />
       <h1 className="login-page-title">Login Page</h1>
       <form onSubmit={handleSubmit} className="form-container">
         <div className="form-input">

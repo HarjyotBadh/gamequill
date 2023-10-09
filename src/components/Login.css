@@ -6,6 +6,12 @@
   height: 100vh;
 }
 
+.image-container {
+  width: 45%; /* Adjust the width as desired */
+  height: 45%; /* Adjust the height as desired */
+  /* You can also add other styles as needed */
+}
+
 .logo {
   max-width: 200px;
   margin-bottom: 20px;
