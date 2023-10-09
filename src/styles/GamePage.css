@@ -1,5 +1,21 @@
+:root {
+    /* Light theme */
+    --wrapper-light: #f3f4f6;
+
+    /* Dark theme */
+    --wrapper-dark: #646d77;
+}
+
+[data-theme="dark"] {
+    --wrapper: var(--wrapper-dark);
+}
+
+[data-theme="light"] {
+    --wrapper: var(--wrapper-light);
+}
+
 .game-page-wrapper {
-    background-color: #f3f4f6;
+    background-color: var(--wrapper);
     min-height: 100vh;
 }
 
@@ -7,10 +23,11 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    flex-wrap: wrap; 
-    gap: 20px; 
-    max-width: 90%; 
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 90%;
     margin: 0 auto;
+    /* border: 1px solid rgb(0, 4, 255); */
 }
 
 .left-content {
@@ -18,16 +35,14 @@
     display: flex;
     gap: 5px;
     overflow: auto;
-    border: 1px solid rgb(0, 255, 119);
+    /* border: 1px solid rgb(255, 0, 247); */
     margin-top: 20px;
-    
+    flex-direction: row;
+    height: 100%;
 }
 
-
 .right-content {
-    flex-basis: 100%; 
+    flex-basis: 100%;
     width: 100%;
     /* border: 1px solid blue; */
 }
-
-
