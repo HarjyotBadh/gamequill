@@ -29,7 +29,7 @@ function Register() {
 
   const checkUsernameAvailability = async (proposedUsername) => {
     const firestore = getFirestore();
-    const usersCollection = collection(firestore, "users");
+    const usersCollection = collection(firestore, "profileData");
 
     const q = query(usersCollection, where("username", "==", proposedUsername));
     const querySnapshot = await getDocs(q);
@@ -69,6 +69,7 @@ function Register() {
 
     const auth = getAuth();
     const firestore = getFirestore();
+    const profileDataCollection = collection(firestore, "profileData"); // Change the collection reference to "profileData"
 
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -78,14 +79,17 @@ function Register() {
       );
 
       const userData = {
+        bio: "",
         username,
         email,
         pronouns,
         favoriteGames: [],
         favoriteGenres: [],
+        name: "",
+        profilePicture: ""
       };
 
-      await addDoc(collection(firestore, "users"), userData);
+      await addDoc(profileDataCollection, userData); // Store user data in "profileData" collection
 
       const user = userCredential.user;
       console.log("Registration successful:", user);
