@@ -6,6 +6,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Login from "./components/Login"; // Import your Login component
 import Register from "./components/Register"; // Import your Register componen
+import ResetPassword from "./components/ResetPassword"; // Import the ResetPassword component
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       {/* This will render the Login component */}
       <Route path="/register" element={<Register />} />{" "}
       {/* This will take you to register page*/}
+      <Route path="/reset-password" element={<ResetPassword />} />{" "}
       <Route path="/home" element={<HomePage />} />
       <Route path="/game" element={<GamePage />} />
     </Routes>

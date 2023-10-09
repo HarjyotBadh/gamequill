@@ -1,36 +1,119 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import Link for routing
+import { Link } from "react-router-dom";
 import gamequillLogo from "../images/gamequill.png";
-import "./Register.css"; // Import the CSS file
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import "./Register.css";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 
 function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [pronouns, setPronouns] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordMatchError, setPasswordMatchError] = useState("");
+  const [registrationError, setRegistrationError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
 
-  const handleSubmit = (e) => {
-    console.log("Submit button clicked");
+  const checkUsernameAvailability = async (proposedUsername) => {
+    const firestore = getFirestore();
+    const usersCollection = collection(firestore, "profileData");
+
+    const q = query(usersCollection, where("username", "==", proposedUsername));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      setUsernameError("Username is already taken");
+      return false;
+    }
+
+    setUsernameError("");
+    return true;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (password.length < 6) {
+      setPasswordError("Password should be at least 6 characters long");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setPasswordMatchError("Passwords do not match");
+      return;
+    }
+
+    setPasswordError("");
+    setPasswordMatchError("");
+    setRegistrationError("");
+    setUsernameError("");
+
+    const isUsernameAvailable = await checkUsernameAvailability(username);
+
+    if (!isUsernameAvailable) {
+      return;
+    }
+
     const auth = getAuth();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        console.log("Registration successful:", user);
-        window.location.href = "/home";
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log("Registration failed:", errorCode, errorMessage);
-      });
+    const firestore = getFirestore();
+    const profileDataCollection = collection(firestore, "profileData"); // Change the collection reference to "profileData"
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const userData = {
+        bio: "",
+        username,
+        email,
+        pronouns,
+        favoriteGames: [],
+        favoriteGenres: [],
+        name: "",
+        profilePicture: ""
+      };
+
+      await addDoc(profileDataCollection, userData); // Store user data in "profileData" collection
+
+      const user = userCredential.user;
+      console.log("Registration successful:", user);
+      window.location.href = "/home";
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log("Registration failed:", errorCode, errorMessage);
+      setRegistrationError(errorMessage);
+      setShowPopup(true);
+    }
+  };
+
+  const closePopup = () => {
+    setShowPopup(false);
   };
 
   return (
     <div className="register-container">
-      <img src={gamequillLogo} alt="GameQuill Logo" className="logo" />
+      <img
+        src={gamequillLogo}
+        alt="GameQuill Logo"
+        className="image-container"
+      />
       <h1 className="register-title">Register</h1>
       <form onSubmit={handleSubmit} className="register-form">
         <div className="form-input">
@@ -42,6 +125,9 @@ function Register() {
             onChange={(e) => setUsername(e.target.value)}
             required
           />
+          {usernameError && (
+            <p className="error-message">{usernameError}</p>
+          )}
         </div>
         <div className="form-input">
           <label htmlFor="email">Email:</label>
@@ -62,6 +148,7 @@ function Register() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          {passwordError && <p className="error-message">{passwordError}</p>}
         </div>
         <div className="form-input">
           <label htmlFor="confirmPassword">Confirm Password:</label>
@@ -72,11 +159,32 @@ function Register() {
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
+          {passwordMatchError && (
+            <p className="error-message">{passwordMatchError}</p>
+          )}
+        </div>
+        <div className="form-input">
+          <label htmlFor="pronouns">Pronouns:</label>
+          <input
+            type="text"
+            id="pronouns"
+            value={pronouns}
+            onChange={(e) => setPronouns(e.target.value)}
+            required
+          />
         </div>
         <button type="submit" className="register-button">
           Register
         </button>
       </form>
+      {registrationError && showPopup && (
+        <div className="popup-container">
+          <div className="popup">
+            <p className="popup-message">{registrationError}</p>
+            <button onClick={closePopup}>OK</button>
+          </div>
+        </div>
+      )}
       <p>
         Already have an account? <br />{" "}
         <Link to="/login" className="link-to-login">

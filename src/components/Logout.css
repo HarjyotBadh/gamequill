@@ -1,0 +1,6 @@
+.logout-button-no-background {
+  background-color: transparent;
+}
+.logout-button-no-background:hover {
+  background-color: transparent;
+}
