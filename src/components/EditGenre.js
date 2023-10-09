@@ -1,8 +1,9 @@
 import Popup from "reactjs-popup";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import "../styles/EditGenre.css";
 export default function EditGenre({ genres, setGenres }) {
   const uid = "GPiU3AHpvyOhnbsVSzap";
   const gameGenres = [
@@ -33,6 +34,7 @@ export default function EditGenre({ genres, setGenres }) {
   const [selectedOptions, setSelectedOptions] = useState(
     genres.map((genre) => gameGenres.find((g) => g.value === genre))
   );
+
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState(false);
   const handleSelectChange = async (selectedOptions) => {
@@ -46,7 +48,7 @@ export default function EditGenre({ genres, setGenres }) {
   };
   const handleSave = async () => {
     const updatedGenres = selectedOptions.map((option) => option.value);
-    console.log("genres: ", updatedGenres);
+    //console.log("genres: ", updatedGenres);
     const docRef = doc(db, "profileData", uid);
     try {
       await updateDoc(docRef, {
@@ -105,16 +107,21 @@ export default function EditGenre({ genres, setGenres }) {
               You can only select a maximum of 4 genres.
             </div>
           )}
-          <button onClick={handleSave}>Save</button>
-          <button
-            type="close"
-            onClick={() => {
-              if (saved) window.location.reload();
-              close();
-            }}
-          >
-            Close
-          </button>
+          <div className="button-container">
+            <button className="save-button" onClick={handleSave}>
+              Save
+            </button>
+            <button
+              type="close"
+              className="close-button"
+              onClick={() => {
+                if (saved) window.location.reload();
+                close();
+              }}
+            >
+              Close
+            </button>
+          </div>
         </div>
       )}
     </Popup>
