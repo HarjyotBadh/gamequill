@@ -41,7 +41,7 @@ img {
 
 
 /* Style the gradient overlay */
-.image-container::before {
+.image-container2::before {
     content: ''; /* Required for the pseudo-element to be displayed */
     position: absolute;
     top: 0;
@@ -54,7 +54,7 @@ img {
 }
 
 /* Style the image */
-.image-container img {
+.image-container2 img {
     display: block;
     width: 100%;
     height: auto;
