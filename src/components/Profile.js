@@ -5,10 +5,25 @@ import ProfileTitleCard from "./ProfileTitleCard";
 import EditGames from "./EditGames";
 import "../styles/Profile.css";
 import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
+import EditGenre from "./EditGenre";
 
 function Profile({ profileData, setProfileData }) {
   const [gameCovers, setGameCovers] = useState([]);
-  const uid = "GPiU3AHpvyOhnbsVSzap";
+  const [genres, setGenres] = useState([]);
+
+  const auth = getAuth();
+  //console.log("User: ", auth.currentUser.uid);
+  //const uid = "GPiU3AHpvyOhnbsVSzap";
+  var uid;
+  if (auth.currentUser == null) {
+    //window.location.href = "/login";
+    uid = "GPiU3AHpvyOhnbsVSzap";
+  } else {
+    uid = auth.currentUser.uid;
+  }
+  //
+  //const uid = auth.currentUser.uid;
   const docRef = doc(db, "profileData", uid);
 
   useEffect(() => {
@@ -37,6 +52,7 @@ function Profile({ profileData, setProfileData }) {
 
       const covers = await Promise.all(coverPromises);
       setGameCovers(covers);
+      setGenres(profileData.favoriteGenres);
     };
 
     fetchCovers();
@@ -49,7 +65,7 @@ function Profile({ profileData, setProfileData }) {
         <div className="flex flex-col items-center">
           <div className="Profile Picture">
             <img
-              className="rounded-full w-32 h-32"
+              className="rounded-full w-32 h-32 border-2 dark:border-white border-black"
               src={profileData.profilePicture}
               alt="Profile Picture"
             />
@@ -93,7 +109,10 @@ function Profile({ profileData, setProfileData }) {
           <ProfileTitleCard gameData={gameCovers[3]} />
         </div>
       </div>
-      <div className="ml-20 dark:text-white text-black">Favorite Genres</div>
+      <div className="ml-20 dark:text-white text-black flex gap-4">
+        Favorite Genres
+        <EditGenre genres={genres} setGenres={setGenres} />
+      </div>
       <div className="FavoriteGenres flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-whitetext-black">
         {profileData.favoriteGenres.map((genre, index) => (
           <div

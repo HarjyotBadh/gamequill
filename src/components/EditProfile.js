@@ -8,6 +8,7 @@ import "../styles/EditProfile.css";
 export default function EditProfile({ profileData, setProfileData }) {
   console.log(profileData);
   const uid = "GPiU3AHpvyOhnbsVSzap";
+  const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
     setFormData({
@@ -25,15 +26,13 @@ export default function EditProfile({ profileData, setProfileData }) {
     profilePicture: "",
   });
 
-  const [hasChanges, setHasChanges] = useState(false);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
-    //setHasChanges(true);
+    setHasChanges(true);
   };
 
   const handleFileUpload = async (e) => {
@@ -64,6 +63,7 @@ export default function EditProfile({ profileData, setProfileData }) {
       ...prevProfileData,
       ...updatedFormData,
     }));
+    await setHasChanges(true);
   };
 
   return (
@@ -117,17 +117,15 @@ export default function EditProfile({ profileData, setProfileData }) {
                 name="profile picture"
               />
             </div>
-            <button type="submit" onClick={setHasChanges(true)}>
-              Save
-            </button>
+            <button type="submit">Save</button>
             <button
               type="close"
               onClick={() => {
-                close();
                 if (hasChanges) {
-                  window.location.reload();
                   setHasChanges(false);
+                  window.location.reload();
                 }
+                close();
               }}
             >
               Close
