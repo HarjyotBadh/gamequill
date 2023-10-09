@@ -1,5 +1,6 @@
 import React from 'react';
 import "../styles/UserActivity.css";
+import tempcover from "../images/temp_images/tempcover.png";
 
 
 function truncateString(str, maxLength = 165) {
@@ -12,6 +13,11 @@ function truncateString(str, maxLength = 165) {
   }
 
 export default function Featured1({ cover, username, rating, note }) {
+
+    if (!cover) {
+        cover = tempcover;
+    }
+
     username = "furmanek"
     rating = 5
     note = truncateString("The Legend of Zelda: Breath of the Wild’s sheer freedom and sense of adventure is a remarkable achievement. Right from the start, the vast landscape of Hyrule is thrown completely open to you, and it constantly finds ways to pique your curiosity with mysterious landmarks, complex hidden puzzles, and enemy camps to raid for treasure and weapons. The fact that you can tackle any one of these things at your own pace and almost never get");

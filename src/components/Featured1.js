@@ -1,9 +1,18 @@
 import React from 'react';
 import '../styles/Featured1.css';
+import tempscreenshot from "../images/temp_images/tempscreenshot.png";
 
 export default function Featured1({ gameData, screenshots }) {
-    if (!gameData) return <div>Loading...</div>;
 
+    if (!gameData) {
+        return (
+            <div class="image-cont rounded-corners">
+                <div class="image-container">
+                    <img src={tempscreenshot} alt="Pikmin Test"/>
+                </div>
+            </div>
+        )
+    }
     var imageUrl = screenshots[0];
 
     // @TODO: Replace rating with our rating system.
