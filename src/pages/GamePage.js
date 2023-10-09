@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { getAuth } from "firebase/auth";
 import NavBar from "../components/NavBar";
 import TitleCard from "../components/TitleCard";
 import MediaPlayer from "../components/MediaPlayer";
@@ -9,16 +11,51 @@ export default function GamePage({game_id}) {
     const [gameData, setGameData] = useState(null);
     const [screenshots, setScreenshots] = useState([]);
     const [videos, setVideos] = useState([]);
+    const [searchParams] = useSearchParams();
+    game_id = searchParams.get("game_id");
+    console.log("The game id is: " + game_id);
 
-    const sample_id = 96437;
+    // Get signed in user
+    const auth = getAuth();
+
+    // If user is signed in continue, otherwise bring them to login page
+    if (!auth.currentUser) {
+        window.location.href = "/login";
+    }
+    const user = auth.currentUser;
+    console.log("The current user is: " + user.uid );
+
+    const sample_id = 119388;
     // Cyberpunk 2077: 1877
     // ToTK: 119388
     // Starfield: 96437
     // Minecraft: 135400
     // Skyrim: 165192
 
-    game_id = sample_id;
+    // game_id = sample_id;
+
+    // Sets dark mode based on user's system preferences
+    const [darkMode, setDarkMode] = React.useState(
+        () =>
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+    );
+
+
+
+    // Sets dark mode based on user's system preferences
+    React.useEffect(() => {
+        const matcher = window.matchMedia("(prefers-color-scheme: dark)");
+        const onChange = (e) => setDarkMode(e.matches);
+
+        matcher.addListener(onChange);
+
+        return () => {
+            matcher.removeListener(onChange);
+        };
+    }, []);
     
+    // Fetch game data from IGDB API
     useEffect(() => {
         const corsAnywhereUrl = "http://localhost:8080/";
         const apiUrl = "https://api.igdb.com/v4/games";
@@ -33,7 +70,7 @@ export default function GamePage({game_id}) {
                     'Authorization': 'Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp',
                 },
                 body: `
-                fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name;
+                fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*;
                     where id = ${game_id};
                     `
 
@@ -63,11 +100,11 @@ export default function GamePage({game_id}) {
     }, [game_id]);
 
 
-    // @TODO: When requesting the similar games data, that can all be done through one request to IGDB.
-    //        You can send an array of IDs to the API, and that will return all the games.
-    //        Ex:   (ID1, ID2, ID3)      - See Mulitple Game Request
     return (
-        <div className="game-page-wrapper">
+        <div
+        className={`game-page-wrapper ${darkMode ? "dark" : "light"}`}
+        data-theme={darkMode ? "dark" : "light"}
+        >
             <NavBar />
     
             <div className="game-content-container">
@@ -82,8 +119,5 @@ export default function GamePage({game_id}) {
             </div>
         </div>
     );
-    
-    
-    
-    
+
 }

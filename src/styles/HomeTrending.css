@@ -1,7 +1,7 @@
 .trending-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Create a 12-column grid */
-    gap: 10px; /* Adjust the gap between grid items as needed */
+    gap: 6.5px; /* Adjust the gap between grid items as needed */
     margin-bottom: 50px;
 }
 
@@ -9,6 +9,7 @@
     grid-column: 1 / span 2;
 }
 
-h1 {
-    font-size: 30px;
+.trending-head {
+    font-size: 20px;
+    font-weight: bold;
 }

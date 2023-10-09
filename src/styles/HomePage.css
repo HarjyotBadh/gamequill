@@ -1,7 +1,7 @@
 .grid-container {
     display: grid;
     grid-template-columns: repeat(12, 1fr); /* Create a 12-column grid */
-    gap: 10px; /* Adjust the gap between grid items as needed */
+    gap: 13px; /* Adjust the gap between grid items as needed */
 }
   
 .grid-pad {
@@ -13,9 +13,5 @@
 }
 
 .grid-activity {
-    background-color: #ccc;
     grid-column: 8 / span 4;
-    padding: 30px;
-    border-radius: 25px;
-    height: 700px;
 }

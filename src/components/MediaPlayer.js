@@ -1,11 +1,22 @@
 import React from 'react';
+import { useState } from 'react';
 import YouTube from 'react-youtube';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
 import '../styles/MediaPlayer.css';
+import Popup from 'reactjs-popup';
+
 
 const MediaPlayer = ({ screenshots, youtubeLinks }) => {
+    const [open, setOpen] = useState(false);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+    const closeModal = () => {
+        setOpen(false);
+        setSelectedImageIndex(null);
+    };
+    
+    // Options for the YouTube player
     const opts = {
         height: '100%',
         width: '100%',
@@ -15,6 +26,7 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
         
     };
 
+    // Options for the image slider
     const settings = {
         dots: true,
         infinite: true,
@@ -25,21 +37,48 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
       };
 
       return (
-        <Slider className='media-slider-container img'{...settings}>
-            {screenshots.map((screenshotURL, index) => (
-                <div key={index}>
-                    <img src={screenshotURL} alt={`screenshot-${index}`} />
-                </div>
-            ))}
-    
-            {youtubeLinks.map((videoId, index) => (
-                <div key={videoId} className="youtube-video-wrapper">
-                    <YouTube videoId={videoId} opts={opts} />
-                </div>
-            ))}
-        </Slider>
-    );
+          <>
+              <Slider className="media-slider-container img" {...settings}>
+                  {screenshots.map((screenshotURL, index) => (
+                      <div key={index}>
+                          <button onClick={() => {
+                              setSelectedImageIndex(index);
+                              setOpen(true);
+                          }}>
+                              <img
+                                  src={screenshotURL}
+                                  alt={`screenshot-${index}`}
+                              />{" "}
+                          </button>
+                      </div>
+                  ))}
+
+                  {youtubeLinks.map((videoId, index) => (
+                      <div key={videoId} className="youtube-video-wrapper">
+                          <YouTube videoId={videoId} opts={opts} />
+                      </div>
+                  ))}
+              </Slider>
+
+              <Popup open={open} closeOnDocumentClick onClose={closeModal}>
+                  <div className="modal">
+                      <a className="close" onClick={closeModal}>
+                          &times;
+                      </a>
+                      {selectedImageIndex !== null && (
+                          <img
+                              src={screenshots[selectedImageIndex]}
+                              alt={`screenshot-${selectedImageIndex}`}
+                              className="enlarged-image"
+                          />
+                      )}
+                  </div>
+              </Popup>
+          </>
+      );
     
 };
 
 export default MediaPlayer;
+
+

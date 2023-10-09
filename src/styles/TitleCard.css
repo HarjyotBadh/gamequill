@@ -1,15 +1,49 @@
+:root {
+    /* Light theme */
+    --background-light: #fafafa;
+    --text-color-light: #333;
+    --secondary-text-color-light: #555;
+    --rating-color-light: #618edb;
+    --star-color-light: #bbbac0;
+
+    /* Dark theme */
+    --background-dark: #4b5563;
+    --text-color-dark: #f5f5f5;
+    --secondary-text-color-dark: #CAC7C7;
+    --rating-color-dark: #92a8d1;
+    --star-color-dark: #bbbac0;
+}
+
+[data-theme="dark"] {
+    --background: var(--background-dark);
+    --text-color: var(--text-color-dark);
+    --secondary-text-color: var(--secondary-text-color-dark);
+    --rating-color: var(--rating-color-dark);
+    --star-color: var(--star-color-dark);
+}
+
+[data-theme="light"] {
+    --background: var(--background-light);
+    --text-color: var(--text-color-light);
+    --secondary-text-color: var(--secondary-text-color-light);
+    --rating-color: var(--rating-color-light);
+    --star-color: var(--star-color-light);
+}
+
 .game-card {
-    background-color: #fafafa; /* Consistent with the previous background color */
+    background-color: var(--background);
     border: 1px solid #ddd;
     padding: 2% 4%; 
     margin: 1% 2%;
-    border-radius: 20px; /* Rounded Corners */
+    border-radius: 20px;
     width: 90%;
     max-width: 250px;
     text-align: center;
     box-sizing: border-box;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-height: 565px;
+    /* border: 1px solid rgb(0, 255, 119); */
 }
 
 .game-card:hover {
@@ -32,7 +66,7 @@
 
 .game-card img {
     width: 100%;
-    max-height: 300px;
+    max-height: 200px;
     object-fit: cover;
     border-radius: 20px 20px 20px 20px;
     margin-bottom: 20px;
@@ -40,13 +74,13 @@
 
 .game-card h2 {
     font-weight: 700;
-    color: #333; 
+    color: var(--text-color); 
     margin-bottom: 16px;
-    font-size: 2.5rem;
+    
 }
 
 .game-card p {
-    color: #555; 
+    color: var(--secondary-text-color); 
     line-height: 1.5; 
     margin-bottom: 16px;
 }
@@ -55,7 +89,7 @@
     font-size: 25px;
     font-weight: bold;
     text-align: center;
-    color: #618edb;
+    color: var(--rating-color);
     margin-bottom: 8px; /* Add some spacing before the stars */
 }
 
@@ -79,11 +113,11 @@
 }
 
 .fullStar {
-    color: #618edb;
+    color: var(--rating-color);
 }
 
 .halfStar {
-    color: #bbbac0;  
+    color: var(--star-color); 
 }
 
 .halfStar::before {
@@ -91,7 +125,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    color: #618edb;  
+    color: var(--rating-color);
     clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
     width: 20px;
     height: 20px;
@@ -100,5 +134,5 @@
 }
 
 .emptyStar {
-    color: #bbbac0; 
+    color: var(--star-color); 
 }
