@@ -16,7 +16,7 @@ function Register() {
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // Signed in 
+        // Signed in
         const user = userCredential.user;
         console.log("Registration successful:", user);
         window.location.href = "/home";
@@ -80,7 +80,7 @@ function Register() {
       <p>
         Already have an account? <br />{" "}
         <Link to="/login" className="link-to-login">
-        Login here
+          Login here
         </Link>
       </p>
     </div>

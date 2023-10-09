@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import "../styles/HomeTrending.css";
-import Featured1 from "./Featured1";
-import Featured2 from "./Featured2";
+import "../styles/HomeActivity.css";
+import UserActivity from "./UserActivity";
 
 function App() {
+    const [gameCover0, setGameCover0] = useState(null);
     const [gameData0, setGameData0] = useState(null);
-    const [screenshots, setScreenshots] = useState([]);
-    const [gameData1, setGameData1] = useState(null);
     const game_id = [7346, 2240, 2241];
 
     useEffect(() => {
@@ -22,7 +20,7 @@ function App() {
                     'Authorization': 'Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp',
                 },
                 body: `
-                    fields name,screenshots.url,cover.url,rating,aggregated_rating;
+                    fields cover.url;
                     where id = ${game_id[0]};
                 `
             })
@@ -32,8 +30,10 @@ function App() {
                     const game = data[0];
                     setGameData0(game);
 
-                    const screenshotUrls = game.screenshots ? game.screenshots.map(s => s.url.replace('t_thumb', 't_1080p')) : [];
-                    setScreenshots(screenshotUrls);
+                    console.log("game.cover.url:  " + game.cover.url);
+                    const gameUrl = game.cover.url.replace('t_thumb', 't_1080p');
+                    setGameCover0(gameUrl);
+                    console.log("gameCover0: " + gameCover0);
                 }
             })
             .catch(err => {
@@ -60,7 +60,7 @@ function App() {
             })
             .then(response => response.json())
             .then(data => {
-                if (data.length) setGameData1(data[0]);
+                //if (data.length) setGameData1(data[0]);
             })
             .catch(err => {
                 console.error(err);
@@ -68,13 +68,13 @@ function App() {
     }, [game_id[1]]);
 
     return (
-        <div class="trending-container">
-            <h1 class="trending-head">TRENDING GAMES</h1>
-            <div class="trending-featured1"><Featured1 gameData={gameData0} screenshots={screenshots} /></div>
-            <Featured2 gameData={gameData0} screenshots={screenshots} />
-            <Featured2 gameData={gameData1} screenshots={screenshots} />
-            <Featured2 gameData={gameData0} screenshots={screenshots} />
-            <Featured2 gameData={gameData0} screenshots={screenshots} />
+        <div>
+            <div class="activity-container">
+                <h1 class="user-head">YOUR FRIENDS HAVE LIKED...</h1>
+                <div class="user-activity"><UserActivity cover={gameCover0}/></div>
+                <div class="user-activity"><UserActivity /></div>
+                <div class="user-activity"><UserActivity /></div>
+            </div>
         </div>
     );
   }

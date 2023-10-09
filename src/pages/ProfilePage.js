@@ -4,7 +4,18 @@ import Profile from "../components/Profile";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import DefaultProfilePicture from "../images/defaultProfilePicture.png";
-export default function ProfilePage({ accountNumber }) {
+import { getAuth } from "firebase/auth";
+export default function ProfilePage({}) {
+  const auth = getAuth();
+  var uid;
+  if (auth.currentUser == null) {
+    //window.location.href = "/login";
+    uid = "GPiU3AHpvyOhnbsVSzap";
+  } else {
+    uid = auth.currentUser.uid;
+    console.log("User: ", auth.currentUser.uid);
+  }
+
   const defaultProfileData = {
     profilePicture: DefaultProfilePicture,
     bio: "my bio",
@@ -23,7 +34,7 @@ export default function ProfilePage({ accountNumber }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const docRef = doc(db, "profileData", accountNumber);
+      const docRef = doc(db, "profileData", uid);
       // const snapshot = await getDocs(
       //   collection(db, "profileData", accountNumber)
       // );

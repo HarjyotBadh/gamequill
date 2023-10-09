@@ -1,0 +1,66 @@
+.genre-modal {
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  .select-container {
+    margin-bottom: 20px;
+  }
+  
+  .select-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 50px; /* Increased margin for space */
+    align-items: center;
+  }
+  
+  .save-button {
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  width: 150px;
+  }
+  
+  .close-button {
+    border: 2px solid #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  width: 150px;
+  }
+  
+  .button:hover {
+    opacity: 0.8;
+  }
+
+  
