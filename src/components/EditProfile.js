@@ -8,6 +8,7 @@ import "../styles/EditProfile.css";
 export default function EditProfile({ profileData, setProfileData }) {
   console.log(profileData);
   const uid = "GPiU3AHpvyOhnbsVSzap";
+  const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
     setFormData({
@@ -24,8 +25,6 @@ export default function EditProfile({ profileData, setProfileData }) {
     bio: profileData.bio || "",
     profilePicture: "",
   });
-
-  const [hasChanges, setHasChanges] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -64,6 +63,7 @@ export default function EditProfile({ profileData, setProfileData }) {
       ...prevProfileData,
       ...updatedFormData,
     }));
+    await setHasChanges(true);
   };
 
   return (
@@ -121,10 +121,11 @@ export default function EditProfile({ profileData, setProfileData }) {
             <button
               type="close"
               onClick={() => {
-                close();
                 if (hasChanges) {
+                  setHasChanges(false);
                   window.location.reload();
                 }
+                close();
               }}
             >
               Close

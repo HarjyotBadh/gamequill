@@ -1,0 +1,49 @@
+@media (prefers-color-scheme: dark) {
+  .FavoriteGames,
+  .FavoriteGenres {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-left: 100px;
+    border: 1px solid white;
+    width: 450px;
+    height: 150px;
+    padding: 10px;
+    gap: 10px;
+    color: white;
+  }
+  
+  .FavoriteGames > div,
+  .FavoriteGenres > div {
+    border: 1px solid white;
+    width: 100px;
+    height: 125px;
+    text-align: center;
+  }
+  
+}
+@media (prefers-color-scheme: light) {
+  .FavoriteGames,
+  .FavoriteGenres {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-left: 100px;
+    border: 1px solid black;
+    width: 450px;
+    height: 150px;
+    padding: 10px;
+    gap: 10px;
+    color: black;
+  }
+  
+  .FavoriteGames > div,
+  .FavoriteGenres > div {
+    border: 1px solid black;
+    width: 100px;
+    height: 125px;
+    text-align: center;
+  }
+  
+}
+  

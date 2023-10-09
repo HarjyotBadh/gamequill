@@ -1,17 +1,86 @@
+// Import necessary dependencies and components
 import React, { useState, useEffect } from "react";
 import Popup from "reactjs-popup";
 import ProfileTitleCard from "./ProfileTitleCard";
-import "../styles/EditProfile.css";
-export default function EditGames({
-  profileData,
-  setProfileData,
-  gameCovers,
-  setGameCovers,
-}) {
+import "../styles/EditGames.css";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
+
+// Define the functional component EditGames and pass it the props gameCovers and setGameCovers
+export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
+  // Define state variables using the useState hook
   const [selectedGame, setSelectedGame] = useState(null);
+  const [selectedGameId, setSelectedGameId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [gameData, setGameData] = useState([]);
+  const [selectedSearchedGame, setSelectedSearchedGame] = useState(null);
+  const uid = "GPiU3AHpvyOhnbsVSzap";
+
+  // Define a function to handle replacing a favorite game
+  const handleReplaceFavorite = async () => {
+    if (selectedSearchedGame) {
+      const updatedFavorites = [...gameCovers];
+      updatedFavorites[gameCovers.indexOf(selectedGame)] =
+        selectedSearchedGame.coverUrl;
+      gameIds[gameIds.indexOf(selectedGameId)] = selectedSearchedGame.id;
+      setGameCovers(updatedFavorites);
+      setSelectedGame(null);
+      setSelectedSearchedGame(null); // Reset selected searched game
+      const docRef = doc(db, "profileData", uid);
+      try {
+        await updateDoc(docRef, {
+          favoriteGames: gameIds,
+        });
+        console.log("Favorite games updated successfully");
+      } catch (error) {
+        console.error("Error updating favorite games:", error);
+      }
+    }
+  };
+
+  // Define a function to handle the search functionality
+  const search = (e) => {
+    e.preventDefault();
+    const corsAnywhereUrl = "http://localhost:8080/";
+    const apiUrl = "https://api.igdb.com/v4/games";
+    console.log("Search: ", searchQuery);
+
+    fetch(corsAnywhereUrl + apiUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
+      },
+      body: `search "${searchQuery}";fields name,cover.url, id; limit:5; where category = (0,8,9);`,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.length) {
+          const gamesData = data.map((game) => ({
+            name: game.name,
+            coverUrl: game.cover && game.cover.url ? game.cover.url : null,
+            id: game.id,
+          }));
+          setGameData(gamesData);
+          console.log("gamesData", gamesData);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  // Define a function to handle the form submission
+  const handleSubmit = (e) => {
+    search(e);
+  };
+
+  // Return the JSX for the component
   return (
     <Popup
       trigger={
+        // Render a trigger element (SVG) for the Popup component
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -40,83 +109,110 @@ export default function EditGames({
       }}
     >
       {(close) => (
+        // Render the Popup component with a function as its child
         <div className="modal">
-          Choose Game To Replace
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              marginLeft: 175,
-              width: 450,
-              height: 150,
-              padding: 10,
-              gap: 10,
-              color: "white",
-            }}
-            className="FavoriteGames"
-          >
-            <div
-              className="GameCard Game1"
+          <form onSubmit={handleSubmit}>
+            {/* Form to handle game replacement */}
+            Choose Game To Replace
+            <div className="FavoriteGames">
+              {/* Map over gameCovers to display favorite games */}
+              {gameCovers.map((game, index) => (
+                <div
+                  key={index}
+                  className={`EditGameCard Game${index + 1}`}
+                  onClick={() => {
+                    setSelectedGame(game);
+                    setSelectedGameId(gameIds[index]);
+                  }}
+                >
+                  {/* Display the ProfileTitleCard for the game */}
+                  <ProfileTitleCard
+                    gameData={game === selectedGame ? selectedGame : game}
+                  />
+                </div>
+              ))}
+            </div>
+            <div>
+              {selectedGame ? (
+                <div>
+                  {/* Display the selected favorite game */}
+                  Selected Game:
+                  <div
+                    className="EditGameCard SelectedGame"
+                    style={{
+                      border: "1px solid white",
+                      width: 100,
+                      height: 125,
+                      textAlign: "center",
+                      cursor: "pointer",
+                    }}
+                  >
+                    <ProfileTitleCard gameData={selectedGame} />
+                  </div>
+                </div>
+              ) : null}
+            </div>
+            <div className="SearchBar">
+              {/* Input field for game search */}
+              <input
+                type="text"
+                name="gameSearch"
+                placeholder="Enter Game"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{ width: 300 }}
+              />
+            </div>
+            <button type="submit">Search</button>
+            {gameData[0] ? (
+              <div>
+                {/* Display searched games */}
+                Select Replacement Game
+                <div className="searchedGamesBox">
+                  {/* Map over gameData to display searched games */}
+                  {gameData.map((game, index) => (
+                    <div
+                      key={index}
+                      className={`EditGameCard SearchedGames ${
+                        game === selectedSearchedGame ? "selected" : ""
+                      }`}
+                      style={{
+                        width: 100,
+                        height: 125,
+                        textAlign: "center",
+                        cursor: "pointer",
+                      }}
+                      onClick={() => setSelectedSearchedGame(game)}
+                    >
+                      {/* Display the ProfileTitleCard for the searched game */}
+                      {game.coverUrl ? (
+                        <ProfileTitleCard gameData={game.coverUrl} />
+                      ) : (
+                        <div>No Cover Image Available</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                {/* Button to replace selected favorite */}
+                <button
+                  type="submit"
+                  onClick={handleReplaceFavorite}
+                  disabled={!selectedGame}
+                >
+                  Replace Selected Favorite
+                </button>
+              </div>
+            ) : null}
+            {/* Button to close the modal */}
+            <button
+              type="close"
               onClick={() => {
-                console.log("clicked");
-                setSelectedGame(gameCovers[0]);
+                close();
               }}
             >
-              <ProfileTitleCard gameData={gameCovers[0]} />
-            </div>
-            <div
-              className="GameCard Game2"
-              onClick={() => {
-                console.log("clicked");
-                setSelectedGame(gameCovers[1]);
-              }}
-            >
-              <ProfileTitleCard gameData={gameCovers[1]} />
-            </div>
-            <div
-              className="GameCard Game3"
-              onClick={() => {
-                console.log("clicked");
-                setSelectedGame(gameCovers[2]);
-              }}
-            >
-              <ProfileTitleCard gameData={gameCovers[2]} />
-            </div>
-            <div
-              className="GameCard Game4"
-              onClick={() => {
-                console.log("clicked");
-                setSelectedGame(gameCovers[3]);
-              }}
-            >
-              <ProfileTitleCard gameData={gameCovers[3]} />
-            </div>
-          </div>
-          <div>
-            Selected Game:
-            <div
-              className="GameCard SelectedGame"
-              style={{
-                border: "1px solid white",
-                width: 100,
-                height: 125,
-                textAlign: "center",
-                cursor: "pointer",
-                marginLeft: 350,
-              }}
-            >
-              <ProfileTitleCard gameData={selectedGame} />
-            </div>
-          </div>
-          <button
-            type="close"
-            onClick={() => {
-              close();
-            }}
-          >
-            Close
-          </button>
+              Close
+            </button>
+          </form>
         </div>
       )}
     </Popup>
