@@ -11,7 +11,7 @@
     --text-color-dark: #f5f5f5;
     --secondary-text-color-dark: #CAC7C7;
     --rating-color-dark: #92a8d1;
-    --star-color-dark: #555555;
+    --star-color-dark: #bbbac0;
 }
 
 [data-theme="dark"] {

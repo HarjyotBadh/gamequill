@@ -19,6 +19,7 @@ function Register() {
         // Signed in 
         const user = userCredential.user;
         console.log("Registration successful:", user);
+        window.location.href = "/home";
       })
       .catch((error) => {
         const errorCode = error.code;

@@ -3,7 +3,7 @@
     --wrapper-light: #f3f4f6;
 
     /* Dark theme */
-    --wrapper-dark: #646d77;
+    --wrapper-dark: rgb(107, 114, 128);
 }
 
 [data-theme="dark"] {

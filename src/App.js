@@ -12,7 +12,7 @@ function App() {
     <Routes>
       <Route path="/" element={<NavBar />} />
       <Route
-        path="/Profile"
+        path="/profile"
         element={<ProfilePage accountNumber="GPiU3AHpvyOhnbsVSzap" />}
       />
       <Route path="/test" element={<h1>Test</h1>} />{" "}
@@ -26,4 +26,5 @@ function App() {
     </Routes>
   );
 }
+
 export default App;
