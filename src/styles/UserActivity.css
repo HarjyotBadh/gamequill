@@ -1,0 +1,28 @@
+.user-container {
+    display: grid;
+    grid-template-columns: repeat(24, 1fr);
+}
+
+.user-cover {
+    grid-column: 1 / span 8;
+}
+
+.user-cover-rounded {
+    border-radius: 15px;
+}
+.user-text {
+    grid-column: 10 / span 16;
+}
+
+.user-name-rating {
+    font-size: 20px;
+}
+
+.user-note {
+    font-size: 15.8px;
+}
+
+.user-note-more {
+    color: gray;
+    margin-left: 5px;
+}

@@ -22,5 +22,6 @@ function App() {
       <Route path="/game" element={<GamePage />} />
     </Routes>
   );
+
 }
 export default App;

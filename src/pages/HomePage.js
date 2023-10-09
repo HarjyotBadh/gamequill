@@ -1,6 +1,7 @@
 import React from "react";
 import NavBar from "../components/NavBar";
 import HomeTrending from "../components/HomeTrending";
+import HomeActivity from "../components/HomeActivity";
 import "../styles/HomePage.css";
 
 function App() {
@@ -10,7 +11,7 @@ function App() {
             <div class="grid-container">
                 <div class="grid-pad"></div>
                 <div class="grid-featured"><HomeTrending /></div>
-                <div class="grid-activity">User Activity</div>
+                <div class="grid-activity"><HomeActivity /></div>
                 <div class="grid-pad"></div>
             </div>
         </div>
