@@ -13,6 +13,8 @@ function App() {
                 <div class="grid-featured"><HomeTrending /></div>
                 <div class="grid-activity"><HomeActivity /></div>
                 <div class="grid-pad"></div>
+                <div class="grid-pad"></div>
+                <div class="grid-recommend">a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a </div>
             </div>
         </div>
     );
