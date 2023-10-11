@@ -9,24 +9,19 @@ export default function ProfilePage({}) {
   const auth = getAuth();
   var uid;
   if (auth.currentUser == null) {
-    //window.location.href = "/login";
-    uid = "GPiU3AHpvyOhnbsVSzap";
+    window.location.href = "/login";
+    //uid = "GPiU3AHpvyOhnbsVSzap";
   } else {
     uid = auth.currentUser.uid;
-    console.log("User: ", auth.currentUser.uid);
+    //   console.log("User: ", auth.currentUser.uid);
   }
 
   const defaultProfileData = {
     profilePicture: DefaultProfilePicture,
     bio: "my bio",
     pronouns: "",
-    favoriteGames: [
-      "Spider-Man",
-      "God of War",
-      "Pokemon Platinum",
-      "Red Dead Redemption 2",
-    ],
-    favoriteGenres: ["Adventure", "FPS", "RPG", "Strategy"],
+    favoriteGames: ["", "", "", ""],
+    favoriteGenres: ["", "", "", ""],
     name: "John Doe",
   };
 

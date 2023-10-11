@@ -3,11 +3,20 @@ import Popup from "reactjs-popup";
 import { setDoc, doc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
 import "../styles/EditProfile.css";
 
 export default function EditProfile({ profileData, setProfileData }) {
   console.log(profileData);
-  const uid = "GPiU3AHpvyOhnbsVSzap";
+  //const uid = "GPiU3AHpvyOhnbsVSzap";
+  const auth = getAuth();
+  var uid;
+  if (auth.currentUser == null) {
+    window.location.href = "/login";
+    //uid = "GPiU3AHpvyOhnbsVSzap";
+  } else {
+    uid = auth.currentUser.uid;
+  }
   const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
@@ -23,7 +32,7 @@ export default function EditProfile({ profileData, setProfileData }) {
     name: profileData.name || "",
     pronouns: profileData.pronouns || "",
     bio: profileData.bio || "",
-    profilePicture: "",
+    profilePicture: profileData.profilePicture || "",
   });
 
   const handleInputChange = (e) => {
