@@ -1,19 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link for routing
 import gamequillLogo from "../images/gamequill.png";
 import "./Login.css";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth"; // Import Firebase Authentication
+import { getAuth, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, onAuthStateChanged } from "firebase/auth"; // Import Firebase Authentication
 
 function Login() {
   const [email, setEmail] = useState(""); // Add email state
   const [password, setPassword] = useState(""); // Add password state
   const [loginError, setLoginError] = useState(""); // State for login error message
 
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User is already signed in:", user);
+        window.location.href = "/home";
+      }
+    });
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const auth = getAuth();
+      await setPersistence(auth, browserLocalPersistence); // Set persistence to local
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       // User is successfully logged in here
       const user = userCredential.user;

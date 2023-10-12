@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import gamequillLogo from "../images/gamequill.png";
 import "./Register.css";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
+} from "firebase/auth";
+
 import {
   getFirestore,
   collection,
@@ -94,6 +100,7 @@ function Register() {
     const profileDataCollection = collection(firestore, "profileData"); // Change the collection reference to "profileData"
 
     try {
+      await setPersistence(auth, browserLocalPersistence);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
