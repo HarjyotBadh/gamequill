@@ -25,6 +25,7 @@ function Register() {
   const [passwordMatchError, setPasswordMatchError] = useState("");
   const [registrationError, setRegistrationError] = useState("");
   const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState(""); // Separate email error state
   const [showPopup, setShowPopup] = useState(false);
 
   const checkUsernameAvailability = async (proposedUsername) => {
@@ -40,6 +41,22 @@ function Register() {
     }
 
     setUsernameError("");
+    return true;
+  };
+
+  const checkEmailAvailability = async (proposedEmail) => {
+    const firestore = getFirestore();
+    const usersCollection = collection(firestore, "profileData");
+
+    const q = query(usersCollection, where("email", "==", proposedEmail));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      setEmailError("Email is already in use"); // Set the email error message
+      return false;
+    }
+
+    setEmailError(""); // Clear the email error if email is available
     return true;
   };
 
@@ -60,6 +77,12 @@ function Register() {
     setPasswordMatchError("");
     setRegistrationError("");
     setUsernameError("");
+
+    const isEmailAvailable = await checkEmailAvailability(email);
+
+    if (!isEmailAvailable) {
+      return;
+    }
 
     const isUsernameAvailable = await checkUsernameAvailability(username);
 
@@ -138,6 +161,9 @@ function Register() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+          {emailError && (
+          <p className="error-message">{emailError}</p>
+        )}
         </div>
         <div className="form-input">
           <label htmlFor="password">Password:</label>
