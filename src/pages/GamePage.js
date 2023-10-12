@@ -20,6 +20,8 @@ export default function GamePage({game_id}) {
         onAuthStateChanged(auth, (user) => {
           if (user) {
             console.log("User is already signed in:", user);
+          } else {
+            window.location.href = "/login";
           }
         });
       }, []);

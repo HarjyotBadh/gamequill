@@ -4,13 +4,13 @@ import Profile from "../components/Profile";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import DefaultProfilePicture from "../images/defaultProfilePicture.png";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 export default function ProfilePage({}) {
-  const auth = getAuth();
-  var uid;
+  // const auth = getAuth();
+  // var uid;
   // if (auth.currentUser == null) {
     //window.location.href = "/login";
-    uid = "GPiU3AHpvyOhnbsVSzap";
+    // uid = "GPiU3AHpvyOhnbsVSzap";
   // } else {
   //   uid = auth.currentUser.uid;
   //   console.log("User: ", auth.currentUser.uid);
@@ -31,6 +31,22 @@ export default function ProfilePage({}) {
   };
 
   const [profileData, setProfileData] = useState(defaultProfileData);
+
+
+  var auth;
+  var uid;
+
+  useEffect(() => {
+    auth = getAuth();
+    uid = auth.currentUser.uid;
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User is already signed in:", user);
+      } else {
+        window.location.href = "/login";
+      }
+    });
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {

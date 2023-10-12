@@ -1,5 +1,5 @@
 import NavBar from "./components/NavBar";
-import GamePage from "./pages/GamePage";
+import GamePageWrapper from "./components/GamePageWrapper";
 import ProfilePage from "./pages/ProfilePage";
 import HomePage from "./pages/HomePage";
 import React from "react";
@@ -14,14 +14,11 @@ function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/Profile" element={<ProfilePage />} />
       <Route path="/test" element={<h1>Test</h1>} />{" "}
-      {/* If you are at /test -> This will bring you to the Test Page */}
       <Route path="/login" element={<Login />} />{" "}
-      {/* This will render the Login component */}
       <Route path="/register" element={<Register />} />{" "}
-      {/* This will take you to register page*/}
       <Route path="/reset-password" element={<ResetPassword />} />{" "}
       <Route path="/home" element={<HomePage />} />
-      <Route path="/game" element={<GamePage />} />
+      <Route path="/game" element={<GamePageWrapper />} />
     </Routes>
   );
 
