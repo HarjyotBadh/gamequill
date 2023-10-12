@@ -5,7 +5,7 @@ import ProfileTitleCard from "./ProfileTitleCard";
 import EditGames from "./EditGames";
 import "../styles/Profile.css";
 import { db } from "../firebase";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import EditGenre from "./EditGenre";
 
 function Profile({ profileData, setProfileData }) {
@@ -15,16 +15,31 @@ function Profile({ profileData, setProfileData }) {
   const auth = getAuth();
   //console.log("User: ", auth.currentUser.uid);
   //const uid = "GPiU3AHpvyOhnbsVSzap";
-  var uid = "GPiU3AHpvyOhnbsVSzap";
   //
   //const uid = auth.currentUser.uid;
-  const docRef = doc(db, "profileData", uid);
 
   useEffect(() => {
+    // auth = getAuth();
+    // uid = auth.currentUser.uid;
+    // onAuthStateChanged(auth, (user) => {
+    //   if (user) {
+    //     console.log("User is already signed in:", user);
+    //     uid = auth.currentUser.uid;
+    //   } else {
+    //     window.location.href = "/login";
+    //   }
+    // });
     const corsAnywhereUrl = "http://localhost:8080/";
     const apiUrl = "https://api.igdb.com/v4/covers";
 
     const fetchCovers = async () => {
+      if (auth.currentUser == null) {
+        window.location.href = "/login";
+        //uid = "GPiU3AHpvyOhnbsVSzap";
+      } else {
+        uid = auth.currentUser.uid;
+      }
+      const docRef = doc(db, "profileData", uid);
       const docSnapshot = await getDoc(docRef);
       const favoriteGames = docSnapshot.data().favoriteGames || [];
       const coverPromises = favoriteGames.map(async (id) => {
