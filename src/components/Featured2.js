@@ -1,13 +1,20 @@
 import React from 'react';
 import '../styles/Featured2.css';
+import tempscreenshot from "../images/temp_images/tempscreenshot.png";
 
 export default function Featured1({ gameData, screenshots }) {
-    if (!gameData) return <div>Loading...</div>;
-
-    const bigCoverUrl = gameData.cover ? gameData.cover.url.replace("/t_thumb/", "/t_cover_big/") : null;
-    // Declare your variable containing the image URL
+    
+    if (!gameData) {
+        return (
+            <div class="image-cont rounded-corners">
+                <div class="image-container2">
+                    <img src={tempscreenshot} alt="Pikmin Test"/>
+                </div>
+            </div>
+        )
+    }
     var imageUrl = screenshots[0];
-    console.log("imageUrl: " + imageUrl);
+    var company = gameData.involved_companies[0].company.name;
 
     // Find the image element with the id "game-screenshot"
     var imageElement = document.getElementById("game-screenshot");
@@ -53,7 +60,7 @@ export default function Featured1({ gameData, screenshots }) {
             <div class="overlay"></div>
             <div class="text-overlay">
                 <div class="game-name2">{gameData.name}</div>
-                <div class="developer">Nintendo</div>
+                <div class="developer">{company}</div>
             </div>
         </div>
     );

@@ -14,6 +14,7 @@ export default function Featured1({ gameData, screenshots }) {
         )
     }
     var imageUrl = screenshots[0];
+    var company = gameData.involved_companies[0].company.name;
 
     // @TODO: Replace rating with our rating system.
     var rating = gameData.aggregated_rating;
@@ -53,7 +54,7 @@ export default function Featured1({ gameData, screenshots }) {
             <div class="overlay"></div>
             <div class="text-overlay">
                 <div class="game-name1">{gameData.name}</div>
-                <div class="developer1">{gameData.involved_companies}</div>
+                <div class="developer1">{company}</div>
             </div>
         </div>
     );
