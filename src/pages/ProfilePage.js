@@ -8,13 +8,13 @@ import { getAuth } from "firebase/auth";
 export default function ProfilePage({}) {
   const auth = getAuth();
   var uid;
-  if (auth.currentUser == null) {
+  // if (auth.currentUser == null) {
     //window.location.href = "/login";
     uid = "GPiU3AHpvyOhnbsVSzap";
-  } else {
-    uid = auth.currentUser.uid;
-    console.log("User: ", auth.currentUser.uid);
-  }
+  // } else {
+  //   uid = auth.currentUser.uid;
+  //   console.log("User: ", auth.currentUser.uid);
+  // }
 
   const defaultProfileData = {
     profilePicture: DefaultProfilePicture,
@@ -43,6 +43,9 @@ export default function ProfilePage({}) {
 
       if (!snapshot.empty) {
         const docData = snapshot.data();
+        if (docData.profilePicture == null) {
+          console.log("Profile picture is null==============================");
+        }
         const data = {
           profilePicture:
             docData.profilePicture || defaultProfileData.profilePicture,
@@ -58,6 +61,10 @@ export default function ProfilePage({}) {
       } else {
         setProfileData(defaultProfileData);
       }
+      // if (profileData.profilePicture == null) {
+      //   console.log("Profile picture is null==============================");
+      // }
+
       if (snapshot.exists()) {
         console.log("Doc data", snapshot.data());
       } else {

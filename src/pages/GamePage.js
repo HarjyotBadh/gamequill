@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import NavBar from "../components/NavBar";
 import TitleCard from "../components/TitleCard";
 import MediaPlayer from "../components/MediaPlayer";
@@ -15,15 +15,14 @@ export default function GamePage({game_id}) {
     game_id = searchParams.get("game_id");
     console.log("The game id is: " + game_id);
 
-    // Get signed in user
-    const auth = getAuth();
-
-    // If user is signed in continue, otherwise bring them to login page
-    if (!auth.currentUser) {
-        window.location.href = "/login";
-    }
-    const user = auth.currentUser;
-    console.log("The current user is: " + user.uid );
+    useEffect(() => {
+        const auth = getAuth();
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            console.log("User is already signed in:", user);
+          }
+        });
+      }, []);
 
     const sample_id = 119388;
     // Cyberpunk 2077: 1877

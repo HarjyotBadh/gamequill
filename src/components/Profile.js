@@ -7,21 +7,23 @@ import "../styles/Profile.css";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
 import EditGenre from "./EditGenre";
+import { Link } from "react-router-dom";
 
 function Profile({ profileData, setProfileData }) {
   const [gameCovers, setGameCovers] = useState([]);
   const [genres, setGenres] = useState([]);
+  const [gameIds, setGameIds] = useState([]);
 
-  const auth = getAuth();
+  // const auth = getAuth();
   //console.log("User: ", auth.currentUser.uid);
   //const uid = "GPiU3AHpvyOhnbsVSzap";
-  var uid;
-  if (auth.currentUser == null) {
+  // var uid;
+  // if (auth.currentUser == null) {
     //window.location.href = "/login";
-    uid = "GPiU3AHpvyOhnbsVSzap";
-  } else {
-    uid = auth.currentUser.uid;
-  }
+    const uid = "GPiU3AHpvyOhnbsVSzap";
+  // } else {
+  //   uid = auth.currentUser.uid;
+  // }
   //
   //const uid = auth.currentUser.uid;
   const docRef = doc(db, "profileData", uid);
@@ -53,6 +55,8 @@ function Profile({ profileData, setProfileData }) {
       const covers = await Promise.all(coverPromises);
       setGameCovers(covers);
       setGenres(profileData.favoriteGenres);
+
+      setGameIds(favoriteGames);
     };
 
     fetchCovers();
@@ -97,16 +101,24 @@ function Profile({ profileData, setProfileData }) {
       </div>
       <div className="FavoriteGames flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-white text-black">
         <div className="GameCover1 w-30 h-32 text-center border dark:border-white border-black">
-          <ProfileTitleCard gameData={gameCovers[0]} />
+          <Link to={`/game?game_id=${gameIds[0]}`}>
+            <ProfileTitleCard gameData={gameCovers[0]} />
+          </Link>
         </div>
         <div className="GameCover2 w-30 h-32 text-center border dark:border-white border-black">
+        <Link to={`/game?game_id=${gameIds[1]}`}>
           <ProfileTitleCard gameData={gameCovers[1]} />
+        </Link>
         </div>
         <div className="GameCover3 w-30 h-32 text-center border dark:border-white border-black">
+        <Link to={`/game?game_id=${gameIds[2]}`}>
           <ProfileTitleCard gameData={gameCovers[2]} />
+        </Link>
         </div>
         <div className="GameCover4 w-30 h-32 text-center border dark:border-white border-black">
+        <Link to={`/game?game_id=${gameIds[3]}`}>
           <ProfileTitleCard gameData={gameCovers[3]} />
+        </Link>
         </div>
       </div>
       <div className="ml-20 dark:text-white text-black flex gap-4">

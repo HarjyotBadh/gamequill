@@ -5,6 +5,8 @@ import "./Register.css";
 import {
   getAuth,
   createUserWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -72,6 +74,7 @@ function Register() {
     const profileDataCollection = collection(firestore, "profileData"); // Change the collection reference to "profileData"
 
     try {
+      await setPersistence(auth, browserLocalPersistence);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,

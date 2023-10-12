@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
 import "../styles/HomeTrending.css";
 import Featured1 from "./Featured1";
 import Featured2 from "./Featured2";
@@ -22,7 +24,7 @@ function App() {
                     'Authorization': 'Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp',
                 },
                 body: `
-                    fields name,screenshots.url,cover.url,rating,aggregated_rating;
+                    fields name,screenshots.url,cover.url,rating,aggregated_rating,id;
                     where id = ${game_id[0]};
                 `
             })
@@ -34,6 +36,8 @@ function App() {
 
                     const screenshotUrls = game.screenshots ? game.screenshots.map(s => s.url.replace('t_thumb', 't_1080p')) : [];
                     setScreenshots(screenshotUrls);
+
+                    console.log("summary: " + gameData0.id);
                 }
             })
             .catch(err => {
@@ -67,14 +71,30 @@ function App() {
             });
     }, [game_id[1]]);
 
+    // If gameData0 is null, wait until it's not null to render the page.
+    if (!gameData0) return <div>Loading...</div>;
+    if (!gameData1) return <div>Loading...</div>;
+
     return (
         <div class="trending-container">
             <h1 class="trending-head">TRENDING GAMES</h1>
-            <div class="trending-featured1"><Featured1 gameData={gameData0} screenshots={screenshots} /></div>
-            <Featured2 gameData={gameData0} screenshots={screenshots} />
-            <Featured2 gameData={gameData1} screenshots={screenshots} />
-            <Featured2 gameData={gameData0} screenshots={screenshots} />
-            <Featured2 gameData={gameData0} screenshots={screenshots} />
+            <div class="trending-featured1">
+                <Link to={`/game?game_id=${gameData0.id}`}>
+                    <Featured1 gameData={gameData0} screenshots={screenshots} />
+                </Link>
+            </div>
+            <Link to={`/game?game_id=${gameData0.id}`}>
+                <Featured2 gameData={gameData0} screenshots={screenshots} />
+            </Link>
+            <Link to={`/game?game_id=${gameData1.id}`}>
+                <Featured2 gameData={gameData1} screenshots={screenshots} />
+            </Link>
+            <Link to={`/game?game_id=${gameData0.id}`}>
+                <Featured2 gameData={gameData0} screenshots={screenshots} />
+            </Link>
+            <Link to={`/game?game_id=${gameData0.id}`}>
+                <Featured2 gameData={gameData0} screenshots={screenshots} />
+            </Link>
         </div>
     );
   }
