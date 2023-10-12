@@ -106,7 +106,6 @@ function Register() {
         email,
         password
       );
-
       const userData = {
         bio: "",
         username,
@@ -166,9 +165,7 @@ function Register() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          {emailError && (
-          <p className="error-message">{emailError}</p>
-        )}
+          {emailError && <p className="error-message">{emailError}</p>}
         </div>
         <div className="form-input">
           <label htmlFor="password">Password:</label>
