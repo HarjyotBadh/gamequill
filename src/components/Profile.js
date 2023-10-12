@@ -18,7 +18,7 @@ function Profile({ profileData, setProfileData }) {
   //console.log("User: ", auth.currentUser.uid);
   //const uid = "GPiU3AHpvyOhnbsVSzap";
   //
-  const uid = auth.currentUser.uid;
+  var uid = auth.currentUser.uid;
 
   useEffect(() => {
     // auth = getAuth();
