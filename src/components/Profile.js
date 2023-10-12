@@ -15,13 +15,7 @@ function Profile({ profileData, setProfileData }) {
   const auth = getAuth();
   //console.log("User: ", auth.currentUser.uid);
   //const uid = "GPiU3AHpvyOhnbsVSzap";
-  var uid;
-  if (auth.currentUser == null) {
-    //window.location.href = "/login";
-    uid = "GPiU3AHpvyOhnbsVSzap";
-  } else {
-    uid = auth.currentUser.uid;
-  }
+  var uid = "GPiU3AHpvyOhnbsVSzap";
   //
   //const uid = auth.currentUser.uid;
   const docRef = doc(db, "profileData", uid);

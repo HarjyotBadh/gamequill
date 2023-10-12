@@ -7,14 +7,7 @@ import DefaultProfilePicture from "../images/defaultProfilePicture.png";
 import { getAuth } from "firebase/auth";
 export default function ProfilePage({}) {
   const auth = getAuth();
-  var uid;
-  if (auth.currentUser == null) {
-    //window.location.href = "/login";
-    uid = "GPiU3AHpvyOhnbsVSzap";
-  } else {
-    uid = auth.currentUser.uid;
-    console.log("User: ", auth.currentUser.uid);
-  }
+  var uid = "GPiU3AHpvyOhnbsVSzap";
 
   const defaultProfileData = {
     profilePicture: DefaultProfilePicture,

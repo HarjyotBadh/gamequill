@@ -1,0 +1,13 @@
+.recommend-container {
+
+}
+
+.recommend-grid {
+    background-color: #ccc;
+    border-radius: 25px;
+}
+
+.recommend-head {
+    font-size: 20px;
+    font-weight: bold;
+}

@@ -2,6 +2,7 @@ import React from "react";
 import NavBar from "../components/NavBar";
 import HomeTrending from "../components/HomeTrending";
 import HomeActivity from "../components/HomeActivity";
+import HomeRecommend from "../components/HomeRecommend";
 import "../styles/HomePage.css";
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
                 <div class="grid-activity"><HomeActivity /></div>
                 <div class="grid-pad"></div>
                 <div class="grid-pad"></div>
-                <div class="grid-recommend">a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a </div>
+                <div class="grid-recommend"><HomeRecommend /></div>
             </div>
         </div>
     );
