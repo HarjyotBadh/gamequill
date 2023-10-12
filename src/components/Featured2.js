@@ -48,11 +48,11 @@ export default function Featured1({ gameData, screenshots }) {
     return (
         <div class="image-cont rounded-corners">
             <div class="image-container2">
-                <img src="https://images.igdb.com/igdb/image/upload/t_original/gsheqjbqnt71evl1aqmh.png" alt="Pikmin Test"/>
+                <img src={imageUrl} alt="Pikmin Test"/>
             </div>
             <div class="overlay"></div>
             <div class="text-overlay">
-                <div class="game-name2">Pikmin</div>
+                <div class="game-name2">{gameData.name}</div>
                 <div class="developer">Nintendo</div>
             </div>
         </div>

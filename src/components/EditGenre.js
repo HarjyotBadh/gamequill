@@ -3,9 +3,19 @@ import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
 import "../styles/EditGenre.css";
 export default function EditGenre({ genres, setGenres }) {
-  const uid = "GPiU3AHpvyOhnbsVSzap";
+  //const uid = "GPiU3AHpvyOhnbsVSzap";
+  const auth = getAuth();
+  var uid;
+  if (auth.currentUser == null) {
+    window.location.href = "/login";
+    //uid = "GPiU3AHpvyOhnbsVSzap";
+  } else {
+    uid = auth.currentUser.uid;
+  }
+
   const gameGenres = [
     { value: "point-and-click", label: "Point-and-Click" },
     { value: "fighting", label: "Fighting" },
