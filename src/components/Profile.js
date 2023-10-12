@@ -14,11 +14,11 @@ function Profile({ profileData, setProfileData }) {
   const [genres, setGenres] = useState([]);
   const [gameIds, setGameIds] = useState([]);
 
-  // const auth = getAuth();
+  const auth = getAuth();
   //console.log("User: ", auth.currentUser.uid);
   //const uid = "GPiU3AHpvyOhnbsVSzap";
   //
-  //const uid = auth.currentUser.uid;
+  const uid = auth.currentUser.uid;
 
   useEffect(() => {
     // auth = getAuth();

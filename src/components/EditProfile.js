@@ -5,7 +5,6 @@ import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "fire
 import { auth, deleteUser } from "../firebase"; // Import Firebase auth
 import { getAuth, updateProfile } from "firebase/auth";
 import { db } from "../firebase";
-import { getAuth } from "firebase/auth";
 import "../styles/EditProfile.css";
 
 export default function EditProfile({ profileData, setProfileData }) {
