@@ -53,7 +53,7 @@ export default function Featured1({ gameData, screenshots }) {
             <div class="overlay"></div>
             <div class="text-overlay">
                 <div class="game-name1">{gameData.name}</div>
-                <div class="developer1">Nintendo</div>
+                <div class="developer1">{gameData.involved_companies}</div>
             </div>
         </div>
     );
