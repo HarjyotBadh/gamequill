@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Popup from "reactjs-popup";
-import { setDoc, doc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { setDoc, doc, deleteDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+import { auth, deleteUser } from "../firebase"; // Import Firebase auth
+import { getAuth, updateProfile } from "firebase/auth";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
 import "../styles/EditProfile.css";
@@ -56,6 +58,20 @@ export default function EditProfile({ profileData, setProfileData }) {
       ...prevState,
       profilePicture: downloadURL,
     }));
+  };
+
+  const handleDeleteAccount = async () => {
+    if (window.confirm("Are you sure you want to delete your account? This action is irreversible.")) {
+      try {
+        const user = auth.currentUser;
+        await user.delete();
+        // Redirect to the sign-in page or perform other actions after successful deletion
+        window.location.href = "/login";
+      } catch (error) {
+        // Handle errors, e.g., display an error message
+        console.error("Error deleting account:", error);
+      }
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -126,6 +142,12 @@ export default function EditProfile({ profileData, setProfileData }) {
                 name="profile picture"
               />
             </div>
+            <button type="button" onClick={handleDeleteAccount}>
+              Delete Account
+            </button>
+            <button type="button" onClick={handleInputChange}>
+              Change Username
+            </button>
             <button type="submit">Save</button>
             <button
               type="close"
