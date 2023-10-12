@@ -5,6 +5,7 @@ import ProfileTitleCard from "./ProfileTitleCard";
 import "../styles/EditGames.css";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
+import { getAuth } from "firebase/auth";
 
 // Define the functional component EditGames and pass it the props gameCovers and setGameCovers
 export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
@@ -14,15 +15,35 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [gameData, setGameData] = useState([]);
   const [selectedSearchedGame, setSelectedSearchedGame] = useState(null);
-  const uid = "GPiU3AHpvyOhnbsVSzap";
+  //const uid = "GPiU3AHpvyOhnbsVSzap";
+  const auth = getAuth();
+  var uid;
+  // if (auth.currentUser == null) {
+  //   window.location.href = "/login";
+  //   //uid = "GPiU3AHpvyOhnbsVSzap";
+  // } else {
+  uid = auth.currentUser.uid;
+  // }
 
   // Define a function to handle replacing a favorite game
   const handleReplaceFavorite = async () => {
     if (selectedSearchedGame) {
       const updatedFavorites = [...gameCovers];
-      updatedFavorites[gameCovers.indexOf(selectedGame)] =
-        selectedSearchedGame.coverUrl;
-      gameIds[gameIds.indexOf(selectedGameId)] = selectedSearchedGame.id;
+      let selectedCardIndex;
+      if (selectedGame) {
+        selectedCardIndex = gameCovers.indexOf(selectedGame);
+      } else {
+        // If no game is selected, find the first empty slot
+        selectedCardIndex = gameCovers.findIndex((card) => card === null);
+      }
+      updatedFavorites[selectedCardIndex] = selectedSearchedGame.coverUrl;
+      // updatedFavorites[gameCovers.indexOf(selectedGame)] =
+      //   selectedSearchedGame.coverUrl;
+      if (selectedGameId == null) {
+        gameIds[selectedCardIndex] = selectedSearchedGame.id;
+      } else {
+        gameIds[gameIds.indexOf(selectedGameId)] = selectedSearchedGame.id;
+      }
       setGameCovers(updatedFavorites);
       setSelectedGame(null);
       setSelectedSearchedGame(null); // Reset selected searched game
@@ -113,7 +134,8 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
         <div className="modal">
           <form onSubmit={handleSubmit}>
             {/* Form to handle game replacement */}
-            Choose Game To Replace
+            Choose Game To Replace<br></br>
+            If no game is selected, the first empty slot will be replaced.
             <div className="FavoriteGames">
               {/* Map over gameCovers to display favorite games */}
               {gameCovers.map((game, index) => (
@@ -126,9 +148,15 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
                   }}
                 >
                   {/* Display the ProfileTitleCard for the game */}
-                  <ProfileTitleCard
-                    gameData={game === selectedGame ? selectedGame : game}
-                  />
+                  {game ? (
+                    <ProfileTitleCard
+                      gameData={game === selectedGame ? selectedGame : game}
+                    />
+                  ) : (
+                    <div className="EmptyGameCard">
+                      <span>Empty</span>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -197,7 +225,7 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
                 <button
                   type="submit"
                   onClick={handleReplaceFavorite}
-                  disabled={!selectedGame}
+                  // disabled={!selectedGame}
                 >
                   Replace Selected Favorite
                 </button>
