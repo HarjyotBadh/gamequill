@@ -16,21 +16,22 @@ function Profile({ profileData, setProfileData }) {
   //console.log("User: ", auth.currentUser.uid);
   //const uid = "GPiU3AHpvyOhnbsVSzap";
   var uid;
-  if (auth.currentUser == null) {
-    window.location.href = "/login";
-    //uid = "GPiU3AHpvyOhnbsVSzap";
-  } else {
-    uid = auth.currentUser.uid;
-  }
+
   //
   //const uid = auth.currentUser.uid;
-  const docRef = doc(db, "profileData", uid);
 
   useEffect(() => {
     const corsAnywhereUrl = "http://localhost:8080/";
     const apiUrl = "https://api.igdb.com/v4/covers";
 
     const fetchCovers = async () => {
+      if (auth.currentUser == null) {
+        window.location.href = "/login";
+        //uid = "GPiU3AHpvyOhnbsVSzap";
+      } else {
+        uid = auth.currentUser.uid;
+      }
+      const docRef = doc(db, "profileData", uid);
       const docSnapshot = await getDoc(docRef);
       const favoriteGames = docSnapshot.data().favoriteGames || [];
       const coverPromises = favoriteGames.map(async (id) => {

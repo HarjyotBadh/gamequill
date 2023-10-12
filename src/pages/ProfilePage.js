@@ -18,11 +18,11 @@ export default function ProfilePage({}) {
 
   const defaultProfileData = {
     profilePicture: DefaultProfilePicture,
-    bio: "my bio",
+    bio: "",
     pronouns: "",
     favoriteGames: ["", "", "", ""],
     favoriteGenres: ["", "", "", ""],
-    name: "John Doe",
+    name: "",
   };
 
   const [profileData, setProfileData] = useState(defaultProfileData);

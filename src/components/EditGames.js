@@ -134,7 +134,8 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
         <div className="modal">
           <form onSubmit={handleSubmit}>
             {/* Form to handle game replacement */}
-            Choose Game To Replace
+            Choose Game To Replace<br></br>
+            If no game is selected, the first empty slot will be replaced.
             <div className="FavoriteGames">
               {/* Map over gameCovers to display favorite games */}
               {gameCovers.map((game, index) => (

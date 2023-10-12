@@ -2,10 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import gamequillLogo from "../images/gamequill.png";
 import "./Register.css";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import {
   getFirestore,
   collection,
@@ -13,6 +10,8 @@ import {
   query,
   where,
   getDocs,
+  setDoc,
+  doc,
 } from "firebase/firestore";
 
 function Register() {
@@ -83,13 +82,14 @@ function Register() {
         username,
         email,
         pronouns,
-        favoriteGames: [],
-        favoriteGenres: [],
+        favoriteGames: ["", "", "", ""],
+        favoriteGenres: ["", "", "", ""],
         name: "",
-        profilePicture: ""
+        profilePicture: "",
       };
 
-      await addDoc(profileDataCollection, userData); // Store user data in "profileData" collection
+      // await addDoc(profileDataCollection, userData, auth.currentUser.uid); // Store user data in "profileData" collection
+      await setDoc(doc(profileDataCollection, auth.currentUser.uid), userData);
 
       const user = userCredential.user;
       console.log("Registration successful:", user);
@@ -125,9 +125,7 @@ function Register() {
             onChange={(e) => setUsername(e.target.value)}
             required
           />
-          {usernameError && (
-            <p className="error-message">{usernameError}</p>
-          )}
+          {usernameError && <p className="error-message">{usernameError}</p>}
         </div>
         <div className="form-input">
           <label htmlFor="email">Email:</label>
