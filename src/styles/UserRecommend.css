@@ -1,0 +1,25 @@
+.user-recommend-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Create a 12-column grid */
+    gap: 6.5px; /* Adjust the gap between grid items as needed */
+    background-color: #ccc;
+    border-radius: 25px;
+    padding: 12px;
+}
+
+.recommend-cover {
+}
+
+.recommend-cover-rounded {
+    border-radius: 15px;
+}
+
+.right-mar {
+    margin-right: 0px;
+}
+
+.recommend-genre {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}

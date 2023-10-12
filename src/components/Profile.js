@@ -15,8 +15,6 @@ function Profile({ profileData, setProfileData }) {
   const auth = getAuth();
   //console.log("User: ", auth.currentUser.uid);
   //const uid = "GPiU3AHpvyOhnbsVSzap";
-  var uid;
-
   //
   //const uid = auth.currentUser.uid;
 
