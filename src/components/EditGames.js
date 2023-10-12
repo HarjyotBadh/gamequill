@@ -18,12 +18,12 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
   //const uid = "GPiU3AHpvyOhnbsVSzap";
   const auth = getAuth();
   var uid;
-  if (auth.currentUser == null) {
-    window.location.href = "/login";
-    //uid = "GPiU3AHpvyOhnbsVSzap";
-  } else {
-    uid = auth.currentUser.uid;
-  }
+  // if (auth.currentUser == null) {
+  //   window.location.href = "/login";
+  //   //uid = "GPiU3AHpvyOhnbsVSzap";
+  // } else {
+  uid = auth.currentUser.uid;
+  // }
 
   // Define a function to handle replacing a favorite game
   const handleReplaceFavorite = async () => {

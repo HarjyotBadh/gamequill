@@ -11,12 +11,12 @@ export default function EditProfile({ profileData, setProfileData }) {
   //const uid = "GPiU3AHpvyOhnbsVSzap";
   const auth = getAuth();
   var uid;
-  if (auth.currentUser == null) {
-    window.location.href = "/login";
-    //uid = "GPiU3AHpvyOhnbsVSzap";
-  } else {
-    uid = auth.currentUser.uid;
-  }
+  // if (auth.currentUser == null) {
+  //   window.location.href = "/login";
+  //   //uid = "GPiU3AHpvyOhnbsVSzap";
+  // } else {
+  uid = auth.currentUser.uid;
+  // }
   const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {

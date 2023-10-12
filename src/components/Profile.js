@@ -5,7 +5,7 @@ import ProfileTitleCard from "./ProfileTitleCard";
 import EditGames from "./EditGames";
 import "../styles/Profile.css";
 import { db } from "../firebase";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import EditGenre from "./EditGenre";
 
 function Profile({ profileData, setProfileData }) {
@@ -21,6 +21,16 @@ function Profile({ profileData, setProfileData }) {
   //const uid = auth.currentUser.uid;
 
   useEffect(() => {
+    // auth = getAuth();
+    // uid = auth.currentUser.uid;
+    // onAuthStateChanged(auth, (user) => {
+    //   if (user) {
+    //     console.log("User is already signed in:", user);
+    //     uid = auth.currentUser.uid;
+    //   } else {
+    //     window.location.href = "/login";
+    //   }
+    // });
     const corsAnywhereUrl = "http://localhost:8080/";
     const apiUrl = "https://api.igdb.com/v4/covers";
 
