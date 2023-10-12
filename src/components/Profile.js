@@ -18,7 +18,7 @@ function Profile({ profileData, setProfileData }) {
   //console.log("User: ", auth.currentUser.uid);
   //const uid = "GPiU3AHpvyOhnbsVSzap";
   //
-  const uid = auth.currentUser.uid;
+  var uid = auth.currentUser.uid;
 
   useEffect(() => {
     // auth = getAuth();
@@ -115,19 +115,19 @@ function Profile({ profileData, setProfileData }) {
           </Link>
         </div>
         <div className="GameCover2 w-30 h-32 text-center border dark:border-white border-black">
-        <Link to={`/game?game_id=${gameIds[1]}`}>
-          <ProfileTitleCard gameData={gameCovers[1]} />
-        </Link>
+          <Link to={`/game?game_id=${gameIds[1]}`}>
+            <ProfileTitleCard gameData={gameCovers[1]} />
+          </Link>
         </div>
         <div className="GameCover3 w-30 h-32 text-center border dark:border-white border-black">
-        <Link to={`/game?game_id=${gameIds[2]}`}>
-          <ProfileTitleCard gameData={gameCovers[2]} />
-        </Link>
+          <Link to={`/game?game_id=${gameIds[2]}`}>
+            <ProfileTitleCard gameData={gameCovers[2]} />
+          </Link>
         </div>
         <div className="GameCover4 w-30 h-32 text-center border dark:border-white border-black">
-        <Link to={`/game?game_id=${gameIds[3]}`}>
-          <ProfileTitleCard gameData={gameCovers[3]} />
-        </Link>
+          <Link to={`/game?game_id=${gameIds[3]}`}>
+            <ProfileTitleCard gameData={gameCovers[3]} />
+          </Link>
         </div>
       </div>
       <div className="ml-20 dark:text-white text-black flex gap-4">
