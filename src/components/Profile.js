@@ -15,22 +15,9 @@ function Profile({ profileData, setProfileData }) {
   const [gameIds, setGameIds] = useState([]);
 
   const auth = getAuth();
-  //console.log("User: ", auth.currentUser.uid);
-  //const uid = "GPiU3AHpvyOhnbsVSzap";
-  //
   var uid = auth.currentUser.uid;
 
   useEffect(() => {
-    // auth = getAuth();
-    // uid = auth.currentUser.uid;
-    // onAuthStateChanged(auth, (user) => {
-    //   if (user) {
-    //     console.log("User is already signed in:", user);
-    //     uid = auth.currentUser.uid;
-    //   } else {
-    //     window.location.href = "/login";
-    //   }
-    // });
     const corsAnywhereUrl = "http://localhost:8080/";
     const apiUrl = "https://api.igdb.com/v4/covers";
 
