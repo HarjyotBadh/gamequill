@@ -7,9 +7,13 @@ import Featured2 from "./Featured2";
 
 function App() {
     const [gameData0, setGameData0] = useState(null);
-    const [screenshots, setScreenshots] = useState([]);
+    const [screenshots0, setScreenshots0] = useState([]);
     const [gameData1, setGameData1] = useState(null);
-    const game_id = [7346, 2240, 2241];
+    const [screenshots1, setScreenshots1] = useState([]);
+
+
+
+    const game_id = [96437, 148241, 213639, 233307, ];
 
     useEffect(() => {
         const corsAnywhereUrl = "http://localhost:8080/";
@@ -24,7 +28,7 @@ function App() {
                     'Authorization': 'Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp',
                 },
                 body: `
-                    fields name,screenshots.url,cover.url,rating,aggregated_rating,id;
+                    fields name,involved_companies.company.name,screenshots.url,cover.url,rating,aggregated_rating,id;
                     where id = ${game_id[0]};
                 `
             })
@@ -35,9 +39,7 @@ function App() {
                     setGameData0(game);
 
                     const screenshotUrls = game.screenshots ? game.screenshots.map(s => s.url.replace('t_thumb', 't_1080p')) : [];
-                    setScreenshots(screenshotUrls);
-
-                    console.log("summary: " + gameData0.id);
+                    setScreenshots0(screenshotUrls);
                 }
             })
             .catch(err => {
@@ -64,7 +66,14 @@ function App() {
             })
             .then(response => response.json())
             .then(data => {
-                if (data.length) setGameData1(data[0]);
+                // if (data.length) setGameData1(data[0]);
+                if (data.length) {
+                    const game = data[0];
+                    setGameData1(game);
+
+                    const screenshotUrls = game.screenshots ? game.screenshots.map(s => s.url.replace('t_thumb', 't_1080p')) : [];
+                    setScreenshots1(screenshotUrls);
+                }
             })
             .catch(err => {
                 console.error(err);
@@ -73,27 +82,26 @@ function App() {
 
     // If gameData0 is null, wait until it's not null to render the page.
     if (!gameData0) return <div>Loading...</div>;
-    if (!gameData1) return <div>Loading...</div>;
 
     return (
         <div class="trending-container">
             <h1 class="trending-head">TRENDING GAMES</h1>
             <div class="trending-featured1">
                 <Link to={`/game?game_id=${gameData0.id}`}>
-                    <Featured1 gameData={gameData0} screenshots={screenshots} />
+                    <Featured1 gameData={gameData0} screenshots={screenshots0} />
                 </Link>
             </div>
-            <Link to={`/game?game_id=${gameData0.id}`}>
-                <Featured2 gameData={gameData0} screenshots={screenshots} />
-            </Link>
             <Link to={`/game?game_id=${gameData1.id}`}>
-                <Featured2 gameData={gameData1} screenshots={screenshots} />
+                <Featured2 gameData={gameData1} screenshots={screenshots0} />
             </Link>
             <Link to={`/game?game_id=${gameData0.id}`}>
-                <Featured2 gameData={gameData0} screenshots={screenshots} />
+                <Featured2 gameData={gameData0} screenshots={screenshots0} />
             </Link>
             <Link to={`/game?game_id=${gameData0.id}`}>
-                <Featured2 gameData={gameData0} screenshots={screenshots} />
+                <Featured2 gameData={gameData0} screenshots={screenshots0} />
+            </Link>
+            <Link to={`/game?game_id=${gameData0.id}`}>
+                <Featured2 gameData={gameData0} screenshots={screenshots0} />
             </Link>
         </div>
     );
