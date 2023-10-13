@@ -10,10 +10,17 @@ function App() {
     const [screenshots0, setScreenshots0] = useState([]);
     const [gameData1, setGameData1] = useState(null);
     const [screenshots1, setScreenshots1] = useState([]);
+    const [gameData2, setGameData2] = useState(null);
+    const [screenshots2, setScreenshots2] = useState([]);
+    const [gameData3, setGameData3] = useState(null);
+    const [screenshots3, setScreenshots3] = useState([]);
+    const [gameData4, setGameData4] = useState(null);
+    const [screenshots4, setScreenshots4] = useState([]);
 
 
 
-    const game_id = [96437, 148241, 213639, 233307, ];
+
+    const game_ids = [96437, 148241, 213639, 233307, 78511];
 
     useEffect(() => {
         const corsAnywhereUrl = "http://localhost:8080/";
@@ -29,56 +36,42 @@ function App() {
                 },
                 body: `
                     fields name,involved_companies.company.name,screenshots.url,cover.url,rating,aggregated_rating,id;
-                    where id = ${game_id[0]};
+                    where id = (${game_ids.join(',')});
                 `
             })
             .then(response => response.json())
             .then(data => {
                 if (data.length) {
-                    const game = data[0];
-                    setGameData0(game);
+                    const game0 = data.find(game => game.id === game_ids[0]);
+                    setGameData0(game0);
+                    const screenshotUrls0 = game0.screenshots ? game0.screenshots.map(s => s.url.replace('t_thumb', 't_1080p')) : [];
+                    setScreenshots0(screenshotUrls0);
 
-                    const screenshotUrls = game.screenshots ? game.screenshots.map(s => s.url.replace('t_thumb', 't_1080p')) : [];
-                    setScreenshots0(screenshotUrls);
+                    const game1 = data.find(game => game.id === game_ids[1]);
+                    setGameData1(game1);
+                    const screenshotUrls1 = game1.screenshots ? game1.screenshots.map(s => s.url.replace('t_thumb', 't_1080p')) : [];
+                    setScreenshots1(screenshotUrls1);
+
+                    const game2 = data.find(game => game.id === game_ids[2]);
+                    setGameData2(game2);
+                    const screenshotUrls2 = game2.screenshots ? game2.screenshots.map(s => s.url.replace('t_thumb', 't_1080p')) : [];
+                    setScreenshots2(screenshotUrls2);
+
+                    const game3 = data.find(game => game.id === game_ids[3]);
+                    setGameData3(game3);
+                    const screenshotUrls3 = game3.screenshots ? game3.screenshots.map(s => s.url.replace('t_thumb', 't_1080p')) : [];
+                    setScreenshots3(screenshotUrls3);
+
+                    const game4 = data.find(game => game.id === game_ids[4]);
+                    setGameData4(game4);
+                    const screenshotUrls4 = game4.screenshots ? game4.screenshots.map(s => s.url.replace('t_thumb', 't_1080p')) : [];
+                    setScreenshots4(screenshotUrls4);
                 }
             })
             .catch(err => {
                 console.error(err);
             });
-    }, [game_id[0]]);
-
-    useEffect(() => {
-        const corsAnywhereUrl = "http://localhost:8080/";
-        const apiUrl = "https://api.igdb.com/v4/games";
-        fetch(
-            corsAnywhereUrl + apiUrl,
-            { 
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Client-ID': '71i4578sjzpxfnbzejtdx85rek70p6',
-                    'Authorization': 'Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp',
-                },
-                body: `
-                    fields name,cover.url,involved_companies.company.name,rating,aggregated_rating;
-                    where id = ${game_id[1]};
-                `
-            })
-            .then(response => response.json())
-            .then(data => {
-                // if (data.length) setGameData1(data[0]);
-                if (data.length) {
-                    const game = data[0];
-                    setGameData1(game);
-
-                    const screenshotUrls = game.screenshots ? game.screenshots.map(s => s.url.replace('t_thumb', 't_1080p')) : [];
-                    setScreenshots1(screenshotUrls);
-                }
-            })
-            .catch(err => {
-                console.error(err);
-            });
-    }, [game_id[1]]);
+    }, []);
 
     // If gameData0 is null, wait until it's not null to render the page.
     if (!gameData0) return <div>Loading...</div>;
@@ -92,16 +85,16 @@ function App() {
                 </Link>
             </div>
             <Link to={`/game?game_id=${gameData1.id}`}>
-                <Featured2 gameData={gameData1} screenshots={screenshots0} />
+                <Featured2 gameData={gameData1} screenshots={screenshots1} />
             </Link>
-            <Link to={`/game?game_id=${gameData0.id}`}>
-                <Featured2 gameData={gameData0} screenshots={screenshots0} />
+            <Link to={`/game?game_id=${gameData2.id}`}>
+                <Featured2 gameData={gameData2} screenshots={screenshots2} />
             </Link>
-            <Link to={`/game?game_id=${gameData0.id}`}>
-                <Featured2 gameData={gameData0} screenshots={screenshots0} />
+            <Link to={`/game?game_id=${gameData3.id}`}>
+                <Featured2 gameData={gameData3} screenshots={screenshots3} />
             </Link>
-            <Link to={`/game?game_id=${gameData0.id}`}>
-                <Featured2 gameData={gameData0} screenshots={screenshots0} />
+            <Link to={`/game?game_id=${gameData4.id}`}>
+                <Featured2 gameData={gameData4} screenshots={screenshots4} />
             </Link>
         </div>
     );
