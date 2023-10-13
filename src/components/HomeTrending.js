@@ -20,7 +20,7 @@ function App() {
 
 
 
-    const game_ids = [96437, 148241, 213639, 233307, 78511];
+    const game_ids = [96437, 148241, 242408, 233307, 78511];
 
     useEffect(() => {
         const corsAnywhereUrl = "http://localhost:8080/";
