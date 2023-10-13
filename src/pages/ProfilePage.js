@@ -33,6 +33,7 @@ export default function ProfilePage({}) {
     favoriteGames: ["", "", "", ""],
     favoriteGenres: ["", "", "", ""],
     name: "",
+    username: "",
   };
 
   const [profileData, setProfileData] = useState(defaultProfileData);
@@ -58,6 +59,7 @@ export default function ProfilePage({}) {
         favoriteGenres:
           docData.favoriteGenres || defaultProfileData.favoriteGenres,
         name: docData.name || defaultProfileData.name,
+        username: docData.username || defaultProfileData.username,
       };
       setProfileData(data);
     } else {
