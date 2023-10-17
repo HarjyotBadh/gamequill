@@ -7,6 +7,7 @@ import {
   createUserWithEmailAndPassword,
   setPersistence,
   browserLocalPersistence,
+  sendEmailVerification
 } from "firebase/auth";
 
 import {
@@ -106,6 +107,11 @@ function Register() {
         email,
         password
       );
+      const user = userCredential.user;
+    
+      // Send email verification
+      await sendEmailVerification(user);
+    
       const userData = {
         bio: "",
         username,
@@ -116,13 +122,15 @@ function Register() {
         name: "",
         profilePicture: "",
       };
-
-      // await addDoc(profileDataCollection, userData, auth.currentUser.uid); // Store user data in "profileData" collection
-      await setDoc(doc(profileDataCollection, auth.currentUser.uid), userData);
-
-      const user = userCredential.user;
-      console.log("Registration successful:", user);
-      window.location.href = "/home";
+    
+      // Store user data in Firestore
+      await setDoc(doc(profileDataCollection, user.uid), userData); // make sure to use user.uid
+    
+      console.log("Registration successful. Verification email sent:", user);
+      
+      // Redirecting or showing a message that verification email is sent and user should verify email
+      window.location.href = "/registrationsuccess"; // You might want to change this part to wait until the user verifies their email.
+      // For now, you can redirect them to a "Please verify your email" page or show a message.
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -130,6 +138,7 @@ function Register() {
       setRegistrationError(errorMessage);
       setShowPopup(true);
     }
+    
   };
 
   const closePopup = () => {

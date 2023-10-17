@@ -7,6 +7,7 @@
     grid-template-columns: repeat(2, 1fr); /* Create a 12-column grid */
     gap: 6.5px; /* Adjust the gap between grid items as needed */
     border-radius: 25px;
+    margin-bottom: 50px;
 }
 
 .recommend-head {
