@@ -1,5 +1,5 @@
 import GamePageWrapper from "./components/GamePageWrapper";
-import ProfilePage from "./pages/ProfilePage";
+import ProfilePageWrapper from "./components/ProfilePageWrapper";
 import HomePage from "./pages/HomePage";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
@@ -12,17 +12,19 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/Profile" element={<ProfilePage />} />
+      <Route path="/Profile" element={<ProfilePageWrapper />} />
       <Route path="/test" element={<h1>Test</h1>} />{" "}
       <Route path="/login" element={<Login />} />{" "}
       <Route path="/register" element={<Register />} />{" "}
       <Route path="/reset-password" element={<ResetPassword />} />{" "}
       <Route path="/home" element={<HomePage />} />
       <Route path="/game" element={<GamePageWrapper />} />
-      <Route path="/registrationsuccess" element={<RegistrationSuccessPage />} />
+      <Route
+        path="/registrationsuccess"
+        element={<RegistrationSuccessPage />}
+      />
     </Routes>
   );
-
 }
 
 export default App;

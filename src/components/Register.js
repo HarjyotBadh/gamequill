@@ -7,7 +7,7 @@ import {
   createUserWithEmailAndPassword,
   setPersistence,
   browserLocalPersistence,
-  sendEmailVerification
+  sendEmailVerification,
 } from "firebase/auth";
 
 import {
@@ -108,10 +108,10 @@ function Register() {
         password
       );
       const user = userCredential.user;
-    
+
       // Send email verification
       await sendEmailVerification(user);
-    
+
       const userData = {
         bio: "",
         username,
@@ -120,14 +120,15 @@ function Register() {
         favoriteGames: ["", "", "", ""],
         favoriteGenres: ["", "", "", ""],
         name: "",
-        profilePicture: "",
+        profilePicture:
+          "https://firebasestorage.googleapis.com/v0/b/gamequill-3bab8.appspot.com/o/profilePictures%2FdefaultProfilePicture.png?alt=media&token=3d964f48-c8b6-4fab-8f5e-d7ebf6addc61",
       };
-    
+
       // Store user data in Firestore
       await setDoc(doc(profileDataCollection, user.uid), userData); // make sure to use user.uid
-    
+
       console.log("Registration successful. Verification email sent:", user);
-      
+
       // Redirecting or showing a message that verification email is sent and user should verify email
       window.location.href = "/registrationsuccess"; // You might want to change this part to wait until the user verifies their email.
       // For now, you can redirect them to a "Please verify your email" page or show a message.
@@ -138,7 +139,6 @@ function Register() {
       setRegistrationError(errorMessage);
       setShowPopup(true);
     }
-    
   };
 
   const closePopup = () => {

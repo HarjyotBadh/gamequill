@@ -4,7 +4,6 @@ import logo from "../images/gamequill.png";
 import { getAuth, signOut } from "firebase/auth";
 
 function App() {
-
   const [user, setUser] = useState(null);
   const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
 
@@ -65,12 +64,21 @@ function App() {
               </a>
             </li>
             <li>
-              <Link
-                to="/Profile"
-                class="block py-2 pl-3 pr-4 text-gray-900 rounded  md:hover:bg-transparent md:border-0  md:p-0 text-white md:hover:text-blue-500 hover:bg-gray-600 hover:text-white md:hover:bg-transparent"
-              >
-                Profile
-              </Link>
+              {user ? (
+                <Link
+                  to={`/Profile?user_id=${user.uid}`}
+                  class="block py-2 pl-3 pr-4 text-gray-900 rounded  md:hover:bg-transparent md:border-0  md:p-0 text-white md:hover:text-blue-500 hover:bg-gray-600 hover:text-white md:hover:bg-transparent"
+                >
+                  Profile
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  class="block py-2 pl-3 pr-4 text-gray-900 rounded  md:hover:bg-transparent md:border-0  md:p-0 text-white md:hover:text-blue-500 hover:bg-gray-600 hover:text-white md:hover:bg-transparent"
+                >
+                  Profile
+                </Link>
+              )}
             </li>
             <li>
               <Link
@@ -81,32 +89,32 @@ function App() {
               </Link>
             </li>
             <li>
-          {user ? (
-            <button
-              onClick={handleLogout}
-              class="block py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-500 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-              Log Out
-            </button>
-          ) : (
-            <Link
-              to="/login"
-              class="block py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-500 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-              Login/Sign Up
-            </Link>
-          )}
+              {user ? (
+                <button
+                  onClick={handleLogout}
+                  class="block py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-500 dark:hover:text-white md:dark:hover:bg-transparent"
+                >
+                  Log Out
+                </button>
+              ) : (
+                <Link
+                  to="/login"
+                  class="block py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-500 dark:hover:text-white md:dark:hover:bg-transparent"
+                >
+                  Login/Sign Up
+                </Link>
+              )}
             </li>
           </ul>
         </div>
       </div>
       {showLogoutConfirmation && (
-    <div className="logout-confirmation-popup">
-      <p>Are you sure you want to log out?</p>
-      <button onClick={confirmLogout}>OK</button>
-      <button onClick={cancelLogout}>Cancel</button>
-    </div>
-  )}
+        <div className="logout-confirmation-popup">
+          <p>Are you sure you want to log out?</p>
+          <button onClick={confirmLogout}>OK</button>
+          <button onClick={cancelLogout}>Cancel</button>
+        </div>
+      )}
     </nav>
   );
 }
