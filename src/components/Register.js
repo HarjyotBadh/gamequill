@@ -26,7 +26,6 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [pronouns, setPronouns] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordMatchError, setPasswordMatchError] = useState("");
   const [registrationError, setRegistrationError] = useState("");
@@ -116,7 +115,7 @@ function Register() {
         bio: "",
         username,
         email,
-        pronouns,
+        pronouns: "",
         favoriteGames: ["", "", "", ""],
         favoriteGenres: ["", "", "", ""],
         name: "",
@@ -199,16 +198,6 @@ function Register() {
           {passwordMatchError && (
             <p className="error-message">{passwordMatchError}</p>
           )}
-        </div>
-        <div className="form-input">
-          <label htmlFor="pronouns">Pronouns:</label>
-          <input
-            type="text"
-            id="pronouns"
-            value={pronouns}
-            onChange={(e) => setPronouns(e.target.value)}
-            required
-          />
         </div>
         <button type="submit" className="register-button">
           Register

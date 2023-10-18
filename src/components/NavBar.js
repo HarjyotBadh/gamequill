@@ -46,12 +46,36 @@ function App() {
     setShowLogoutConfirmation(false);
   };
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const handleSearchInputChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+  const handleSearch = () => {
+    // Redirect to the search page with the search query as a parameter
+    window.location.href = `/search?query=${encodeURIComponent(searchQuery)}`;
+  };
+
   return (
     <nav class="border-gray-200 bg-gray-600">
       <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link to="/Home" class="flex items-center">
           <img src={logo} class="h-20 mr-10" alt="GameQuill Logo"></img>
         </Link>
+        <div className="flex items-center">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchInputChange}
+            placeholder="Search for games or users"
+            className="bg-gray-200 p-2 rounded mr-2"
+          />
+          <button
+            onClick={handleSearch}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Search
+          </button>
+        </div>
         <div class="hidden w-full md:block md:w-auto" id="navbar-default">
           <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg  md:flex-row md:space-x-8 md:mt-0 md:border-0  bg-gray-600 md:bg-gray-600 border-gray-700">
             <li>
