@@ -6,7 +6,6 @@ import {
     ref,
     uploadBytes,
     getDownloadURL,
-    deleteObject,
 } from "firebase/storage";
 import {
     getAuth,

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import gamequillLogo from "../images/gamequill.png";
-import "./Register.css";
+import "../styles/Register.css";
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -13,7 +13,6 @@ import {
 import {
   getFirestore,
   collection,
-  addDoc,
   query,
   where,
   getDocs,

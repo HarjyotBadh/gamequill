@@ -26,15 +26,6 @@ export default function GamePage({ game_id }) {
     });
   }, []);
 
-  const sample_id = 119388;
-  // Cyberpunk 2077: 1877
-  // ToTK: 119388
-  // Starfield: 96437
-  // Minecraft: 135400
-  // Skyrim: 165192
-
-  // game_id = sample_id;
-
   // Sets dark mode based on user's system preferences
   const [darkMode, setDarkMode] = React.useState(
     () =>
@@ -113,7 +104,10 @@ export default function GamePage({ game_id }) {
         <div className="right-content">
           <DescriptionBox gameData={gameData} />
         </div>
+
+        
       </div>
+      <NavBar />
     </div>
   );
 }
