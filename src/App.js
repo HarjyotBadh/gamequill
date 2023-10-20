@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import ResetPassword from "./components/ResetPassword";
 import RegistrationSuccessPage from "./pages/RegistrationSuccessPage";
+import SearchPageWrapper from "./components/SearchPageWrapper";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         path="/registrationsuccess"
         element={<RegistrationSuccessPage />}
       />
+      <Route path="/search" element={<SearchPageWrapper />} />
     </Routes>
   );
 }
