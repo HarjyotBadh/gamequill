@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/TitleCard.css";
+import GameLog from "./GameLog";
 
 export default function TitleCard({ gameData }) {
     const [darkMode, setDarkMode] = React.useState(
@@ -81,6 +82,15 @@ export default function TitleCard({ gameData }) {
             <p>{gameData.involved_companies?.[0]?.company?.name || "N/A"}</p>
             <p className="numericRating">{starAverage.toFixed(1)}</p>
             <div className="rating">{stars}</div>
+
+            <div class="play-buttons-container">
+                <div class="play-button">
+                    <GameLog />
+                </div>
+                <div class="play-button">
+                    <GameLog />
+                </div>
+            </div>
         </div>
     );
 }

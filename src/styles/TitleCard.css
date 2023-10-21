@@ -136,3 +136,19 @@
 .emptyStar {
     color: var(--star-color); 
 }
+
+
+
+
+
+.play-buttons-container {
+    background-color: #ddd;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Create a 12-column grid */
+    gap: 6.5px; /* Adjust the gap between grid items as needed */
+    padding: 10px;
+}
+
+.play-button {
+    
+}

@@ -6,6 +6,7 @@ import TitleCard from "../components/TitleCard";
 import MediaPlayer from "../components/MediaPlayer";
 import DescriptionBox from "../components/DescriptionBox";
 import "../styles/GamePage.css";
+import TestComponent from "../components/TestComponent";
 
 export default function GamePage({ game_id }) {
   const [gameData, setGameData] = useState(null);
@@ -111,6 +112,7 @@ export default function GamePage({ game_id }) {
         </div>
 
         <div className="right-content">
+          <h1>jeffrey turkstra sucks</h1>
           <DescriptionBox gameData={gameData} />
         </div>
       </div>
