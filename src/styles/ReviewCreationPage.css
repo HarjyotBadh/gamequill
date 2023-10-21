@@ -1,5 +1,3 @@
-/* ReviewCreationPage.css */
-
 :root {
     /* Light theme */
     --wrapper-light: #f3f4f6;
@@ -23,25 +21,50 @@
 .review-page-wrapper {
     background-color: var(--wrapper);
     min-height: 100vh;
-    /* padding: 20px; */
+    
+}
+.review-page-stuff {
+    display: flex;
+    justify-content: space;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+/* flex justify-between items-start px-16 py-8 */
+
+.review-content-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 90%;
+    margin: 0 auto;
 }
 
 .review-content-container {
+    flex: 2;
+    width: 66%;
     display: flex;
-    flex-direction: column; /* Stack children vertically */
-    align-items: center; /* Center children horizontally */
+    flex-direction: column;
+    align-items: stretch;
     gap: 20px;
-    max-width: 600px;
-    margin: 0 auto;
-    margin-top: 20px;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Similar to your other components */
-    background-color: var(--background); /* From your other styles */
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: var(--background);
+    margin-top: 20px;
 }
 
 .review-content-container h1 {
-    color: var(--text-color); /* From your other styles */
+    text-align: center;
+    color: var(--text-color);
 }
 
-/* You can add more specific styles here as needed */
+.review-content-container textarea {
+    width: 100%;
+    height: 1000px;
+}

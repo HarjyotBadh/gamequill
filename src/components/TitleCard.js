@@ -1,4 +1,5 @@
 import React from "react";
+import { Spinner } from "@material-tailwind/react";
 import "../styles/TitleCard.css";
 
 export default function TitleCard({ gameData }) {
@@ -19,7 +20,7 @@ export default function TitleCard({ gameData }) {
         };
     }, []);
 
-    if (!gameData) return <div>Loading...</div>;
+    if (!gameData) return <Spinner color="blue" />;
 
     const bigCoverUrl = gameData.cover
         ? gameData.cover.url.replace("/t_thumb/", "/t_cover_big/")
