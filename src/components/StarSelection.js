@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { StarIcon } from '@heroicons/react/24/solid';
 import '../styles/StarSelection.css';
 
@@ -15,9 +15,8 @@ const Star = ({ selectionType = 'empty', onClick = f => f }) => (
 
 const createArray = length => [...Array(length)];
 
-export default function StarSelection({ totalStars = 5 }) {
-  const [selectedStars, setSelectedStars] = useState(0);
-  const [darkMode, setDarkMode] = useState(
+export default function StarSelection({ totalStars = 5, starRating, setStarRating }) {
+  const [darkMode, setDarkMode] = React.useState(
       () => window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
   );
 
@@ -34,14 +33,14 @@ export default function StarSelection({ totalStars = 5 }) {
 
   return (
     <div className={`flex-container ${darkMode ? "dark" : "light"}`} data-theme={darkMode ? "dark" : "light"}>
-      <div className="star-rating">{selectedStars}</div>
+      <div className="star-rating">{starRating}</div>
       <div className="stars-row">
         {createArray(totalStars).map((n, i) => {
           let selectionType = 'empty';
-          if (selectedStars > i) {
+          if (starRating > i) {
             selectionType = 'full';
           }
-          if (selectedStars - i === 0.5) {
+          if (starRating - i === 0.5) {
             selectionType = 'half';
           }
           return (
@@ -49,13 +48,13 @@ export default function StarSelection({ totalStars = 5 }) {
               key={i}
               selectionType={selectionType}
               onClick={() => {
-                const diff = selectedStars - i;
+                const diff = starRating - i;
                 if (diff > 0 && diff < 1) {
-                  setSelectedStars(i + 1);
-                } else if (selectedStars === i + 1) {
-                  setSelectedStars(i + 0.5);
+                  setStarRating(i + 1);
+                } else if (starRating === i + 1) {
+                  setStarRating(i + 0.5);
                 } else {
-                  setSelectedStars(i + 1);
+                  setStarRating(i + 1);
                 }
               }}
             />

@@ -57,6 +57,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: var(--background);
     margin-top: 20px;
+    margin-bottom: 100px;
 }
 
 .review-content-container h1 {
@@ -68,3 +69,37 @@
     width: 100%;
     height: 1000px;
 }
+
+.post-review-button {
+    background-color: var(--rating-color); /* Use the text color for button background */
+    color: var(--text-color); /* Use the wrapper color for text */
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 50%;
+    margin: 0 auto;
+    transition: background-color 0.3s ease;
+}
+
+.post-review-button:hover {
+    background-color: var(--wrapper-dark); /* Darken the button a bit on hover */
+}
+
+.post-review-button:active {
+    background-color: var(--text-color-light); /* Lighten the button a bit when active/clicked */
+}
+
+.centered-dialog {
+    position: fixed;
+    top: 25%;
+    left: 35%;
+    /* transform: translate(-50%, -50%); */
+    z-index: 1000;
+    width: auto;
+    max-width: 90%;
+    box-sizing: border-box;
+}
+
+

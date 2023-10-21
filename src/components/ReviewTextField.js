@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import '../styles/ReviewTextField.css';
 
-export default function ReviewTextField() {
-  const [review, setReview] = useState("");
+export default function ReviewTextField({ reviewText, setReviewText }) {
   const maxLength = 5000;
 
   const handleInputChange = (e) => {
     if (e.target.value.length <= maxLength) {
-      setReview(e.target.value);
+      setReviewText(e.target.value);
     }
   };
 
@@ -16,11 +15,11 @@ export default function ReviewTextField() {
         <textarea 
             className="review-text-field" 
             placeholder="Enter your review here..."
-            value={review}
+            value={reviewText}
             onChange={handleInputChange}
         />
         <div className="review-character-count">
-            {review.length} / {maxLength}
+            {reviewText.length} / {maxLength}
         </div>
     </div>
 );
