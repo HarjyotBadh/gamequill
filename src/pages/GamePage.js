@@ -112,7 +112,6 @@ export default function GamePage({ game_id }) {
         </div>
 
         <div className="right-content">
-          <h1>jeffrey turkstra sucks</h1>
           <DescriptionBox gameData={gameData} />
         </div>
       </div>
