@@ -55,6 +55,12 @@ function App() {
     window.location.href = `/search?query=${encodeURIComponent(searchQuery)}`;
   };
 
+  const handleEnterKey = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
     <nav class="border-gray-200 bg-gray-600">
       <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -66,6 +72,7 @@ function App() {
             type="text"
             value={searchQuery}
             onChange={handleSearchInputChange}
+            onKeyDown={handleEnterKey}
             placeholder="Search for games or users"
             className="bg-gray-200 p-2 rounded mr-2"
           />
