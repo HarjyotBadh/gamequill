@@ -1,6 +1,8 @@
 import React from "react";
 import { Spinner } from "@material-tailwind/react";
 import "../styles/TitleCard.css";
+import GameLog from "./GameLog";
+import GameLike from "./GameLike";
 
 export default function TitleCard({ gameData }) {
   const [darkMode, setDarkMode] = React.useState(
@@ -72,16 +74,25 @@ export default function TitleCard({ gameData }) {
       );
   });
 
-  return (
-    <div
-      className={`game-card ${darkMode ? "dark" : "light"}`}
-      data-theme={darkMode ? "dark" : "light"}
-    >
-      {bigCoverUrl && <img src={bigCoverUrl} alt={gameData.name} />}
-      <h2 className={textSizeClass}>{gameData.name}</h2>
-      <p>{gameData.involved_companies?.[0]?.company?.name || "N/A"}</p>
-      <p className="numericRating">{starAverage.toFixed(1)}</p>
-      <div className="rating">{stars}</div>
-    </div>
-  );
+    return (
+        <div
+            className={`game-card ${darkMode ? "dark" : "light"}`}
+            data-theme={darkMode ? "dark" : "light"}
+        >
+            {bigCoverUrl && <img src={bigCoverUrl} alt={gameData.name} />}
+            <h2 className={textSizeClass}>{gameData.name}</h2>
+            <p>{gameData.involved_companies?.[0]?.company?.name || "N/A"}</p>
+            <p className="numericRating">{starAverage.toFixed(1)}</p>
+            <div className="rating">{stars}</div>
+
+            <div class="play-buttons-container">
+                <div class="play-button">
+                    <GameLog />
+                </div>
+                <div class="play-button">
+                    <GameLike />
+                </div>
+            </div>
+        </div>
+    );
 }
