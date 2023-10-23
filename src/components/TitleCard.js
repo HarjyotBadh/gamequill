@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/TitleCard.css";
 import GameLog from "./GameLog";
+import GameLike from "./GameLike";
 
 export default function TitleCard({ gameData }) {
     const [darkMode, setDarkMode] = React.useState(
@@ -88,7 +89,7 @@ export default function TitleCard({ gameData }) {
                     <GameLog />
                 </div>
                 <div class="play-button">
-                    <GameLog />
+                    <GameLike />
                 </div>
             </div>
         </div>
