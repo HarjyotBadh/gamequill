@@ -62,7 +62,7 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
 
               <Popup open={open} closeOnDocumentClick onClose={closeModal}>
                   <div className="modal">
-                      <a className="close" onClick={closeModal} href='Enlarged Screenshot'>
+                      <a className="close" onClick={closeModal}>
                           &times;
                       </a>
                       {selectedImageIndex !== null && (
