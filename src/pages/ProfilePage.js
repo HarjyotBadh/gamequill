@@ -3,9 +3,8 @@ import NavBar from "../components/NavBar";
 import Profile from "../components/Profile";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
-import DefaultProfilePicture from "../images/defaultProfilePicture.png";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-export default function ProfilePage({}) {
+export default function ProfilePage({ userId }) {
   const [loading, setLoading] = useState(true);
 
   var uid;
@@ -15,9 +14,17 @@ export default function ProfilePage({}) {
       if (user) {
         console.log("User is signed in:", user);
         uid = user.uid; // use the uid from the auth state change
+        if (userId) {
+          uid = userId;
+        }
         await fetchData(uid); // fetch data here with the uid
       } else {
-        window.location.href = "/login";
+        if (userId) {
+          uid = userId;
+          await fetchData(uid);
+        } else {
+          window.location.href = "/login";
+        }
       }
       setLoading(false); // set loading to false after auth check
     });
@@ -27,7 +34,7 @@ export default function ProfilePage({}) {
   }, []);
 
   const defaultProfileData = {
-    profilePicture: DefaultProfilePicture,
+    profilePicture: "",
     bio: "",
     pronouns: "",
     favoriteGames: ["", "", "", ""],
@@ -38,14 +45,9 @@ export default function ProfilePage({}) {
 
   const [profileData, setProfileData] = useState(defaultProfileData);
 
-  // useEffect(() => {
   const fetchData = async (uid) => {
     const docRef = doc(db, "profileData", uid);
-    // const snapshot = await getDocs(
-    //   collection(db, "profileData", accountNumber)
-    // );
     const snapshot = await getDoc(docRef);
-    //console.log("print");
 
     if (!snapshot.empty) {
       const docData = snapshot.data();
@@ -76,13 +78,14 @@ export default function ProfilePage({}) {
     return <div>Loading...</div>;
   }
 
-  //   fetchData();
-  // }, []);
-
   return (
     <div>
       <NavBar />
-      <Profile profileData={profileData} setProfileData={setProfileData} />
+      <Profile
+        profileData={profileData}
+        setProfileData={setProfileData}
+        userId={userId}
+      />
     </div>
   );
 }

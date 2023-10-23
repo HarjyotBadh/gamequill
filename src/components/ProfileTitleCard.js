@@ -2,7 +2,7 @@ import React from "react";
 import "../styles/ProfileTitleCard.css";
 
 export default function ProfileTitleCard({ gameData }) {
-  if (!gameData) return <div>Loading...</div>;
+  if (!gameData) return <div></div>;
   //console.log("gameData", gameData);
 
   const bigCoverUrl = gameData
