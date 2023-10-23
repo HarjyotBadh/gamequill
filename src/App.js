@@ -7,6 +7,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import ResetPassword from "./components/ResetPassword";
 import RegistrationSuccessPage from "./pages/RegistrationSuccessPage";
+import ReviewCreationPage from "./pages/ReviewCreationPage";
 import SearchPageWrapper from "./components/SearchPageWrapper";
 
 function App() {
@@ -20,6 +21,8 @@ function App() {
       <Route path="/reset-password" element={<ResetPassword />} />{" "}
       <Route path="/home" element={<HomePage />} />
       <Route path="/game" element={<GamePageWrapper />} />
+      <Route path="/registrationsuccess" element={<RegistrationSuccessPage />} />
+      <Route path="/reviewcreation" element={<ReviewCreationPage />} />
       <Route
         path="/registrationsuccess"
         element={<RegistrationSuccessPage />}

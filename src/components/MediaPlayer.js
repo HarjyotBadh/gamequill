@@ -53,7 +53,7 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
                       </div>
                   ))}
 
-                  {youtubeLinks.map((videoId, index) => (
+                  {youtubeLinks.map((videoId) => (
                       <div key={videoId} className="youtube-video-wrapper">
                           <YouTube videoId={videoId} opts={opts} />
                       </div>
@@ -62,7 +62,7 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
 
               <Popup open={open} closeOnDocumentClick onClose={closeModal}>
                   <div className="modal">
-                      <a className="close" onClick={closeModal}>
+                      <a className="close" onClick={closeModal} href='Enlarged Screenshot'>
                           &times;
                       </a>
                       {selectedImageIndex !== null && (
