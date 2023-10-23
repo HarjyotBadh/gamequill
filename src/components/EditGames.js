@@ -1,5 +1,5 @@
 // Import necessary dependencies and components
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Popup from "reactjs-popup";
 import ProfileTitleCard from "./ProfileTitleCard";
 import "../styles/EditGames.css";

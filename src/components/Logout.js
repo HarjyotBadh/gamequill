@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
-import "./logout.css"; // Import the CSS file
-import "./Login.css";
+import "../styles/logout.css"; // Import the CSS file
+import "../styles/Login.css";
 
 function Logout() {
   const auth = getAuth();

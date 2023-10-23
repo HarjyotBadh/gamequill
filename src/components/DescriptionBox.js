@@ -1,4 +1,5 @@
 import React from "react";
+import { Spinner } from "@material-tailwind/react";
 import "../styles/DescriptionBox.css";
 import xboxLogo from "../images/platform_logos/Xbox_logo.png";
 import playstationLogo from "../images/platform_logos/PlayStation_Logo.png";
@@ -32,7 +33,7 @@ export default function DescriptionBox({ gameData }) {
         };
     }, []);
 
-    if (!gameData) return <div>Loading...</div>;
+    if (!gameData) return <Spinner color="blue" />;
 
     // Get the game's summary, storyline, and genres.
     const summary = gameData.summary;
@@ -183,29 +184,31 @@ export default function DescriptionBox({ gameData }) {
     const platforms = gameData.platforms.map(getPlatformLink);
 
     return (
-        <div
-            className={`description-box ${darkMode ? "dark" : "light"}`}
-            data-theme={darkMode ? "dark" : "light"}
-        >
-            <h1> Summary </h1>
-            <p>{summary}</p>
-            <h1> Genres </h1>
-            <p>{genres}</p>
-            {storyline && <h1> Storyline </h1>}
-            {storyline && <p>{storyline}</p>}
-            <h1> Platforms </h1>
-            <div className="platform-container">{platforms}</div>
-            <h1> Age Rating </h1>
-            {esrbDetails && (
-                <>
-                    <img
-                        src={esrbDetails.image}
-                        alt={gameData.esrb_rating}
-                        className="esrb-image"
-                    />
-                    <p className="esrb-description">{esrbDescription}</p>
-                </>
-            )}
+        <div>
+            <div
+                className={`description-box ${darkMode ? "dark" : "light"}`}
+                data-theme={darkMode ? "dark" : "light"}
+            >
+                <h1> Summary </h1>
+                <p>{summary}</p>
+                <h1> Genres </h1>
+                <p>{genres}</p>
+                {storyline && <h1> Storyline </h1>}
+                {storyline && <p>{storyline}</p>}
+                <h1> Platforms </h1>
+                <div className="platform-container">{platforms}</div>
+                <h1> Age Rating </h1>
+                {esrbDetails && (
+                    <>
+                        <img
+                            src={esrbDetails.image}
+                            alt={gameData.esrb_rating}
+                            className="esrb-image"
+                        />
+                        <p className="esrb-description">{esrbDescription}</p>
+                    </>
+                )}
+            </div>
         </div>
     );
 }

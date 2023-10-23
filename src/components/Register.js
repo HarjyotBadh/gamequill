@@ -1,19 +1,18 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import gamequillLogo from "../images/gamequill.png";
-import "./Register.css";
+import "../styles/Register.css";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   setPersistence,
   browserLocalPersistence,
-  sendEmailVerification
+  sendEmailVerification,
 } from "firebase/auth";
 
 import {
   getFirestore,
   collection,
-  addDoc,
   query,
   where,
   getDocs,
@@ -26,7 +25,6 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [pronouns, setPronouns] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordMatchError, setPasswordMatchError] = useState("");
   const [registrationError, setRegistrationError] = useState("");
@@ -108,26 +106,27 @@ function Register() {
         password
       );
       const user = userCredential.user;
-    
+
       // Send email verification
       await sendEmailVerification(user);
-    
+
       const userData = {
         bio: "",
         username,
         email,
-        pronouns,
+        pronouns: "",
         favoriteGames: ["", "", "", ""],
         favoriteGenres: ["", "", "", ""],
         name: "",
-        profilePicture: "",
+        profilePicture:
+          "https://firebasestorage.googleapis.com/v0/b/gamequill-3bab8.appspot.com/o/profilePictures%2FdefaultProfilePicture.png?alt=media&token=3d964f48-c8b6-4fab-8f5e-d7ebf6addc61",
       };
-    
+
       // Store user data in Firestore
       await setDoc(doc(profileDataCollection, user.uid), userData); // make sure to use user.uid
-    
+
       console.log("Registration successful. Verification email sent:", user);
-      
+
       // Redirecting or showing a message that verification email is sent and user should verify email
       window.location.href = "/registrationsuccess"; // You might want to change this part to wait until the user verifies their email.
       // For now, you can redirect them to a "Please verify your email" page or show a message.
@@ -138,7 +137,6 @@ function Register() {
       setRegistrationError(errorMessage);
       setShowPopup(true);
     }
-    
   };
 
   const closePopup = () => {
@@ -199,16 +197,6 @@ function Register() {
           {passwordMatchError && (
             <p className="error-message">{passwordMatchError}</p>
           )}
-        </div>
-        <div className="form-input">
-          <label htmlFor="pronouns">Pronouns:</label>
-          <input
-            type="text"
-            id="pronouns"
-            value={pronouns}
-            onChange={(e) => setPronouns(e.target.value)}
-            required
-          />
         </div>
         <button type="submit" className="register-button">
           Register

@@ -1,0 +1,76 @@
+:root {
+  /* Light theme */
+  --background-light: #fafafa;
+  --text-color-light: #618edb;
+  --rating-color-light: #618edb;
+
+  /* Dark theme */
+  --background-dark: #4b5563;
+  --text-color-dark: #92a8d1;
+  --rating-color-dark: #92a8d1;
+}
+
+[data-theme="dark"] {
+  --background: var(--background-dark);
+  --text-color: var(--text-color-dark);
+  --rating-color: var(--rating-color-dark);
+}
+
+[data-theme="light"] {
+  --background: var(--background-light);
+  --text-color: var(--text-color-light);
+  --rating-color: var(--rating-color-light);
+}
+
+.star-container {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: transform 0.3s ease, color 0.3s ease;
+  color: var(--text-color);
+}
+
+.star-container:hover {
+  transform: scale(1.2);
+}
+
+
+.stars-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+
+.star-icon {
+  width: 30px; /* Star size */
+  height: 30px; /* Star size */
+  color: #bbbac0;
+}
+
+.full-star {
+  color: var(--rating-color);
+}
+
+.half-star-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 15px; /* Half Star size */
+  height: 30px; /* Star size */
+}
+
+.flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.star-rating {
+  margin-bottom: 0.5rem;
+  color: var(--rating-color);
+  font-size: 1.5rem; /* Font Size */
+  font-weight: bold;
+}

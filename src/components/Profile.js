@@ -9,39 +9,31 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import EditGenre from "./EditGenre";
 import { Link } from "react-router-dom";
 
-function Profile({ profileData, setProfileData }) {
+function Profile({ profileData, setProfileData, userId }) {
   const [gameCovers, setGameCovers] = useState([]);
   const [genres, setGenres] = useState([]);
   const [gameIds, setGameIds] = useState([]);
 
   const auth = getAuth();
-  //console.log("User: ", auth.currentUser.uid);
-  //const uid = "GPiU3AHpvyOhnbsVSzap";
-  //
-  var uid = auth.currentUser.uid;
+  var isUser = false;
+  if (auth.currentUser != null && userId == auth.currentUser.uid) {
+    isUser = true;
+  }
+  //var uid = auth.currentUser.uid;
 
   useEffect(() => {
-    // auth = getAuth();
-    // uid = auth.currentUser.uid;
-    // onAuthStateChanged(auth, (user) => {
-    //   if (user) {
-    //     console.log("User is already signed in:", user);
-    //     uid = auth.currentUser.uid;
-    //   } else {
-    //     window.location.href = "/login";
-    //   }
-    // });
     const corsAnywhereUrl = "http://localhost:8080/";
     const apiUrl = "https://api.igdb.com/v4/covers";
 
     const fetchCovers = async () => {
-      if (auth.currentUser == null) {
+      if (auth.currentUser == null && userId == auth.currentUser.uid) {
         window.location.href = "/login";
         //uid = "GPiU3AHpvyOhnbsVSzap";
-      } else {
-        uid = auth.currentUser.uid;
       }
-      const docRef = doc(db, "profileData", uid);
+      // else {
+      //   uid = auth.currentUser.uid;
+      // }
+      const docRef = doc(db, "profileData", userId);
       const docSnapshot = await getDoc(docRef);
       const favoriteGames = docSnapshot.data().favoriteGames || [];
       const coverPromises = favoriteGames.map(async (id) => {
@@ -93,20 +85,24 @@ function Profile({ profileData, setProfileData }) {
         <div className="Bio border-2 dark:border-white border-black w-96 h-48 mx-4 p-2 dark:text-white text-black">
           {profileData.bio}
         </div>
-        <div className="menuButtons border-2 dark:border-white border-black w-72 h-60 ml-10 p-2 dark:text-white text-black flex flex-col">
-          <EditProfile
-            profileData={profileData}
-            setProfileData={setProfileData}
-          />
-        </div>
+        {isUser && (
+          <div className="menuButtons border-2 dark:border-white border-black w-72 h-60 ml-10 p-2 dark:text-white text-black flex flex-col">
+            <EditProfile
+              profileData={profileData}
+              setProfileData={setProfileData}
+            />
+          </div>
+        )}
       </div>
       <div className="ml-20 dark:text-white text-black flex gap-4">
         Favorite Games
-        <EditGames
-          gameCovers={gameCovers}
-          setGameCovers={setGameCovers}
-          gameIds={profileData.favoriteGames}
-        />
+        {isUser && (
+          <EditGames
+            gameCovers={gameCovers}
+            setGameCovers={setGameCovers}
+            gameIds={profileData.favoriteGames}
+          />
+        )}
       </div>
       <div className="FavoriteGames flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-white text-black">
         <div className="GameCover1 w-30 h-32 text-center border dark:border-white border-black">
@@ -132,7 +128,7 @@ function Profile({ profileData, setProfileData }) {
       </div>
       <div className="ml-20 dark:text-white text-black flex gap-4">
         Favorite Genres
-        <EditGenre genres={genres} setGenres={setGenres} />
+        {isUser && <EditGenre genres={genres} setGenres={setGenres} />}
       </div>
       <div className="FavoriteGenres flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-whitetext-black">
         {profileData.favoriteGenres.map((genre, index) => (

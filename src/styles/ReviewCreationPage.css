@@ -1,0 +1,105 @@
+:root {
+    /* Light theme */
+    --wrapper-light: #f3f4f6;
+    --text-color-light: #333;
+
+    /* Dark theme */
+    --wrapper-dark: rgb(107, 114, 128);
+    --text-color-dark: #f5f5f5;
+}
+
+[data-theme="dark"] {
+    --wrapper: var(--wrapper-dark);
+    --text-color: var(--text-color-dark);
+}
+
+[data-theme="light"] {
+    --wrapper: var(--wrapper-light);
+    --text-color: var(--text-color-light);
+}
+
+.review-page-wrapper {
+    background-color: var(--wrapper);
+    min-height: 100vh;
+    
+}
+.review-page-stuff {
+    display: flex;
+    justify-content: space;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+/* flex justify-between items-start px-16 py-8 */
+
+.review-content-layout {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+.review-content-container {
+    flex: 2;
+    width: 66%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: var(--background);
+    margin-top: 20px;
+    margin-bottom: 100px;
+}
+
+.review-content-container h1 {
+    text-align: center;
+    color: var(--text-color);
+}
+
+.review-content-container textarea {
+    width: 100%;
+    height: 1000px;
+}
+
+.post-review-button {
+    background-color: var(--rating-color); /* Use the text color for button background */
+    color: var(--text-color); /* Use the wrapper color for text */
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 50%;
+    margin: 0 auto;
+    transition: background-color 0.3s ease;
+}
+
+.post-review-button:hover {
+    background-color: var(--wrapper-dark); /* Darken the button a bit on hover */
+}
+
+.post-review-button:active {
+    background-color: var(--text-color-light); /* Lighten the button a bit when active/clicked */
+}
+
+.centered-dialog {
+    position: fixed;
+    top: 25%;
+    left: 35%;
+    /* transform: translate(-50%, -50%); */
+    z-index: 1000;
+    width: auto;
+    max-width: 90%;
+    box-sizing: border-box;
+}
+
+
