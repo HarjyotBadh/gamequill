@@ -22,7 +22,7 @@ const SearchPage = ({ searchQuery }) => {
             "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
             Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
           },
-          body: `search "${searchQuery}";fields name, cover.url, aggregated_rating; limit:50; where category = (0,8,9);`,
+          body: `search "${searchQuery}";fields name, cover.url, aggregated_rating, involved_companies.company.name; limit:50; where category = (0,8,9);`,
         });
 
         const data = await response.json();
@@ -50,9 +50,6 @@ const SearchPage = ({ searchQuery }) => {
       <Link to={`/game?game_id=${item.id}`}>
         <TitleCard gameData={item.gameData} />
       </Link>
-
-      {/* <Text style={styles.gameTitle}>{item.title}</Text>
-      <Text style={styles.gameDescription}>{item.description}</Text> */}
     </View>
   );
 
@@ -67,18 +64,21 @@ const SearchPage = ({ searchQuery }) => {
       <NavBar />
       <View style={styles.container}>
         <View style={styles.resultsContainer}>
-          <FlatList
-            data={games}
-            renderItem={renderGame}
-            // keyExtractor={(item) => item.id.toString()}
-            style={styles.gamesList}
-          />
-          <FlatList
-            data={users}
-            renderItem={renderUser}
-            // keyExtractor={(item) => item.id}
-            style={styles.usersList}
-          />
+          <View style={styles.gamesColumn}>
+            <FlatList
+              data={games}
+              renderItem={renderGame}
+              style={styles.gamesList}
+              numColumns={2}
+            />
+          </View>
+          <View style={styles.usersColumn}>
+            <FlatList
+              data={users}
+              renderItem={renderUser}
+              style={styles.usersList}
+            />
+          </View>
         </View>
       </View>
     </div>
@@ -86,46 +86,27 @@ const SearchPage = ({ searchQuery }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  searchInput: {
-    height: 40,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    marginBottom: 16,
-  },
   resultsContainer: {
-    flex: 1,
+    display: "flex",
     flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
-  gamesList: {
-    flex: 3,
+  gamesColumn: {
+    flexBasis: "48%",
+    marginRight: "2%",
   },
-  usersList: {
-    flex: 1,
+  usersColumn: {
+    flexBasis: "48%",
   },
   gameContainer: {
     backgroundColor: "#fff",
     borderRadius: 8,
-    padding: 16,
     marginBottom: 16,
-  },
-  gameTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  gameDescription: {
-    fontSize: 14,
   },
   userContainer: {
     backgroundColor: "#fff",
     borderRadius: 8,
-    padding: 16,
     marginBottom: 16,
   },
   username: {
