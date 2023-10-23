@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
 import NavBar from "../components/NavBar";
 import TitleCard from "../components/TitleCard";
 import { Link } from "react-router-dom";
 
 const SearchPage = ({ searchQuery }) => {
-  const [query, setQuery] = useState("");
   const [games, setGames] = useState([]);
   const [users, setUsers] = useState([]);
-  console.log(searchQuery);
+
   useEffect(() => {
     const searchGames = async () => {
       try {
@@ -28,8 +26,6 @@ const SearchPage = ({ searchQuery }) => {
         const data = await response.json();
         if (data.length) {
           const gamesData = data.map((game) => ({
-            // title: game.name,
-            // description: "", // Add description logic if available
             id: game.id,
             gameData: game,
           }));
@@ -46,46 +42,51 @@ const SearchPage = ({ searchQuery }) => {
   }, [searchQuery]);
 
   const renderGame = ({ item }) => (
-    <View style={styles.gameContainer}>
+    <div style={styles.gameContainer}>
       <Link to={`/game?game_id=${item.id}`}>
         <TitleCard gameData={item.gameData} />
       </Link>
-    </View>
+    </div>
   );
 
   const renderUser = ({ item }) => (
-    <View style={styles.userContainer}>
-      <Text style={styles.username}>{item.username}</Text>
-    </View>
+    <div style={styles.userContainer}>
+      <div style={styles.username}>{item.username}</div>
+    </div>
   );
 
   return (
     <div>
       <NavBar />
-      <View style={styles.container}>
-        <View style={styles.resultsContainer}>
-          <View style={styles.gamesColumn}>
-            <FlatList
-              data={games}
-              renderItem={renderGame}
-              style={styles.gamesList}
-              numColumns={2}
-            />
-          </View>
-          <View style={styles.usersColumn}>
-            <FlatList
-              data={users}
-              renderItem={renderUser}
-              style={styles.usersList}
-            />
-          </View>
-        </View>
-      </View>
+      <div style={styles.container}>
+        <div style={styles.resultsContainer}>
+          <div style={styles.gamesColumn}>
+            {games.map((game) => (
+              <div key={game.id} style={styles.gameContainer}>
+                <Link to={`/game?game_id=${game.id}`}>
+                  <TitleCard gameData={game.gameData} />
+                </Link>
+              </div>
+            ))}
+          </div>
+          <div style={styles.usersColumn}>
+            {users.map((user) => (
+              <div key={user.id} style={styles.userContainer}>
+                <div style={styles.username}>{user.username}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
+  container: {
+    flex: 1,
+    padding: 16,
+  },
   resultsContainer: {
     display: "flex",
     flexDirection: "row",
@@ -113,6 +114,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-});
+};
 
 export default SearchPage;
