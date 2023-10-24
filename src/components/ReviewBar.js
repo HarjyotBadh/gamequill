@@ -18,7 +18,7 @@ export const fetchReviewsByGameId = async (gameID) => {
     return reviews;
 };
 
-const generateStars = (rating) => {
+export const generateStars = (rating) => {
     const fullStars = Math.floor(rating);
     const starArr = [];
 

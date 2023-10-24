@@ -117,31 +117,31 @@ export default function GamePage({ game_id }) {
     }, [game_id]);
 
     return (
-        <div
-            className={`game-page-wrapper ${darkMode ? "dark" : "light"}`}
-            data-theme={darkMode ? "dark" : "light"}
-        >
+        <div className={`game-page-wrapper ${darkMode ? "dark" : "light"}`} data-theme={darkMode ? "dark" : "light"}>
             <NavBar />
-
-            <div className="game-content-container">
-                <div className="left-content">
-                    <TitleCard gameData={gameData} />
-                    <MediaPlayer
-                        screenshots={screenshots}
-                        youtubeLinks={videos}
-                    />
+    
+            {gameData ? (
+                <div className="game-content-container">
+                    <div className="left-content">
+                        <TitleCard gameData={gameData} />
+                        <MediaPlayer screenshots={screenshots} youtubeLinks={videos} />
+                    </div>
+    
+                    <div className="right-content">
+                        <ReviewBar gameID={parseInt(game_id, 10)} userHasReview={userHasReview} gameData={gameData} />
+                        <DescriptionBox gameData={gameData} />
+                    </div>
+    
+                    <Link to="/reviewcreation" state={{ gameData }}>
+                        Write a review
+                    </Link>
                 </div>
-
-                <div className="right-content">
-                    <ReviewBar gameID={parseInt(game_id, 10)} userHasReview={userHasReview} gameData={gameData} />
-                    <DescriptionBox gameData={gameData} />
-                </div>
-
-                <Link to="/reviewcreation" state={{gameData}}>
-                    Write a review
-                </Link>
-            </div>
+            ) : (
+                <div className="loading-container">Loading...</div>
+            )}
+    
             <NavBar />
         </div>
     );
+    
 }
