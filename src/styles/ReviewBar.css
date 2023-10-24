@@ -1,0 +1,139 @@
+:root {
+    --rating-color: #FFD700; /* Gold color for full stars */
+    --star-color: #CCCCCC;   /* Grey color for empty stars */
+}
+
+.review-bar {
+    background-color: var(--background);
+    padding: 1% 4%;  /* Reduced the vertical padding */
+    margin: 1% 2%;
+    border-radius: 20px;
+    width: 95%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.review-bar:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.review-bar h1, .review-bar h2 {
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 16px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 8px;
+    margin-bottom: 8px;  /* Reduced margin-bottom */
+    padding-bottom: 4px;  /* Reduced padding-bottom */
+}
+
+.review-bar p, .review-bar span {
+    color: var(--secondary-text-color);
+    line-height: 1.5;
+    margin-bottom: 8px;  /* Reduced margin-bottom */
+}
+
+.review-bar-button {
+    background-color: var(--text-color);
+    color: var(--background);
+    padding: 8px 16px; /* Increased horizontal padding */
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+    border: none;
+    font-size: 1em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Added a subtle shadow */
+}
+
+.review-bar-button:hover {
+    background-color: var(--secondary-text-color);
+    transform: translateY(-2px); /* Reduced translation for subtle lift */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Increased shadow on hover */
+}
+
+.review-stats-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem; /* Increased gap for better spacing between stats */
+    justify-content: space-between;
+    margin-top: 1rem; /* Added some top margin for better spacing */
+    margin-top: 0.5rem;  /* Reduced top margin */
+}
+
+.rating-icon {
+    width: 20px;
+    height: auto;
+    margin-left: 4px;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;  /* Reduced margin-bottom */
+}
+
+.review-title {
+    font-size: 1.125rem; /* Equivalent to Tailwind's text-lg */
+    font-weight: 700;
+}
+
+.review-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centered items horizontally */
+    text-align: center; /* Centered text */
+}
+
+.stat-title, .stat-value {
+    margin-bottom: 0.125rem;  /* Reduced margin-bottom */
+}
+
+.rating {
+    white-space: nowrap;  /* Ensure stars don't wrap */
+    overflow: hidden;  /* Hide any overflowing content */
+    text-align: center;
+    margin-bottom: 16px; /* Added some space below the stars */
+    margin-bottom: 8px;  /* Reduced margin-bottom */
+}
+
+.review-bar .fullStar, .review-bar .emptyStar, .review-bar .halfStar {
+    font-size: 20px;
+    margin: 0 1px;  /* Slight margin on each side */
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    vertical-align: middle;
+}
+
+.review-bar .fullStar {
+    color: var(--rating-color);
+}
+
+.review-bar .halfStar {
+    color: var(--star-color); 
+}
+
+.review-bar .halfStar::before {
+    content: "★";
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: var(--rating-color);
+    clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+}
+
+.review-bar .emptyStar {
+    color: var(--star-color); 
+}
+

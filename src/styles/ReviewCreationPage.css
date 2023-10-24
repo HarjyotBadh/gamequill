@@ -31,6 +31,8 @@
     gap: 20px;
     max-width: 90%;
     margin: 0 auto;
+    margin-top: 2%;
+    /* background-color: red; */
 }
 
 /* flex justify-between items-start px-16 py-8 */
@@ -56,7 +58,7 @@
     border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background-color: var(--background);
-    margin-top: 20px;
+    /* margin-top: 20px; */
     margin-bottom: 100px;
 }
 

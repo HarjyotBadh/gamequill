@@ -33,8 +33,10 @@
 .game-card {
     background-color: var(--background);
     border: 1px solid var(--background);
-    padding: 2% 4%; 
-    margin: 1% 2%;
+    padding: 2% 4%;
+    /* margin: 1% 2%; */
+    margin-left: 2%;
+    margin-right: 2%;
     border-radius: 20px;
     width: 90%;
     max-width: 250px;
@@ -43,7 +45,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     /* max-height: 565px; */
-    /* border: 1px solid rgb(0, 255, 119); */
+    /* border: 1px solid var(--text-color); */
 }
 
 .game-card:hover {
@@ -136,9 +138,6 @@
 .emptyStar {
     color: var(--star-color); 
 }
-
-
-
 
 
 .play-buttons-container {

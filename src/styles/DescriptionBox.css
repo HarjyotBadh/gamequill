@@ -24,7 +24,7 @@
 
 .description-box {
     background-color: var(--background); /* A subtle light gray background */
-    border: 1px solid #ddd;
+    /* border: 1px solid #ddd; */
     padding: 2% 4%; /* Increased horizontal padding */
     margin: 1% 2%; /* Slightly increased margin for better spacing */
     border-radius: 20px;
@@ -61,7 +61,7 @@
 }
 
 .platform-logo:hover {
-    transform: scale(1.1); /* Slightly increase the size of logo when hovered */
+    transform: scale(1.1);
 }
 
 .platform-container {
