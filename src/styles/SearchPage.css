@@ -1,38 +1,18 @@
 .resultsContainer {
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
-  }
-  .searchContainer {
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 16px;
   }
   
   .gamesColumn, .usersColumn {
     flex: 1;
-  }
-  
-  .gamesColumn {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     gap: 16px;
+    margin-top: 16px;
   }
   
   .usersColumn {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  
-  @media (min-width: 768px) {
-    .gamesColumn, .usersColumn {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    
+    margin-left: 16px; /* Add some space between columns */
   }
   

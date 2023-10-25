@@ -1,0 +1,14 @@
+.custom-avatar {
+    border-radius: 50%;
+    object-fit: cover;
+}
+.medium-avatar {
+    width: 200px;
+    height: 200px;
+}
+.profile-card{
+    height: 500px;
+}
+.userContainer{
+    /* flex: 1 1 calc(50% - 8px);  */
+}
