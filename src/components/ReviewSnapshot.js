@@ -150,6 +150,7 @@ export default function ReviewSnapshot({ game_id }) {
                                     }
                                     onClick={() => handleLike(review)}
                                 />
+                                
                                 <span className="like-count">
                                     {(review.userLikes
                                         ? review.userLikes.length
@@ -158,9 +159,11 @@ export default function ReviewSnapshot({ game_id }) {
                             </div>
                         </div>
                     </div>
-                    <p className="review-text">
-                        {review.reviewText.substring(0, 1000)}...
-                    </p>
+                    <Link to={`/review/${review.id}`}>
+                        <p className="review-text">
+                            {review.reviewText.substring(0, 1000)}...
+                        </p>
+                    </Link>
                 </div>
             ))}
         </div>

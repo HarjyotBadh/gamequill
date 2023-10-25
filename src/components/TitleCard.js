@@ -1,6 +1,7 @@
 import React from "react";
 import { Spinner } from "@material-tailwind/react";
 import { fetchReviewsByGameId, generateStars } from "./ReviewBar";
+import { Link } from "react-router-dom";
 import "../styles/TitleCard.css";
 import GameLog from "./GameLog";
 import GameLike from "./GameLike";
@@ -56,7 +57,11 @@ export default function TitleCard({ gameData }) {
             className={`game-card ${darkMode ? "dark" : "light"}`}
             data-theme={darkMode ? "dark" : "light"}
         >
-            {bigCoverUrl && <img src={bigCoverUrl} alt={gameData.name} />}
+            {bigCoverUrl && (
+                <Link to={`/game?game_id=${gameData.id}`}>  {/* Wrap the image in a Link */}
+                    <img src={bigCoverUrl} alt={gameData.name} />
+                </Link>
+            )}
             <h2 className={textSizeClass}>{gameData.name}</h2>
             <p>{gameData.involved_companies?.[0]?.company?.name || "N/A"}</p>
             <p className="numericRating">{averageRating}</p>

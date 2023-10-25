@@ -70,7 +70,12 @@ export default function ReviewBar({ gameID, userHasReview, gameData }) {
     useEffect(() => {
         fetchReviewsByGameId(gameID).then((reviews) => {
             setNumberOfReviews(reviews.length);
-            setAverageRating(calculateAverageRating(reviews));
+            const reviewRating = calculateAverageRating(reviews);
+            if (reviewRating === "NaN") {
+                setAverageRating("0.0");
+            } else {
+                setAverageRating(reviewRating);
+            }
         });
     }, [gameID]);
 

@@ -11,6 +11,47 @@ import ReviewBar from "../components/ReviewBar";
 import ReviewSnapshot from "../components/ReviewSnapshot";
 import "../styles/GamePage.css";
 
+export const fetchGameDataFromIGDB = async (game_id) => {
+    const corsAnywhereUrl = "http://localhost:8080/";
+    const apiUrl = "https://api.igdb.com/v4/games";
+
+    try {
+        const response = await fetch(corsAnywhereUrl + apiUrl, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+                Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
+            },
+            body: `
+                fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*;
+                where id = ${game_id};
+            `,
+        });
+
+        const data = await response.json();
+
+        if (data.length) {
+            const game = data[0];
+
+            const screenshotUrls = game.screenshots
+                ? game.screenshots.map((s) =>
+                        s.url.replace("t_thumb", "t_1080p")
+                    )
+                : [];
+
+            const videoIds = game.videos ? game.videos.map((v) => v.video_id) : [];
+
+            return { game, screenshotUrls, videoIds };
+        }
+
+        return null;
+    } catch (err) {
+        console.error(err);
+        return null;
+    }
+};
+
 export default function GamePage({ game_id }) {
     const [gameData, setGameData] = useState(null);
     const [screenshots, setScreenshots] = useState([]);
@@ -76,44 +117,13 @@ export default function GamePage({ game_id }) {
             // Get the game data from Firebase
             await getGameData(game_id);
 
-            // If the game doesn't exist on Firebase, then fetch it from IGDB API
-            const corsAnywhereUrl = "http://localhost:8080/";
-            const apiUrl = "https://api.igdb.com/v4/games";
+            const gameDataFromIGDB = await fetchGameDataFromIGDB(game_id);
 
-            fetch(corsAnywhereUrl + apiUrl, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                    Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
-                },
-                body: `
-                    fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*;
-                            where id = ${game_id};
-                            `,
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.length) {
-                        const game = data[0];
-                        setGameData(game);
-
-                        // Get screenshots URLs
-                        const screenshotUrls = game.screenshots
-                            ? game.screenshots.map((s) =>
-                                    s.url.replace("t_thumb", "t_1080p")
-                                )
-                            : [];
-                        setScreenshots(screenshotUrls);
-
-                        // Get video IDs
-                        const videoIds = game.videos ? game.videos.map((v) => v.video_id) : [];
-                        setVideos(videoIds);
-                    }
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
+            if (gameDataFromIGDB) {
+                setGameData(gameDataFromIGDB.game);
+                setScreenshots(gameDataFromIGDB.screenshotUrls);
+                setVideos(gameDataFromIGDB.videoIds);
+            }
         })();
     }, [game_id]);
 
