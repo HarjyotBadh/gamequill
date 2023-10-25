@@ -112,14 +112,6 @@ function App() {
               )}
             </li>
             <li>
-              <Link
-                to="/Game"
-                class="block py-2 pl-3 pr-4 text-gray-900 rounded  md:hover:bg-transparent md:border-0  md:p-0 text-white md:hover:text-blue-500 hover:bg-gray-600 hover:text-white md:hover:bg-transparent"
-              >
-                Games
-              </Link>
-            </li>
-            <li>
               {user ? (
                 <button
                   onClick={handleLogout}

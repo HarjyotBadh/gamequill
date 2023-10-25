@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import TitleCard from "../components/TitleCard";
 import { Link } from "react-router-dom";
+import "../styles/SearchPage.css";
+import GameColumn from "../components/GamesColumn";
+import UserColumn from "../components/UserColumn";
 
 const SearchPage = ({ searchQuery }) => {
   const [games, setGames] = useState([]);
@@ -41,79 +44,17 @@ const SearchPage = ({ searchQuery }) => {
     }
   }, [searchQuery]);
 
-  const renderGame = ({ item }) => (
-    <div style={styles.gameContainer}>
-      <Link to={`/game?game_id=${item.id}`}>
-        <TitleCard gameData={item.gameData} />
-      </Link>
-    </div>
-  );
-
-  const renderUser = ({ item }) => (
-    <div style={styles.userContainer}>
-      <div style={styles.username}>{item.username}</div>
-    </div>
-  );
-
   return (
-    <div>
+    <div className="bg-white dark:bg-gray-500 h-screen">
       <NavBar />
-      <div style={styles.container}>
-        <div style={styles.resultsContainer}>
-          <div style={styles.gamesColumn}>
-            {games.map((game) => (
-              <div key={game.id} style={styles.gameContainer}>
-                <Link to={`/game?game_id=${game.id}`}>
-                  <TitleCard gameData={game.gameData} />
-                </Link>
-              </div>
-            ))}
-          </div>
-          <div style={styles.usersColumn}>
-            {users.map((user) => (
-              <div key={user.id} style={styles.userContainer}>
-                <div style={styles.username}>{user.username}</div>
-              </div>
-            ))}
-          </div>
+      <div className="searchContainer bg-white dark:bg-gray-500">
+        <div className="resultsContainer bg-white dark:bg-gray-500">
+          <GameColumn games={games} />
+          <UserColumn users={users} />
         </div>
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-  resultsContainer: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-  },
-  gamesColumn: {
-    flexBasis: "48%",
-    marginRight: "2%",
-  },
-  usersColumn: {
-    flexBasis: "48%",
-  },
-  gameContainer: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  userContainer: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    marginBottom: 16,
-  },
-  username: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
 };
 
 export default SearchPage;
