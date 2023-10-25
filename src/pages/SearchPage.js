@@ -78,6 +78,15 @@ const SearchPage = ({ searchQuery }) => {
   return (
     <div className="bg-white dark:bg-gray-500 h-screen">
       <NavBar />
+      <div className="searchPageTitle" textAlign="center">
+        <h1 className="text-4xl dark:text-white text-black">
+          Search results for "{searchQuery}"
+        </h1>
+        <div className="headingsGameUser dark:text-white text-black">
+          <h2>Games</h2>
+          <h2>Users</h2>
+        </div>
+      </div>
       <div className="searchContainer bg-white dark:bg-gray-500">
         <div className="resultsContainer bg-white dark:bg-gray-500">
           <GameColumn games={games} />

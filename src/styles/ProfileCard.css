@@ -7,8 +7,14 @@
     height: 200px;
 }
 .profile-card{
-    height: 500px;
+    height: 250px;
 }
 .userContainer{
-    /* flex: 1 1 calc(50% - 8px);  */
+    max-height: 250px;
 }
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }

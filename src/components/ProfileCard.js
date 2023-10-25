@@ -24,14 +24,16 @@ const ProfileCard = ({ userId }) => {
     <div className="profile-card">
       {userData && (
         <>
-          <div className="profile-picture">
-            <Avatar
-              src={userData.profilePicture}
-              alt="Profile"
-              className="custom-avatar medium-avatar"
-            />
+          <div className="profile-info">
+            <div className="profile-picture">
+              <Avatar
+                src={userData.profilePicture}
+                alt="Profile"
+                className="custom-avatar medium-avatar"
+              />
+            </div>
+            <h2 className="dark:text-white text-black">{userData.username}</h2>
           </div>
-          <h2>{userData.username}</h2>
         </>
       )}
     </div>
