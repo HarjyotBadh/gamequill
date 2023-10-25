@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Alert } from "@material-tailwind/react";
 import {
     Dialog,
     DialogHeader,
@@ -9,11 +8,6 @@ import {
     Button,
 } from "@material-tailwind/react";
 import { db } from "../firebase";
-import StarSelection from "../components/StarSelection";
-import TitleCard from "../components/TitleCard";
-import ReviewTextField from "../components/ReviewTextField";
-import NavBar from "../components/NavBar";
-import "../styles/ReviewCreationPage.css";
 import { getAuth } from "firebase/auth";
 import {
     addDoc,
@@ -22,6 +16,11 @@ import {
     updateDoc,
     arrayUnion,
 } from "firebase/firestore";
+import StarSelection from "../components/StarSelection";
+import TitleCard from "../components/TitleCard";
+import ReviewTextField from "../components/ReviewTextField";
+import NavBar from "../components/NavBar";
+import "../styles/ReviewCreationPage.css";
 
 export default function ReviewCreationPage() {
     const location = useLocation();
@@ -72,7 +71,7 @@ export default function ReviewCreationPage() {
         }
 
         try {
-            // Add a new document with a generated id.
+            // Add a new document in the reviews collection, with a generated id.
             const docRef = await addDoc(collection(db, "reviews"), {
                 starRating: starRating,
                 reviewText: reviewText,
@@ -81,14 +80,15 @@ export default function ReviewCreationPage() {
                 uid: getAuth().currentUser.uid,
             });
 
-            // Reference to the user's document
-            const userDocRef = doc(
-                db,
-                "profileData",
-                getAuth().currentUser.uid
-            );
+            // Add the reviewID to the game's reviews list.
+            const gameDocRef = doc(db, "games", gameID.toString());
+            console.log("The gameDocRef is: ", gameDocRef);
+            await updateDoc(gameDocRef, {
+                reviews: arrayUnion(docRef.id),
+            });
 
-            // Add the review's ID to the user's profile in array of reviews
+            // Add the review's ID to the user's profile in array of reviews.
+            const userDocRef = doc(db, "profileData", getAuth().currentUser.uid);
             await updateDoc(userDocRef, {
                 reviews: arrayUnion(docRef.id),
             });
