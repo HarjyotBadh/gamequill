@@ -5,54 +5,51 @@ import "../styles/TitleCard.css";
 import GameLog from "./GameLog";
 import GameLike from "./GameLike";
 
-
 export default function TitleCard({ gameData }) {
-  const [averageRating, setAverageRating] = React.useState(0);
-  const [darkMode, setDarkMode] = React.useState(
-    () =>
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-  );
+    const [averageRating, setAverageRating] = React.useState(0);
+    const [darkMode, setDarkMode] = React.useState(
+        () =>
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+    );
 
-  console.log("gameData: ", gameData);
-
-  React.useEffect(() => {
-    const matcher = window.matchMedia("(prefers-color-scheme: dark)");
-    const onChange = (e) => setDarkMode(e.matches);
-
-    matcher.addListener(onChange);
-
-    return () => {
-      matcher.removeListener(onChange);
-    };
-  }, []);
+    console.log("gameData: ", gameData);
 
     React.useEffect(() => {
-    if (gameData.id) {
-      fetchReviewsByGameId(gameData.id).then((reviews) => {
-        if (reviews.length === 0) {
-          setAverageRating('0.0');
-        } else {
-          const totalRating = reviews.reduce(
-            (sum, review) => sum + review.starRating,
-            0
-          );
-          setAverageRating((totalRating / reviews.length).toFixed(1));
+        const matcher = window.matchMedia("(prefers-color-scheme: dark)");
+        const onChange = (e) => setDarkMode(e.matches);
+
+        matcher.addListener(onChange);
+
+        return () => {
+            matcher.removeListener(onChange);
+        };
+    }, []);
+
+    React.useEffect(() => {
+        if (gameData.id) {
+            fetchReviewsByGameId(gameData.id).then((reviews) => {
+                if (reviews.length === 0) {
+                    setAverageRating("0.0");
+                } else {
+                    const totalRating = reviews.reduce(
+                        (sum, review) => sum + review.starRating,
+                        0
+                    );
+                    setAverageRating((totalRating / reviews.length).toFixed(1));
+                }
+            });
         }
-        
-      });
-    }
-  }, [gameData]);
+    }, [gameData]);
 
-  if (!gameData) return <Spinner color="blue" />;
-    
+    if (!gameData) return <Spinner color="blue" />;
 
-  const bigCoverUrl = gameData.cover
-    ? gameData.cover.url.replace("/t_thumb/", "/t_cover_big/")
-    : null;
-  const textSizeClass = gameData.name.length > 25 ? "text-xl" : "text-4xl";
+    const bigCoverUrl = gameData.cover
+        ? gameData.cover.url.replace("/t_thumb/", "/t_cover_big/")
+        : null;
+    const textSizeClass = gameData.name.length > 25 ? "text-xl" : "text-4xl";
 
-  const stars = generateStars(averageRating);
+    const stars = generateStars(averageRating);
 
     return (
         <div

@@ -27,9 +27,6 @@ export const generateStars = (rating) => {
         starArr.push(1);
     }
 
-    console.log("rating: ", rating);
-    console.log("rating-fullStars: ", rating - fullStars);
-
     // Check for half star
     if (rating - fullStars >= 0.1) {
         starArr.push(0.5);
@@ -68,10 +65,9 @@ export default function ReviewBar({ gameID, userHasReview, gameData }) {
     const [averageRating, setAverageRating] = useState(0);
 
     // Generate a random number (to the nearest 0.X) between 0 and 5
-    const randomRating = Math.round((Math.random() * (5)) * 10) / 10;
+    const randomRating = Math.round(Math.random() * 5 * 10) / 10;
 
     useEffect(() => {
-        console.log("here something");
         fetchReviewsByGameId(gameID).then((reviews) => {
             setNumberOfReviews(reviews.length);
             setAverageRating(calculateAverageRating(reviews));
@@ -91,11 +87,13 @@ export default function ReviewBar({ gameID, userHasReview, gameData }) {
             <div className="review-header">
                 <h1 className="review-title">Reviews</h1>
                 {!userHasReview && (
-                    <Link to="/reviewcreation" state={{gameData}}
-                    className="review-bar-button"
-                >
-                    Create Review
-                </Link>
+                    <Link
+                        to="/reviewcreation"
+                        state={{ gameData }}
+                        className="review-bar-button"
+                    >
+                        Create Review
+                    </Link>
                 )}
             </div>
             <div className="review-stats-container">

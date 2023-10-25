@@ -1,0 +1,136 @@
+.avatar-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ddd; /* Placeholder background, replace with actual image later */
+    margin-right: 15px;
+}
+
+.review-snapshot {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Space between reviews */
+}
+
+.review-box {
+    background-color: var(--background);
+    padding: 2% 4%;
+    margin: 1% 2%;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 95%;
+    box-sizing: border-box;
+}
+
+.review-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px; /* Space between header and review text */
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.review-username, .review-time {
+    color: var(--text-color);
+}
+
+.review-text {
+    color: var(--secondary-text-color);
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.review-rating {
+    color: #fbbf24;
+    margin-left: auto; /* Push rating to the far right */
+}
+
+.custom-avatar {
+    border-radius: 50%;
+    object-fit: cover; /* Ensure the image covers the entire space without distortion */
+}
+
+.medium-avatar {
+    width: 40px;  /* adjust this as needed */
+    height: 40px; /* adjust this as needed */
+}
+
+.review-rating-container {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between numeric rating and stars */
+    margin-left: auto; /* Push container to the far right */
+}
+
+.numericRating {
+    font-size: 20px; /* Adjust as needed */
+    font-weight: bold;
+    color: var(--rating-color);
+    margin-right: 5px; /* Space between number and stars */
+}
+
+.numericRating, .rating {
+    display: flex; /* Convert both elements to flex containers */
+    align-items: center; /* Center align the content of both elements */
+    justify-content: center; /* Horizontally center the content */
+    margin: 0; /* Remove any default margins */
+    padding: 0; /* Remove any default padding */
+}
+
+.like-button-container {
+    display: flex;
+    align-items: center;
+    margin-left: 10px; /* Added space between rating and like button */
+}
+
+
+.liked {
+    color: var(--rating-color); /* Theme primary text color when liked */
+    fill: var(--rating-color); /* Filling the thumb icon when liked */
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.not-liked {
+    color: var(--secondary-text-color); /* Theme secondary text color when not liked */
+    fill: var(--secondary-text-color); /* Filling the thumb icon when not liked */
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.like-count {
+    margin-left: 5px;
+    color: var(--text-color);
+    font-size: 14px;
+}
+
+
+@keyframes clickEffect {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.9); }
+    100% { transform: scale(1); }
+}
+
+.liked, .not-liked {
+    transition: transform 0.1s; /* Smooth transition for the scale effect */
+}
+
+.liked:active, .not-liked:active {
+    animation: clickEffect 0.2s; /* Apply the animation when the button is clicked */
+}
+
+
+
+

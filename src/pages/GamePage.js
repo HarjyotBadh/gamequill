@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc, query, collection, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
@@ -8,6 +8,7 @@ import TitleCard from "../components/TitleCard";
 import MediaPlayer from "../components/MediaPlayer";
 import DescriptionBox from "../components/DescriptionBox";
 import ReviewBar from "../components/ReviewBar";
+import ReviewSnapshot from "../components/ReviewSnapshot";
 import "../styles/GamePage.css";
 
 export default function GamePage({ game_id }) {
@@ -128,13 +129,11 @@ export default function GamePage({ game_id }) {
                     </div>
     
                     <div className="right-content">
-                        <ReviewBar gameID={parseInt(game_id, 10)} userHasReview={userHasReview} gameData={gameData} />
                         <DescriptionBox gameData={gameData} />
+                        <ReviewBar gameID={parseInt(game_id, 10)} userHasReview={userHasReview} gameData={gameData} />
+                        <ReviewSnapshot game_id={parseInt(game_id, 10)}/>
                     </div>
     
-                    <Link to="/reviewcreation" state={{ gameData }}>
-                        Write a review
-                    </Link>
                 </div>
             ) : (
                 <div className="loading-container">Loading...</div>
