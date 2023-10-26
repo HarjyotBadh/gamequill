@@ -2,12 +2,16 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { fetchGameDataFromIGDB } from "./GamePage";
 import { Link } from "react-router-dom";
-import { fetchReviewById } from "../functions/ReviewFunctions";
+import {
+    fetchReviewById,
+    parseReviewWithSpoilersToHTML,
+} from "../functions/ReviewFunctions";
 import NavBar from "../components/NavBar";
 import TitleCard from "../components/TitleCard";
 import StarSelection from "../components/StarSelection";
 import ReviewProfile from "../components/ReviewProfile";
 import "../styles/ReviewPage.css";
+import DOMPurify from "dompurify";
 
 export default function ReviewPage() {
     const { review_id } = useParams();
@@ -84,9 +88,16 @@ export default function ReviewPage() {
                         setStarRating={() => {}}
                         readOnly
                     />
-                    <div className="review-text">
-                        <pre>{reviewData.reviewText}</pre>
-                    </div>
+                    <div
+                        className="review-text"
+                        dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(
+                                parseReviewWithSpoilersToHTML(
+                                    reviewData.reviewText
+                                )
+                            ),
+                        }}
+                    />
                 </div>
             </div>
         </div>

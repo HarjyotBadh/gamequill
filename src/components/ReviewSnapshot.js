@@ -8,8 +8,10 @@ import { Avatar } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { HandThumbUpIcon } from "@heroicons/react/24/solid";
 import { generateStars } from "../functions/RatingFunctions";
-import { fetchReviewsByGameId } from "../functions/ReviewFunctions";
+import { fetchReviewsByGameId,  parseReviewWithSpoilersToHTML} from "../functions/ReviewFunctions";
 import "../styles/ReviewSnapshot.css";
+import DOMPurify from "dompurify";
+
 
 
 export default function ReviewSnapshot({ game_id }) {
@@ -123,9 +125,11 @@ export default function ReviewSnapshot({ game_id }) {
                         </div>
                     </div>
                     <Link to={`/review/${review.id}`}>
-                        <p className="review-text">
-                            {review.reviewText.substring(0, 1000)}...
-                        </p>
+                    <p className="review-text" dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(parseReviewWithSpoilersToHTML(review.reviewText.substring(0, 1000)))
+                    }}>
+                        {/* Content will be inserted by dangerouslySetInnerHTML */}
+                    </p>
                     </Link>
                 </div>
             ))}

@@ -70,6 +70,11 @@ export default function ReviewCreationPage() {
             return;
         }
 
+        if (reviewText.length > 5000) {
+            showErrorDialog("Your review is too long.");
+            return;
+        }
+
         try {
             // Add a new document in the reviews collection, with a generated id.
             const docRef = await addDoc(collection(db, "reviews"), {

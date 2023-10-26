@@ -27,4 +27,14 @@
     padding-top: 20px;
 }
 
+.spoiler {
+    background-color: #000;
+    color: #000;
+    cursor: pointer;
+}
+.spoiler:hover {
+    color: #FFF;
+}
+
+
 /* You can continue adding specific styles for other components and elements as needed. */

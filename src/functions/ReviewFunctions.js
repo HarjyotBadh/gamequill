@@ -1,6 +1,6 @@
 import { db } from "../firebase";
 import { doc, getDoc, getDocs, query, where, collection } from "firebase/firestore";
-
+import React from "react";
 /**
  * Fetches all reviews for a given game ID from the Firestore database.
  * @param {string} game_id - The ID of the game to fetch reviews for.
@@ -72,4 +72,22 @@ export async function fetchReviewById(review_id) {
         profilePicture: userData.profilePicture,
         ...reviewData,
     };
+}
+
+
+export function parseReviewWithSpoilersToHTML(reviewText) {
+    const splitText = reviewText.split(/\[spoiler\]|\[\/spoiler\]/);
+    let htmlString = "";
+
+    splitText.forEach((text, index) => {
+        if (index % 2 === 0) {
+            // Regular text
+            htmlString += text;
+        } else {
+            // Spoiler text
+            htmlString += `<span class="spoiler" onclick="this.style.backgroundColor = 'transparent'; this.style.color = 'inherit';">${text}</span>`;
+        }
+    });
+
+    return htmlString;
 }
