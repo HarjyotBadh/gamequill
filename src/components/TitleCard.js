@@ -1,10 +1,11 @@
 import React from "react";
 import { Spinner } from "@material-tailwind/react";
-import { fetchReviewsByGameId, generateStars } from "./ReviewBar";
+import { fetchReviewsByGameId } from "../functions/ReviewFunctions";
 import { Link } from "react-router-dom";
 import "../styles/TitleCard.css";
 import GameLog from "./GameLog";
 import GameLike from "./GameLike";
+import { calculateAverageRating, generateStars } from "../functions/RatingFunctions";
 
 export default function TitleCard({ gameData }) {
     const [averageRating, setAverageRating] = React.useState(0);
@@ -30,15 +31,7 @@ export default function TitleCard({ gameData }) {
     React.useEffect(() => {
         if (gameData.id) {
             fetchReviewsByGameId(gameData.id).then((reviews) => {
-                if (reviews.length === 0) {
-                    setAverageRating("0.0");
-                } else {
-                    const totalRating = reviews.reduce(
-                        (sum, review) => sum + review.starRating,
-                        0
-                    );
-                    setAverageRating((totalRating / reviews.length).toFixed(1));
-                }
+                setAverageRating(calculateAverageRating(reviews));
             });
         }
     }, [gameData]);

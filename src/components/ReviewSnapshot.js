@@ -1,53 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../firebase";
 import {
-    collection,
-    getDocs,
-    query,
-    where,
-    getDoc,
     doc,
     updateDoc,
 } from "firebase/firestore";
 import { Avatar } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-import { generateStars } from "./ReviewBar";
 import { HandThumbUpIcon } from "@heroicons/react/24/solid";
+import { generateStars } from "../functions/RatingFunctions";
+import { fetchReviewsByGameId } from "../functions/ReviewFunctions";
 import "../styles/ReviewSnapshot.css";
 
-// This is your reusable function
-export async function fetchReviewsByGameId(game_id) {
-    const reviewsQuery = query(
-        collection(db, "reviews"),
-        where("gameID", "==", game_id)
-    );
-    const querySnapshot = await getDocs(reviewsQuery);
-
-    const fetchedReviews = [];
-    for (let document of querySnapshot.docs) {
-        const userRef = doc(
-            db,
-            "profileData",
-            document.data().uid.toString()
-        );
-        const userDoc = await getDoc(userRef);
-        const userData = userDoc.data();
-
-        fetchedReviews.push({
-            id: document.id,
-            username: userData.username,
-            profilePicture: userData.profilePicture,
-            ...document.data(),
-        });
-    }
-
-    // Sort reviews by timestamp (most recent first)
-    fetchedReviews.sort((a, b) => {
-        return b.timestamp.seconds - a.timestamp.seconds;
-    });
-
-    return fetchedReviews;
-}
 
 export default function ReviewSnapshot({ game_id }) {
     const [reviews, setReviews] = useState([]);

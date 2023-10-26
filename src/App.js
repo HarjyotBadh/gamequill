@@ -2,7 +2,7 @@ import GamePageWrapper from "./components/GamePageWrapper";
 import ProfilePageWrapper from "./components/ProfilePageWrapper";
 import HomePage from "./pages/HomePage";
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import ResetPassword from "./components/ResetPassword";
