@@ -1,0 +1,36 @@
+/* ReviewCard.css */
+.review-card {
+  background: #fff;
+  border: 2px solid;
+  border-radius: 10px;
+  margin: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+}
+
+.rating {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.game-name {
+  font-size: 1.2rem; /* Adjust the font size as needed */
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.timestamp {
+  color: #777;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.review-text {
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+/* You can customize the color scheme further based on your project's design. */
+

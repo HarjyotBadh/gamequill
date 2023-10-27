@@ -9,6 +9,8 @@ import ResetPassword from "./components/ResetPassword";
 import RegistrationSuccessPage from "./pages/RegistrationSuccessPage";
 import ReviewCreationPage from "./pages/ReviewCreationPage";
 import SearchPageWrapper from "./components/SearchPageWrapper";
+import RecentReviews from "./components/RecentReviews";
+import ReviewDetail from "./components/ReviewDetail";
 import ReviewPage from "./pages/ReviewPage";
 
 function App() {
@@ -22,11 +24,11 @@ function App() {
       <Route path="/home" element={<HomePage />} />
       <Route path="/game" element={<GamePageWrapper />} />
       <Route path="/registrationsuccess" element={<RegistrationSuccessPage />} />
+      <Route path="/recent-reviews" element={<RecentReviews />} />
       <Route path="/reviewcreation" element={<ReviewCreationPage />} />
       <Route path="/registrationsuccess" element={<RegistrationSuccessPage />} />
       <Route path="/search" element={<SearchPageWrapper />} />
       <Route path="/review/:review_id" element={<ReviewPage />} />
-
     </Routes>
   );
 }

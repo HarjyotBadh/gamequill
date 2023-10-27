@@ -91,6 +91,16 @@ function Profile({ profileData, setProfileData, userId }) {
               profileData={profileData}
               setProfileData={setProfileData}
             />
+            <p>
+          <Link to="/recent-reviews" className="link-to-register">
+          Recent Reviews
+         </Link>
+          </p>
+          <p>
+          <Link to="/wishlist" className="link-to-register">
+          Wishlist
+         </Link>
+          </p>
           </div>
         )}
       </div>

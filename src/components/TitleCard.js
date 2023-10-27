@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import "../styles/TitleCard.css";
 import GameLog from "./GameLog";
 import GameLike from "./GameLike";
+import AddWishlistButton from "./AddWishlistButton";
 import { calculateAverageRating, generateStars } from "../functions/RatingFunctions";
 
 export default function TitleCard({ gameData }) {
@@ -66,6 +67,9 @@ export default function TitleCard({ gameData }) {
         </div>
         <div class="play-button">
           <GameLike />
+        </div>
+        <div class="play-button">
+        <AddWishlistButton />
         </div>
       </div>
     </div>
