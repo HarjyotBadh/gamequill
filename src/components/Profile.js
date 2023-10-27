@@ -8,6 +8,7 @@ import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import EditGenre from "./EditGenre";
 import { Link } from "react-router-dom";
+import FollowUser from "./FollowUser";
 
 function Profile({ profileData, setProfileData, userId }) {
   const [gameCovers, setGameCovers] = useState([]);
@@ -19,6 +20,7 @@ function Profile({ profileData, setProfileData, userId }) {
   if (auth.currentUser != null && userId == auth.currentUser.uid) {
     isUser = true;
   }
+  console.log("isUser:  " + isUser);
   //var uid = auth.currentUser.uid;
 
   useEffect(() => {
@@ -139,6 +141,7 @@ function Profile({ profileData, setProfileData, userId }) {
       <div className="ml-20 dark:text-white text-black flex gap-4">
         Favorite Genres
         {isUser && <EditGenre genres={genres} setGenres={setGenres} />}
+        {/* {(!isUser) && <FollowUser />} */}
       </div>
       <div className="FavoriteGenres flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-whitetext-black">
         {profileData.favoriteGenres.map((genre, index) => (
