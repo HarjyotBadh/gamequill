@@ -1,38 +1,34 @@
 .resultsContainer {
-    display: flex;
-    gap: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.gamesColumn, .usersColumn {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+.gamesColumn {
+    margin-left: 100px;
+}
+
+.usersColumn {
+  margin-right: 50px;
+  max-height: 250px;
+}
+
+.headingsGameUser {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto; /* Center the headings */
+  font-size: 2rem;
+  gap: 600px;
+}
+.searchPageTitle {
+    text-align: center; /* Center the text */
+    margin-top: 10px; /* Add some top margin for spacing */
   }
-  .searchContainer {
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 16px;
-  }
-  
-  .gamesColumn, .usersColumn {
-    flex: 1;
-  }
-  
-  .gamesColumn {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  
-  .usersColumn {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  
-  @media (min-width: 768px) {
-    .gamesColumn, .usersColumn {
-      grid-template-columns: repeat(2, 1fr);
-    }
-    
-  }
-  
