@@ -87,10 +87,10 @@ export default function TitleCard({ gameData, className }) {
 
       <div class="play-buttons-container">
         <div class="play-button">
-          <GameLog />
+          <GameLog gameID={gameData.id} />
         </div>
         <div class="play-button">
-          <GameLike />
+          <GameLike gameID={gameData.id} />
         </div>
       </div>
     </div>

@@ -1,14 +1,55 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import gameLikedImage from '../images/buttons/gq-liked-shadow.png';
 import gameNotLikedImage from '../images/buttons/gq-notliked-shadow.png';
+import { db, auth } from "../firebase";
+import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
-const GameLike = () => {
+const GameLike = ({ gameID }) => {
     const [isClicked, setIsClicked] = useState(false);
 
-    const handleButtonClick = () => {
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const user = auth.currentUser.uid;
+                const docRef = doc(db, "profileData", user);
+                const docSnap = await getDoc(docRef);
+                const docLikes = docSnap.data().likes;
+
+                if (docLikes.includes(gameID)) {
+                    setIsClicked(true); // Set the button to 'on' state
+                }
+            } catch (error) {
+                console.error('Error fetching data from Firestore:', error);
+            }
+        };
+
+        fetchData();
+    }, [gameID]); // Add gameID as a dependency
+
+    // The code that runs every time the button is clicked
+    const handleButtonClick = async () => {
         setIsClicked(prevState => !prevState);
-        console.log(isClicked ? 'Remove game ID from Like array' : 'Add game ID to Like array');
+
+        const user = auth.currentUser.uid;
+        const docRef = doc(db, "profileData", user);
+
+        try {
+            if (isClicked) {
+                // Remove the gameID from the 'likes' array
+                await updateDoc(docRef, {
+                    likes: arrayRemove(gameID)
+                });
+                // console.log('Removed game ID from Like array');
+            } else {
+                // Add the gameID to the 'likes' array
+                await updateDoc(docRef, {
+                    likes: arrayUnion(gameID)
+                });
+                // console.log('Added game ID to Like array');
+            }
+        } catch (error) {
+            console.error('Error updating data in Firestore:', error);
+        }
     }
 
     return (
