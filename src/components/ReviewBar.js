@@ -47,7 +47,7 @@ export default function ReviewBar({ gameID, userHasReview, gameData }) {
 
     return (
         <div className="review-bar">
-            <div className="review-header">
+            <div className="review-header-header">
                 <h1 className="review-title">Reviews</h1>
                 {!userHasReview && (
                     <Link

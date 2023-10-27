@@ -6,6 +6,7 @@ import {
     DialogBody,
     DialogFooter,
     Button,
+    Checkbox
 } from "@material-tailwind/react";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
@@ -31,6 +32,7 @@ export default function ReviewCreationPage() {
     const [reviewText, setReviewText] = React.useState("");
     const [error, setError] = React.useState("");
     const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+    const [containsSpoiler, setContainsSpoiler] = React.useState(false);
 
     const [darkMode, setDarkMode] = React.useState(
         () =>
@@ -81,6 +83,8 @@ export default function ReviewCreationPage() {
                 starRating: starRating,
                 reviewText: reviewText,
                 gameID: gameID,
+                gameName: gameData.name,
+                containsSpoiler: containsSpoiler,
                 timestamp: new Date(),
                 uid: getAuth().currentUser.uid,
             });
@@ -93,7 +97,11 @@ export default function ReviewCreationPage() {
             });
 
             // Add the review's ID to the user's profile in array of reviews.
-            const userDocRef = doc(db, "profileData", getAuth().currentUser.uid);
+            const userDocRef = doc(
+                db,
+                "profileData",
+                getAuth().currentUser.uid
+            );
             await updateDoc(userDocRef, {
                 reviews: arrayUnion(docRef.id),
             });
@@ -110,68 +118,92 @@ export default function ReviewCreationPage() {
     };
 
     return (
-      <div className={`review-page-wrapper ${darkMode ? "dark" : "light"}`} data-theme={darkMode ? "dark" : "light"}>
-      <NavBar />
-      <div className="review-page-stuff">
-          <TitleCard gameData={gameData} />
+        
+        <div
+            className={`review-page-wrapper ${darkMode ? "dark" : "light"}`}
+            data-theme={darkMode ? "dark" : "light"}
+        >
+            <NavBar />
+            
+            <div className="review-page-stuff">
+                <TitleCard gameData={gameData} />
 
-          <div className="review-content-container">
-              <h1>Choose Rating</h1>
-              <StarSelection
-                  starRating={starRating}
-                  setStarRating={setStarRating}
-              />
-              <ReviewTextField
-                  reviewText={reviewText}
-                  setReviewText={setReviewText}
-              />
+                <div className="review-content-container">
+                    <h1>Choose Rating</h1>
+                    <StarSelection
+                        starRating={starRating}
+                        setStarRating={setStarRating}
+                    />
+                    <ReviewTextField
+                        reviewText={reviewText}
+                        setReviewText={setReviewText}
+                    />
 
-              {/* Post Review Button */}
-              <button onClick={handleSubmit} className="post-review-button">
-                  Post Review
-              </button>
-          </div>
-      </div>
 
-      {isDialogOpen && (
-          <div className="fixed inset-0 flex items-center justify-center z-50">
-              <div className="bg-black bg-opacity-50 absolute inset-0"></div>
-              <Dialog
-                  open={isDialogOpen}
-                  handler={() => setIsDialogOpen(false)}
-                  size="md"
-                  dismiss={{
-                      enabled: true,
-                      escapeKey: true,
-                      outsidePress: true,
-                  }}
-                  animate={{
-                      mount: {
-                          transition: { duration: 0.5, type: "fade" },
-                      },
-                      unmount: {
-                          transition: { duration: 0.5, type: "fade" },
-                      },
-                  }}
-                  className="rounded-lg z-50 centered-dialog"
-              >
-                  <DialogHeader className="bg-blue-500 text-white text-lg font-semibold p-4 rounded-t-lg">
-                      Error
-                  </DialogHeader>
-                  <DialogBody className="p-4">{error}</DialogBody>
-                  <DialogFooter className="flex justify-end bg-gray-100 p-4 rounded-b-lg">
-                      <Button
-                          color="green"
-                          onClick={() => setIsDialogOpen(false)}
-                          ripple="light"
-                          className="text-white font-semibold"
-                      >
-                          Okay
-                      </Button>
-                  </DialogFooter>
-              </Dialog>
-          </div>
-      )}
-  </div>
+<div className="spoiler-checkbox-container flex items-center mt-4 mb-4">
+    <Checkbox
+        checked={containsSpoiler}
+        onChange={() => setContainsSpoiler(!containsSpoiler)}
+        ripple={false}
+        className="spoiler-checkbox h-6 w-6 transition-all hover:scale-105"
+    />
+    <label className="ml-2 spoiler-label" style={{ color: darkMode ? "white" : "black" }}>
+        Contains spoilers
+    </label>
+</div>
+
+
+                    
+
+                    {/* Post Review Button */}
+                    <button
+                        onClick={handleSubmit}
+                        className="post-review-button"
+                    >
+                        Post Review
+                    </button>
+                </div>
+            </div>
+
+            {isDialogOpen && (
+                <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <div className="bg-black bg-opacity-50 absolute inset-0"></div>
+                    <Dialog
+                        open={isDialogOpen}
+                        handler={() => setIsDialogOpen(false)}
+                        size="md"
+                        dismiss={{
+                            enabled: true,
+                            escapeKey: true,
+                            outsidePress: true,
+                        }}
+                        animate={{
+                            mount: {
+                                transition: { duration: 0.5, type: "fade" },
+                            },
+                            unmount: {
+                                transition: { duration: 0.5, type: "fade" },
+                            },
+                        }}
+                        className="rounded-lg z-50 centered-dialog"
+                    >
+                        <DialogHeader className="bg-blue-500 text-white text-lg font-semibold p-4 rounded-t-lg">
+                            Error
+                        </DialogHeader>
+                        <DialogBody className="p-4">{error}</DialogBody>
+                        <DialogFooter className="flex justify-end bg-gray-100 p-4 rounded-b-lg">
+                            <Button
+                                color="green"
+                                onClick={() => setIsDialogOpen(false)}
+                                ripple="light"
+                                className="text-white font-semibold"
+                            >
+                                Okay
+                            </Button>
+                        </DialogFooter>
+                    </Dialog>
+                </div>
+            )}
+        </div>
     );
 }

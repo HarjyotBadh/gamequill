@@ -1,6 +1,7 @@
 import { db } from "../firebase";
-import { doc, getDoc, getDocs, query, where, collection } from "firebase/firestore";
+import { doc, getDoc, getDocs, query, where, collection, orderBy, limit } from "firebase/firestore";
 import React from "react";
+
 /**
  * Fetches all reviews for a given game ID from the Firestore database.
  * @param {string} game_id - The ID of the game to fetch reviews for.
@@ -75,6 +76,59 @@ export async function fetchReviewById(review_id) {
 }
 
 
+/**
+ * Fetches the most recent reviews from friends based on the specified number.
+ * @param {number} numReviews - The number of reviews to fetch (use -1 for all reviews).
+ * @param {string} currentUserId - The UID of the  user to fetch the friends' reviews.
+ * @returns {Array} A list of review objects from friends.
+ */
+export async function fetchFriendsRecentReviews(numReviews, currentUserId) {
+    // Retrieve the current user's friends list
+    const userRef = doc(db, "profileData", currentUserId);
+    const userDoc = await getDoc(userRef);
+    if (!userDoc.exists()) {
+        throw new Error(`No user found for UID: ${currentUserId}`);
+    }
+    const followersList = userDoc.data().followersList;
+
+    let allReviews = [];
+
+    // Loop through each friend's UID and fetch their reviews
+    for (let uid of followersList) {
+        const reviewsQuery = query(
+            collection(db, "reviews"),
+            where("uid", "==", uid),
+            orderBy("timestamp", "desc"),
+            numReviews === -1 ? undefined : limit(numReviews)
+        );
+
+        const reviewDocs = await getDocs(reviewsQuery);
+
+        for (let reviewDoc of reviewDocs.docs) {
+            const reviewData = reviewDoc.data();
+            const userDataRef = doc(db, "profileData", uid);
+            const userDataDoc = await getDoc(userDataRef);
+            const userData = userDataDoc.data();
+
+            // Construct the review object
+            allReviews.push({
+                id: reviewDoc.id,
+                username: userData.username,
+                profilePicture: userData.profilePicture,
+                ...reviewData,
+            });
+        }
+    }
+
+    return allReviews;
+}
+
+
+/**
+ * Parses a review text with spoiler tags and returns an HTML string with spoiler text hidden until clicked.
+ * @param {string} reviewText - The review text to parse.
+ * @returns {string} An HTML string with spoiler text hidden until clicked.
+ */
 export function parseReviewWithSpoilersToHTML(reviewText) {
     const splitText = reviewText.split(/\[spoiler\]|\[\/spoiler\]/);
     let htmlString = "";

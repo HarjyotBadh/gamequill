@@ -24,21 +24,23 @@ export default function ReviewTextField({ reviewText, setReviewText }) {
     const maxLength = 5000;
 
     const handleChange = (content) => {
-        // if (content.length <= maxLength) {
-            setEditorHtml(content);
-            setReviewText(content);
-        // }
+        setEditorHtml(content);
+        setReviewText(content);
     };
 
+    /**
+     * This function handles the spoiler formatting when the user clicks on the spoiler button in the toolbar.
+     * It gets the current selection range and checks if any text is selected. If text is selected, it checks if the selected text is already formatted as a spoiler.
+     * If it is, it removes the spoiler formatting. If it isn't, it adds the spoiler formatting.
+     * @param {Object} quill - The Quill instance being used in the component.
+     */
     const handleSpoiler = (quill) => {
-        const range = quill.getSelection();
-        if (range) {
-            if (range.length) {
-                // If some text is selected
-                const isSpoiler = quill.getFormat(range).spoiler;
-                quill.format("spoiler", !isSpoiler);
-            }
-        }
+      const range = quill.getSelection();
+      if (range && range.length > 0) {
+          // If some text is selected
+          const isSpoiler = quill.getFormat(range).spoiler;
+          quill.format("spoiler", !isSpoiler);
+      }
     };
 
     const modules = {
@@ -53,11 +55,6 @@ export default function ReviewTextField({ reviewText, setReviewText }) {
             handleSpoiler(this.quill);
         };
 
-        // Adding the EyeSlashIcon to the spoiler button
-        // const spoilerButton = document.querySelector('.ql-spoiler');
-        // if (spoilerButton) {
-        //     ReactDOM.render(<EyeSlashIcon className="h-5 w-5" />, spoilerButton);
-        // }
     }, []);
 
     return (
@@ -80,10 +77,13 @@ export default function ReviewTextField({ reviewText, setReviewText }) {
                 ]}
             />
 
-<div className={`review-character-count ${editorHtml.length > maxLength ? 'error-text' : ''}`}>
-    {editorHtml.length} / {maxLength}
-</div>
-
+            <div
+                className={`review-character-count ${
+                    editorHtml.length > maxLength ? "error-text" : ""
+                }`}
+            >
+                {editorHtml.length} / {maxLength}
+            </div>
         </div>
     );
 }

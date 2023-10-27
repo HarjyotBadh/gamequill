@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../firebase";
-import {
-    doc,
-    updateDoc,
-} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { Avatar } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { HandThumbUpIcon } from "@heroicons/react/24/solid";
 import { generateStars } from "../functions/RatingFunctions";
-import { fetchReviewsByGameId,  parseReviewWithSpoilersToHTML} from "../functions/ReviewFunctions";
+import {
+    fetchReviewsByGameId,
+    parseReviewWithSpoilersToHTML,
+} from "../functions/ReviewFunctions";
 import "../styles/ReviewSnapshot.css";
 import DOMPurify from "dompurify";
-
-
 
 export default function ReviewSnapshot({ game_id }) {
     const [reviews, setReviews] = useState([]);
@@ -66,73 +64,94 @@ export default function ReviewSnapshot({ game_id }) {
 
     return (
         <div className="review-snapshot">
-            {reviews.map((review) => (
-                <div key={review.id} className="review-box">
-                    <div className="review-header">
-                        <Link
-                            to={`/Profile?user_id=${review.uid}`}
-                            style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                gap: "8px",
-                            }}
-                        >
-                            <Avatar
-                                className="custom-avatar medium-avatar"
-                                src={review.profilePicture}
-                            />
-                            <div className="user-info">
-                                <span className="review-username">
-                                    {review.username}
-                                </span>
-                                <span className="review-time">
-                                    {new Date(
-                                        review.timestamp?.seconds * 1000
-                                    ).toLocaleString(undefined, {
-                                        year: "numeric",
-                                        month: "short",
-                                        day: "numeric",
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                    })}
-                                </span>
+            {reviews.map((review) => {
+                // Check and truncate the review if necessary
+                let displayText = review.reviewText;
+                if (review.reviewText.length > 1000) {
+                    displayText = `${review.reviewText.substring(0, 997)}...`;
+                }
+
+                return (
+                    <div key={review.id} className="review-box">
+                        <div className="review-header">
+                            <div className="review-rating-container">
+                                {review.containsSpoiler && (
+                                    <div className="spoiler-indicator">
+                                        Contains Spoilers
+                                    </div>
+                                )}
+                                <div className="ratings-likes">
+                                    <span className="numericRating">
+                                        {review.starRating.toFixed(1)}
+                                    </span>
+                                    <div className="rating">
+                                        {generateStars(review.starRating)}
+                                    </div>
+                                    <div className="like-button-container">
+                                        <HandThumbUpIcon
+                                            className={
+                                                review.userLikes &&
+                                                review.userLikes.includes(
+                                                    currentUserId
+                                                )
+                                                    ? "liked"
+                                                    : "not-liked"
+                                            }
+                                            onClick={() => handleLike(review)}
+                                        />
+                                        <span className="like-count">
+                                            {(review.userLikes
+                                                ? review.userLikes.length
+                                                : 0) + " likes"}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                        </Link>
-                        <div className="review-rating-container">
-                            <span className="numericRating">
-                                {review.starRating.toFixed(1)}
-                            </span>
-                            <div className="rating">
-                                {generateStars(review.starRating)}
-                            </div>
-                            <div className="like-button-container">
-                                <HandThumbUpIcon
-                                    className={
-                                        review.userLikes &&
-                                        review.userLikes.includes(currentUserId)
-                                            ? "liked"
-                                            : "not-liked"
-                                    }
-                                    onClick={() => handleLike(review)}
+
+                            <Link
+                                to={`/Profile?user_id=${review.uid}`}
+                                className="user-info-container"
+                            >
+                                <Avatar
+                                    className="custom-avatar medium-avatar"
+                                    src={review.profilePicture}
                                 />
-                                
-                                <span className="like-count">
-                                    {(review.userLikes
-                                        ? review.userLikes.length
-                                        : 0) + " likes"}
-                                </span>
-                            </div>
+                                <div className="user-info">
+                                    <span className="review-username">
+                                        {review.username}
+                                    </span>
+                                    <span className="review-time">
+                                        {new Date(
+                                            review.timestamp?.seconds * 1000
+                                        ).toLocaleString(undefined, {
+                                            year: "numeric",
+                                            month: "short",
+                                            day: "numeric",
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
+                                    </span>
+                                </div>
+                            </Link>
                         </div>
+
+                        <Link to={`/review/${review.id}`}>
+                            <p
+                                className="review-text-snapshot"
+                                dangerouslySetInnerHTML={{
+                                    __html: DOMPurify.sanitize(
+                                        parseReviewWithSpoilersToHTML(
+                                            displayText
+                                        )
+                                    ),
+                                }}
+                            >
+                                {/* Content will be inserted by dangerouslySetInnerHTML */}
+                            </p>
+                        </Link>
                     </div>
-                    <Link to={`/review/${review.id}`}>
-                    <p className="review-text" dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(parseReviewWithSpoilersToHTML(review.reviewText.substring(0, 1000)))
-                    }}>
-                        {/* Content will be inserted by dangerouslySetInnerHTML */}
-                    </p>
-                    </Link>
-                </div>
-            ))}
+                );
+            })}
         </div>
     );
 }

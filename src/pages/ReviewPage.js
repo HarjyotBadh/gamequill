@@ -89,7 +89,7 @@ export default function ReviewPage() {
                         readOnly
                     />
                     <div
-                        className="review-text"
+                        className="review-text-snapshot text-justify"
                         dangerouslySetInnerHTML={{
                             __html: DOMPurify.sanitize(
                                 parseReviewWithSpoilersToHTML(
