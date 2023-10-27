@@ -60,14 +60,14 @@ export default function TitleCard({ gameData }) {
             <p className="numericRating">{averageRating}</p>
             <div className="rating">{stars}</div>
 
-            <div class="play-buttons-container">
-                <div class="play-button">
-                    <GameLog />
-                </div>
-                <div class="play-button">
-                    <GameLike />
-                </div>
-            </div>
+      <div class="play-buttons-container">
+        <div class="play-button">
+          <GameLog />
         </div>
-    );
+        <div class="play-button">
+          <GameLike />
+        </div>
+      </div>
+    </div>
+  );
 }
