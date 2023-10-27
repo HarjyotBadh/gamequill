@@ -7,39 +7,52 @@ import { getDoc, doc } from "firebase/firestore";
 function App() {
   const [genreRecommendations, setGenreRecommendations] = useState([]);
   const [favoriteGenres, setFavoriteGenres] = useState([]); // Added this line
+  const [userId, setUserId] = useState("");
   //   const userIdd = auth.currentUser.uid;
   //   console.log(userIdd);
 
   const genreMapping = {
-    "Point-and-click": 2,
-    Fighting: 4,
-    Shooter: 5,
-    Music: 7,
-    Platform: 8,
-    Puzzle: 9,
-    Racing: 10,
-    "Real Time Strategy (RTS)": 11,
-    "Role-playing (RPG)": 12,
-    Simulator: 13,
-    Sport: 14,
-    Strategy: 15,
-    "Turn-based strategy (TBS)": 16,
-    Tactical: 24,
-    "Quiz/Trivia": 26,
-    "Hack and slash/Beat 'em up": 30,
-    Pinball: 32,
-    Adventure: 31,
-    Arcade: 33,
-    "Visual Novel": 34,
-    Indie: 36,
-    "Card & Board Game": 37,
-    MOBA: 38,
+    "point-and-click": 2,
+    fighting: 4,
+    shooter: 5,
+    music: 7,
+    platform: 8,
+    puzzle: 9,
+    racing: 10,
+    "real-time-strategy": 11,
+    "role-playing": 12,
+    simulator: 13,
+    sport: 14,
+    strategy: 15,
+    "turn-based-strategy": 16,
+    tactical: 24,
+    "quiz-trivia": 26,
+    "hack-and-slash-beat-em-up": 30,
+    pinball: 32,
+    adventure: 31,
+    arcade: 33,
+    "visual-novel": 34,
+    indie: 36,
+    "card-board-game": 37,
+    moba: 38,
   };
 
   useEffect(() => {
     //const userId = uid ? uid : auth.currentUser.uid;
-    const userId = "maW6ftAOrUVgWpWtFL0cKkAx3Fn1";
-    const getGenres = async () => {
+    //const userId = "maW6ftAOrUVgWpWtFL0cKkAx3Fn1";
+    const unsub = auth.onAuthStateChanged((authObj) => {
+      unsub();
+      if (authObj) {
+        const theuserId = authObj.uid;
+        setUserId(theuserId);
+        console.log(theuserId);
+        getGenres(theuserId);
+      } else {
+        // not logged in
+      }
+    });
+
+    const getGenres = async (userId) => {
       try {
         const corsAnywhereUrl = "http://localhost:8080/";
         const apiUrl = "https://api.igdb.com/v4/games";
@@ -57,7 +70,7 @@ function App() {
               "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
               Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
             },
-            body: `fields name, genres, cover.url, id; where rating>80; where genres = ${genreNumber}; where follows>5; limit:3`,
+            body: `fields name, genres, cover.url, id; where rating>80; where genres = ${genreNumber}; limit:3;`,
           });
 
           const data = await response.json();
@@ -71,7 +84,7 @@ function App() {
         console.error(error);
       }
     };
-    getGenres();
+    //getGenres();
   }, []);
 
   return (
@@ -81,7 +94,7 @@ function App() {
         {genreRecommendations.map((genreData, index) => (
           <div key={index}>
             <UserRecommend
-              genre={favoriteGenres[index]} // Assuming you have a way to get the genre name
+              genre={favoriteGenres[index]}
               c1={genreData[0]?.cover?.url || ""}
               c2={genreData[1]?.cover?.url || ""}
               c3={genreData[2]?.cover?.url || ""}
