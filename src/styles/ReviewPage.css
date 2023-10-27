@@ -1,0 +1,40 @@
+.review-page-wrapper {
+    /* Add any global styles for the wrapper */
+}
+
+/* Left side container styles */
+.left-container {
+    flex: 1;
+    /* padding: 20px; */
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+}
+
+.left-container > * {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Right side container styles */
+.review-content-container {
+    flex: 3;
+    padding: 20px;
+}
+
+.review-text {
+    /* Styles for the review text */
+    padding-top: 20px;
+}
+
+.spoiler {
+    background-color: #000;
+    color: #000;
+    cursor: pointer;
+}
+.spoiler:hover {
+    color: #FFF;
+}
+
+
+/* You can continue adding specific styles for other components and elements as needed. */

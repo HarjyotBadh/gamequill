@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import HomeTrending from "../components/HomeTrending";
 import HomeActivity from "../components/HomeActivity";

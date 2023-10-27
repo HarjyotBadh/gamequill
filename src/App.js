@@ -11,13 +11,13 @@ import ReviewCreationPage from "./pages/ReviewCreationPage";
 import SearchPageWrapper from "./components/SearchPageWrapper";
 import RecentReviews from "./components/RecentReviews";
 import ReviewDetail from "./components/ReviewDetail";
+import ReviewPage from "./pages/ReviewPage";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/Profile" element={<ProfilePageWrapper />} />
-      <Route path="/test" element={<h1>Test</h1>} />{" "}
       <Route path="/login" element={<Login />} />{" "}
       <Route path="/register" element={<Register />} />{" "}
       <Route path="/reset-password" element={<ResetPassword />} />{" "}
@@ -26,12 +26,9 @@ function App() {
       <Route path="/registrationsuccess" element={<RegistrationSuccessPage />} />
       <Route path="/recent-reviews" element={<RecentReviews />} />
       <Route path="/reviewcreation" element={<ReviewCreationPage />} />
-      <Route
-        path="/registrationsuccess"
-        element={<RegistrationSuccessPage />}
-      />
+      <Route path="/registrationsuccess" element={<RegistrationSuccessPage />} />
       <Route path="/search" element={<SearchPageWrapper />} />
-      <Route path="/review/:reviewId" element={<ReviewDetail />} />
+      <Route path="/review/:review_id" element={<ReviewPage />} />
     </Routes>
   );
 }
