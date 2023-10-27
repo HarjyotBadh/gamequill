@@ -55,7 +55,7 @@ export default function TitleCard({ gameData }) {
                     <img src={bigCoverUrl} alt={gameData.name} />
                 </Link>
             )}
-            <h2 className={textSizeClass}>{gameData.name}</h2>
+            <h2 className="title-card-text">{gameData.name}</h2>
             <p>{gameData.involved_companies?.[0]?.company?.name || "N/A"}</p>
             <p className="numericRating">{averageRating}</p>
             <div className="rating">{stars}</div>

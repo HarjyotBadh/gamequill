@@ -74,6 +74,13 @@
     margin-bottom: 20px;
 }
 
+.title-card-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limit to 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .game-card h2 {
     font-weight: 700;
     color: var(--text-color); 
@@ -143,8 +150,10 @@
 .play-buttons-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* Create a 12-column grid */
-    gap: 6.5px; /* Adjust the gap between grid items as needed */
+    gap: 6.5px;
     padding: 6px;
+    margin-bottom: 16px;
+    
 }
 
 .play-buttons-container img {
