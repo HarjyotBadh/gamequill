@@ -104,4 +104,26 @@
     box-sizing: border-box;
 }
 
+.spoiler-checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background-color: var(--wrapper);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.spoiler-label {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.spoiler-checkbox {
+    border: 1.5px solid var(--text-color);
+    background-color: transparent;
+    transition: transform 0.3s ease;
+}
+
+
 

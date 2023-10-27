@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc, query, collection, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
@@ -8,7 +8,49 @@ import TitleCard from "../components/TitleCard";
 import MediaPlayer from "../components/MediaPlayer";
 import DescriptionBox from "../components/DescriptionBox";
 import ReviewBar from "../components/ReviewBar";
+import ReviewSnapshot from "../components/ReviewSnapshot";
 import "../styles/GamePage.css";
+
+export const fetchGameDataFromIGDB = async (game_id) => {
+    const corsAnywhereUrl = "http://localhost:8080/";
+    const apiUrl = "https://api.igdb.com/v4/games";
+
+    try {
+        const response = await fetch(corsAnywhereUrl + apiUrl, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+                Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
+            },
+            body: `
+                fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*;
+                where id = ${game_id};
+            `,
+        });
+
+        const data = await response.json();
+
+        if (data.length) {
+            const game = data[0];
+
+            const screenshotUrls = game.screenshots
+                ? game.screenshots.map((s) =>
+                        s.url.replace("t_thumb", "t_1080p")
+                    )
+                : [];
+
+            const videoIds = game.videos ? game.videos.map((v) => v.video_id) : [];
+
+            return { game, screenshotUrls, videoIds };
+        }
+
+        return null;
+    } catch (err) {
+        console.error(err);
+        return null;
+    }
+};
 
 export default function GamePage({ game_id }) {
     const [gameData, setGameData] = useState(null);
@@ -75,73 +117,40 @@ export default function GamePage({ game_id }) {
             // Get the game data from Firebase
             await getGameData(game_id);
 
-            // If the game doesn't exist on Firebase, then fetch it from IGDB API
-            const corsAnywhereUrl = "http://localhost:8080/";
-            const apiUrl = "https://api.igdb.com/v4/games";
+            const gameDataFromIGDB = await fetchGameDataFromIGDB(game_id);
 
-            fetch(corsAnywhereUrl + apiUrl, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                    Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
-                },
-                body: `
-                    fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*;
-                            where id = ${game_id};
-                            `,
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    if (data.length) {
-                        const game = data[0];
-                        setGameData(game);
-
-                        // Get screenshots URLs
-                        const screenshotUrls = game.screenshots
-                            ? game.screenshots.map((s) =>
-                                    s.url.replace("t_thumb", "t_1080p")
-                                )
-                            : [];
-                        setScreenshots(screenshotUrls);
-
-                        // Get video IDs
-                        const videoIds = game.videos ? game.videos.map((v) => v.video_id) : [];
-                        setVideos(videoIds);
-                    }
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
+            if (gameDataFromIGDB) {
+                setGameData(gameDataFromIGDB.game);
+                setScreenshots(gameDataFromIGDB.screenshotUrls);
+                setVideos(gameDataFromIGDB.videoIds);
+            }
         })();
     }, [game_id]);
 
     return (
-        <div
-            className={`game-page-wrapper ${darkMode ? "dark" : "light"}`}
-            data-theme={darkMode ? "dark" : "light"}
-        >
+        <div className={`game-page-wrapper ${darkMode ? "dark" : "light"}`} data-theme={darkMode ? "dark" : "light"}>
             <NavBar />
-
-            <div className="game-content-container">
-                <div className="left-content">
-                    <TitleCard gameData={gameData} />
-                    <MediaPlayer
-                        screenshots={screenshots}
-                        youtubeLinks={videos}
-                    />
+    
+            {gameData ? (
+                <div className="game-content-container">
+                    <div className="left-content">
+                        <TitleCard gameData={gameData} />
+                        <MediaPlayer screenshots={screenshots} youtubeLinks={videos} />
+                    </div>
+    
+                    <div className="right-content">
+                        <DescriptionBox gameData={gameData} />
+                        <ReviewBar gameID={parseInt(game_id, 10)} userHasReview={userHasReview} gameData={gameData} />
+                        <ReviewSnapshot game_id={parseInt(game_id, 10)}/>
+                    </div>
+    
                 </div>
-
-                <div className="right-content">
-                    <ReviewBar gameID={parseInt(game_id, 10)} userHasReview={userHasReview} gameData={gameData} />
-                    <DescriptionBox gameData={gameData} />
-                </div>
-
-                <Link to="/reviewcreation" state={{gameData}}>
-                    Write a review
-                </Link>
-            </div>
+            ) : (
+                <div className="loading-container">Loading...</div>
+            )}
+    
             <NavBar />
         </div>
     );
+    
 }

@@ -1,0 +1,171 @@
+.avatar-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ddd; /* Placeholder background, replace with actual image later */
+    margin-right: 15px;
+}
+
+.review-snapshot {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.review-box {
+    background-color: var(--background);
+    padding: 2% 4%;
+    margin: 1% 2%;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 95%;
+    box-sizing: border-box;
+}
+
+.review-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.review-header {
+    background-color: rgba(var(--rating-color), 0.1); /* Subdued version of the rating color */
+    padding: 10px 15px;
+    /* border-radius: 15px 15px 0 0; */
+    /* box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.05); */
+    border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease; /* Smooth transition for the background color */
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* This ensures the username and timestamp are right-aligned */
+    gap: 4px;
+}
+
+/* Stylizing the user-info */
+.user-info .review-username {
+    font-weight: 600; 
+    color: var(--text-color); /* Use primary text color for better visibility */
+}
+
+.user-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Right-align the entire container including the avatar */
+    gap: 8px; /* Space between profile picture, username, and timestamp */
+}
+
+.user-info .review-time {
+    font-size: 12px; 
+    color: var(--secondary-text-color); /* Use secondary text color for the timestamp */
+}
+
+.review-text-snapshot {
+    color: var(--secondary-text-color);
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.review-rating {
+    color: #fbbf24;
+    /* margin-left: auto; */
+}
+
+.ratings-likes {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.custom-avatar {
+    border-radius: 50%;
+    object-fit: cover; /* Ensure the image covers the entire space without distortion */
+}
+
+.medium-avatar {
+    width: 50px;
+    height: 50px;
+}
+
+.review-rating-container {
+    display: flex;
+    flex-direction: column; /* Added to stack spoiler, rating and likes vertically */
+    align-items: flex-start; /* Aligns items to the start of the container */
+}
+
+/* Adjusting the rating and likes for better emphasis */
+.numericRating {
+    font-size: 22px; 
+    color: var(--rating-color); /* Retain the gold color for the rating */
+}
+
+.numericRating, .rating {
+    display: flex; /* Convert both elements to flex containers */
+    align-items: center; /* Center align the content of both elements */
+    justify-content: center; /* Horizontally center the content */
+    margin: 0; /* Remove any default margins */
+    padding: 0; /* Remove any default padding */
+}
+
+.like-button-container {
+    display: flex;
+    align-items: center;
+    margin-left: 10px; /* Added space between rating and like button */
+}
+
+
+.liked {
+    color: var(--rating-color); /* Theme primary text color when liked */
+    fill: var(--rating-color); /* Filling the thumb icon when liked */
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.not-liked {
+    color: var(--secondary-text-color); /* Theme secondary text color when not liked */
+    fill: var(--secondary-text-color); /* Filling the thumb icon when not liked */
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.like-count {
+    color: var(--secondary-text-color); /* Use secondary text color for the likes count */
+    margin-left: 5px; /* Added space between the thumb icon and the count */
+}
+
+
+@keyframes clickEffect {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.9); }
+    100% { transform: scale(1); }
+}
+
+.liked, .not-liked {
+    transition: transform 0.1s; /* Smooth transition for the scale effect */
+}
+
+.liked:active, .not-liked:active {
+    animation: clickEffect 0.2s; /* Apply the animation when the button is clicked */
+}
+
+/* For the spoiler indicator */
+.spoiler-indicator {
+    background-color: rgba(252, 129, 129, 0.9); /* Slightly transparent version of the earlier color */
+    color: #FFF; 
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+/* Hover effects to make interactions smoother */
+.review-box:hover .review-header {
+    background-color: rgba(var(--rating-color), 0.15); /* Slightly darker shade on hover */
+}
