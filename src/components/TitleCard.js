@@ -3,6 +3,7 @@ import { Spinner } from "@material-tailwind/react";
 import "../styles/TitleCard.css";
 import GameLog from "./GameLog";
 import GameLike from "./GameLike";
+import AddWishlistButton from "./AddWishlistButton";
 
 export default function TitleCard({ gameData, className }) {
   const [darkMode, setDarkMode] = React.useState(
@@ -91,6 +92,9 @@ export default function TitleCard({ gameData, className }) {
         </div>
         <div class="play-button">
           <GameLike />
+        </div>
+        <div class="play-button">
+        <AddWishlistButton />
         </div>
       </div>
     </div>

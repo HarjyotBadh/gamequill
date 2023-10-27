@@ -76,6 +76,7 @@ export default function ReviewCreationPage() {
                 starRating: starRating,
                 reviewText: reviewText,
                 gameID: gameID,
+                gameName : gameData.name,
                 timestamp: new Date(),
                 uid: getAuth().currentUser.uid,
             });
