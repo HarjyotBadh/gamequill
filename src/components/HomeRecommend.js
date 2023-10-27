@@ -70,7 +70,7 @@ function App() {
               "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
               Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
             },
-            body: `fields name, genres, cover.url, id; where rating>80; where genres = ${genreNumber}; limit:3;`,
+            body: `fields name, genres, cover.url, id; where rating>80 & total_rating_count>10 & category = (0,8,9) & genres = ${genreNumber}; sort rating desc; limit:3;`,
           });
 
           const data = await response.json();
@@ -86,6 +86,9 @@ function App() {
     };
     //getGenres();
   }, []);
+  const formatCoverUrl = (url) => {
+    return url ? url.replace("/t_thumb/", "/t_cover_big/") : "";
+  };
 
   return (
     <div className="recommend-container">
@@ -95,9 +98,9 @@ function App() {
           <div key={index}>
             <UserRecommend
               genre={favoriteGenres[index]}
-              c1={genreData[0]?.cover?.url || ""}
-              c2={genreData[1]?.cover?.url || ""}
-              c3={genreData[2]?.cover?.url || ""}
+              c1={formatCoverUrl(genreData[0]?.cover?.url)}
+              c2={formatCoverUrl(genreData[1]?.cover?.url)}
+              c3={formatCoverUrl(genreData[2]?.cover?.url)}
               i1={genreData[0]?.id || ""}
               i2={genreData[1]?.id || ""}
               i3={genreData[2]?.id || ""}
