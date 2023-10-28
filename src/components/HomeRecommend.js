@@ -6,13 +6,12 @@ import { getDoc, doc } from "firebase/firestore";
 
 function App() {
   const [genreRecommendations, setGenreRecommendations] = useState([]);
-  const [favoriteGenres, setFavoriteGenres] = useState([]); // Added this line
+  const [favoriteGenres, setFavoriteGenres] = useState([]);
   const [userId, setUserId] = useState("");
   //   const userIdd = auth.currentUser.uid;
   //   console.log(userIdd);
 
   const genreMapping = {
-    "point-and-click": 2,
     fighting: 4,
     shooter: 5,
     music: 7,
@@ -27,19 +26,18 @@ function App() {
     "turn-based-strategy": 16,
     tactical: 24,
     "quiz-trivia": 26,
-    "hack-and-slash-beat-em-up": 30,
-    pinball: 32,
+    "hack-and-slash-beat-em-up": 25,
+    pinball: 30,
     adventure: 31,
     arcade: 33,
     "visual-novel": 34,
-    indie: 36,
-    "card-board-game": 37,
-    moba: 38,
+    indie: 32,
+    "card-board-game": 35,
+    moba: 36,
+    "point-and-click": 2,
   };
 
   useEffect(() => {
-    //const userId = uid ? uid : auth.currentUser.uid;
-    //const userId = "maW6ftAOrUVgWpWtFL0cKkAx3Fn1";
     const unsub = auth.onAuthStateChanged((authObj) => {
       unsub();
       if (authObj) {
@@ -58,8 +56,8 @@ function App() {
         const apiUrl = "https://api.igdb.com/v4/games";
         const docRef = doc(db, "profileData", userId);
         const docSnapshot = await getDoc(docRef);
-        const genres = docSnapshot.data().favoriteGenres; // Updated this line
-        setFavoriteGenres(genres); // Added this line
+        const genres = docSnapshot.data().favoriteGenres;
+        setFavoriteGenres(genres);
 
         const genrePromises = genres.map(async (genre) => {
           const genreNumber = genreMapping[genre];
@@ -70,7 +68,7 @@ function App() {
               "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
               Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
             },
-            body: `fields name, genres, cover.url, id; where rating>80 & total_rating_count>10 & category = (0,8,9) & genres = ${genreNumber}; sort rating desc; limit:3;`,
+            body: `fields name, genres, cover.url, id; where rating>70 & total_rating_count>5 & category = (0,8,9) & genres = (${genreNumber}); sort rating desc; limit:12;`,
           });
 
           const data = await response.json();
@@ -78,8 +76,21 @@ function App() {
         });
 
         const genreResults = await Promise.all(genrePromises);
+        const randomGenreRecommendations = genreResults.map((genreData) => {
+          const randomGames = [];
+          while (randomGames.length < 3) {
+            const randomIndex = Math.floor(Math.random() * genreData.length);
+            const randomGame = genreData[randomIndex];
+            if (!randomGames.includes(randomGame)) {
+              randomGames.push(randomGame);
+            }
+          }
+          return randomGames;
+        });
 
-        setGenreRecommendations(genreResults);
+        setGenreRecommendations(randomGenreRecommendations);
+
+        //setGenreRecommendations(genreResults);
       } catch (error) {
         console.error(error);
       }

@@ -68,90 +68,95 @@ function Profile({ profileData, setProfileData, userId }) {
   return (
     <div className="bg-white dark:bg-gray-500 h-screen">
       <div className="formattingBox h-16 dark:bg-gray-500 bg-white"></div>
-      <div className="ProfileBox flex ml-20">
-        <div className="flex flex-col items-center">
-          <div className="Profile Picture">
-            <img
-              className="rounded-full w-32 h-32 border-2 dark:border-white border-black"
-              src={profileData.profilePicture}
-              alt="Profile Picture"
-            />
+      <div className="profileScreen bg-white dark:bg-gray-500 flex flex-row">
+        <div className="profileAndFavorites dark:bg-gray-500 bg-white flex flex-col">
+          <div className="ProfileBox flex ml-20">
+            <div className="flex flex-col items-center">
+              <div className="Profile Picture">
+                <img
+                  className="rounded-full w-32 h-32 border-2 dark:border-white border-black"
+                  src={profileData.profilePicture}
+                  alt="Profile Picture"
+                />
+              </div>
+              <div className="name dark:text-white text-black">
+                {profileData.name}
+              </div>
+              <div className="Pronouns dark:text-white text-black">
+                {profileData.pronouns}
+              </div>
+            </div>
+            <div className="Bio border-2 dark:border-white border-black w-96 h-48 mx-4 p-2 dark:text-white text-black">
+              {profileData.bio}
+            </div>
           </div>
-          <div className="name dark:text-white text-black">
-            {profileData.name}
+          <div className="formattingBox h-16 dark:bg-gray-500 bg-white"></div>
+          <div className="ml-20 dark:text-white text-black flex gap-4">
+            Favorite Games
+            {isUser && (
+              <EditGames
+                gameCovers={gameCovers}
+                setGameCovers={setGameCovers}
+                gameIds={profileData.favoriteGames}
+              />
+            )}
           </div>
-          <div className="Pronouns dark:text-white text-black">
-            {profileData.pronouns}
+          <div className="FavoriteGames flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-white text-black">
+            <div className="GameCover1 w-30 h-32 text-center border dark:border-white border-black">
+              <Link to={`/game?game_id=${gameIds[0]}`}>
+                <ProfileTitleCard gameData={gameCovers[0]} />
+              </Link>
+            </div>
+            <div className="GameCover2 w-30 h-32 text-center border dark:border-white border-black">
+              <Link to={`/game?game_id=${gameIds[1]}`}>
+                <ProfileTitleCard gameData={gameCovers[1]} />
+              </Link>
+            </div>
+            <div className="GameCover3 w-30 h-32 text-center border dark:border-white border-black">
+              <Link to={`/game?game_id=${gameIds[2]}`}>
+                <ProfileTitleCard gameData={gameCovers[2]} />
+              </Link>
+            </div>
+            <div className="GameCover4 w-30 h-32 text-center border dark:border-white border-black">
+              <Link to={`/game?game_id=${gameIds[3]}`}>
+                <ProfileTitleCard gameData={gameCovers[3]} />
+              </Link>
+            </div>
           </div>
-        </div>
-        <div className="Bio border-2 dark:border-white border-black w-96 h-48 mx-4 p-2 dark:text-white text-black">
-          {profileData.bio}
+          <div className="ml-20 dark:text-white text-black flex gap-4">
+            Favorite Genres
+            {isUser && <EditGenre genres={genres} setGenres={setGenres} />}
+            {/* {(!isUser) && <FollowUser />} */}
+          </div>
+          <div className="FavoriteGenres flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-whitetext-black">
+            {profileData.favoriteGenres.map((genre, index) => (
+              <div
+                key={index}
+                className="w-24 h-32 text-center border dark:border-white border-black"
+              >
+                {genre}
+              </div>
+            ))}
+          </div>
         </div>
         {isUser && (
-          <div className="menuButtons border-2 dark:border-white border-black w-72 h-60 ml-10 p-2 dark:text-white text-black flex flex-col">
+          <div className="menuButtons border-2 dark:border-white border-black w-72 h-100 ml-10 p-2 dark:text-white text-black flex flex-col">
             <EditProfile
               profileData={profileData}
               setProfileData={setProfileData}
             />
             <p>
-          <Link to="/recent-reviews" className="link-to-register">
-          Recent Reviews
-         </Link>
-          </p>
-          <p>
-          <Link to="/wishlist" className="link-to-register">
-          Wishlist
-         </Link>
-          </p>
+              <Link to="/recent-reviews" className="link-to-register">
+                Recent Reviews
+              </Link>
+            </p>
+            <p>
+              <Link to="/wishlist" className="link-to-register">
+                Wishlist
+              </Link>
+            </p>
           </div>
         )}
-      </div>
-      <div className="ml-20 dark:text-white text-black flex gap-4">
-        Favorite Games
-        {isUser && (
-          <EditGames
-            gameCovers={gameCovers}
-            setGameCovers={setGameCovers}
-            gameIds={profileData.favoriteGames}
-          />
-        )}
-      </div>
-      <div className="FavoriteGames flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-white text-black">
-        <div className="GameCover1 w-30 h-32 text-center border dark:border-white border-black">
-          <Link to={`/game?game_id=${gameIds[0]}`}>
-            <ProfileTitleCard gameData={gameCovers[0]} />
-          </Link>
-        </div>
-        <div className="GameCover2 w-30 h-32 text-center border dark:border-white border-black">
-          <Link to={`/game?game_id=${gameIds[1]}`}>
-            <ProfileTitleCard gameData={gameCovers[1]} />
-          </Link>
-        </div>
-        <div className="GameCover3 w-30 h-32 text-center border dark:border-white border-black">
-          <Link to={`/game?game_id=${gameIds[2]}`}>
-            <ProfileTitleCard gameData={gameCovers[2]} />
-          </Link>
-        </div>
-        <div className="GameCover4 w-30 h-32 text-center border dark:border-white border-black">
-          <Link to={`/game?game_id=${gameIds[3]}`}>
-            <ProfileTitleCard gameData={gameCovers[3]} />
-          </Link>
-        </div>
-      </div>
-      <div className="ml-20 dark:text-white text-black flex gap-4">
-        Favorite Genres
-        {isUser && <EditGenre genres={genres} setGenres={setGenres} />}
-        {/* {(!isUser) && <FollowUser />} */}
-      </div>
-      <div className="FavoriteGenres flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-whitetext-black">
-        {profileData.favoriteGenres.map((genre, index) => (
-          <div
-            key={index}
-            className="w-24 h-32 text-center border dark:border-white border-black"
-          >
-            {genre}
-          </div>
-        ))}
       </div>
     </div>
   );
