@@ -6,7 +6,7 @@ import { getDoc, doc } from "firebase/firestore";
 
 function App() {
   const [genreRecommendations, setGenreRecommendations] = useState([]);
-  const [favoriteGenres, setFavoriteGenres] = useState([]); // Added this line
+  const [favoriteGenres, setFavoriteGenres] = useState([]);
   const [userId, setUserId] = useState("");
   //   const userIdd = auth.currentUser.uid;
   //   console.log(userIdd);
@@ -38,8 +38,6 @@ function App() {
   };
 
   useEffect(() => {
-    //const userId = uid ? uid : auth.currentUser.uid;
-    //const userId = "maW6ftAOrUVgWpWtFL0cKkAx3Fn1";
     const unsub = auth.onAuthStateChanged((authObj) => {
       unsub();
       if (authObj) {
@@ -58,8 +56,8 @@ function App() {
         const apiUrl = "https://api.igdb.com/v4/games";
         const docRef = doc(db, "profileData", userId);
         const docSnapshot = await getDoc(docRef);
-        const genres = docSnapshot.data().favoriteGenres; // Updated this line
-        setFavoriteGenres(genres); // Added this line
+        const genres = docSnapshot.data().favoriteGenres;
+        setFavoriteGenres(genres);
 
         const genrePromises = genres.map(async (genre) => {
           const genreNumber = genreMapping[genre];
