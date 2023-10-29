@@ -36,5 +36,40 @@
     color: #FFF;
 }
 
+/* ReviewPage.css */
+
+.toggle-spoilers {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.toggle-spoilers label {
+    cursor: pointer;
+}
+
+.toggle-spoilers input {
+    margin-right: 5px;
+}
+
+.spoiler-effect {
+    background-color: black;
+    color: black;
+    cursor: pointer;
+}
+.spoiler-effect:hover {
+    color: white;
+}
+
+
+
+/* ReviewPage.css */
+.spoiler {
+    background-color: black; 
+    color: black;
+    cursor: pointer;
+}
+
 
 /* You can continue adding specific styles for other components and elements as needed. */

@@ -15,6 +15,7 @@ import DOMPurify from "dompurify";
 
 export default function ReviewPage() {
     const { review_id } = useParams();
+    const reviewTextRef = React.useRef(null);
     const [reviewData, setReviewData] = React.useState(null);
     const [gameData, setGameData] = React.useState(null);
     const [darkMode, setDarkMode] = React.useState(
@@ -22,6 +23,10 @@ export default function ReviewPage() {
             window.matchMedia &&
             window.matchMedia("(prefers-color-scheme: dark)").matches
     );
+    const [showSpoilers, setShowSpoilers] = React.useState(false);
+    const [sanitizedContent, setSanitizedContent] = React.useState("");
+    const [contentWithSpoilersHidden, setContentWithSpoilersHidden] =
+        React.useState("");
 
     React.useEffect(() => {
         const matcher = window.matchMedia("(prefers-color-scheme: dark)");
@@ -43,6 +48,14 @@ export default function ReviewPage() {
                     fetchedReview.gameID
                 );
                 setGameData(gameDataFromIGDB.game);
+                setSanitizedContent(
+                    DOMPurify.sanitize(fetchedReview.reviewText)
+                );
+                setContentWithSpoilersHidden(
+                    DOMPurify.sanitize(
+                        parseReviewWithSpoilersToHTML(fetchedReview.reviewText)
+                    )
+                );
             } catch (error) {
                 console.error("Error fetching review or game data: ", error);
                 // In case of an error or no document found, redirect user to home page.
@@ -52,6 +65,43 @@ export default function ReviewPage() {
 
         fetchReviewAndGameData();
     }, [review_id]);
+
+    const toggleSpoilers = () => {
+        setShowSpoilers(prevState => !prevState);
+    };
+    
+
+    const handleSpoilerClick = (e) => {
+        if (e.target && e.target.classList.contains("spoiler")) {
+            e.target.style.backgroundColor = "transparent";
+            e.target.style.color = "inherit";
+        }
+    }
+
+    const removeSpoilerTags = (text) => {
+        return text.replace(/\[spoiler\](.*?)\[\/spoiler\]/g, '$1');
+    };
+
+    const toggleSpoilersInText = (text, showSpoilers) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, "text/html");
+        const spoilers = doc.querySelectorAll(".spoiler-effect");
+        spoilers.forEach(spoiler => {
+            if (showSpoilers) {
+                spoiler.classList.remove("spoiler-effect");
+            } else {
+                spoiler.classList.add("spoiler-effect");
+            }
+        });
+        return doc.body.innerHTML;
+    };
+    
+    
+    
+    
+    
+
+    // ...
 
     if (!reviewData) {
         return <div>Loading...</div>; // Show a loading state while fetching the data
@@ -88,16 +138,31 @@ export default function ReviewPage() {
                         setStarRating={() => {}}
                         readOnly
                     />
-                    <div
-                        className="review-text-snapshot text-justify"
-                        dangerouslySetInnerHTML={{
-                            __html: DOMPurify.sanitize(
-                                parseReviewWithSpoilersToHTML(
-                                    reviewData.reviewText
-                                )
-                            ),
-                        }}
-                    />
+                    <div className="toggle-spoilers">
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={showSpoilers}
+                                onChange={toggleSpoilers}
+                            />
+                            Show Spoilers
+                        </label>
+                    </div>
+
+
+
+                    <div 
+    className="review-text-snapshot text-justify" 
+    dangerouslySetInnerHTML={{
+        __html: toggleSpoilersInText(reviewData.reviewText, showSpoilers)
+    }}
+/>
+
+
+
+
+
+
                 </div>
             </div>
         </div>

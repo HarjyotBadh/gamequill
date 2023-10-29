@@ -6,7 +6,7 @@ import {
     DialogBody,
     DialogFooter,
     Button,
-    Checkbox
+    Checkbox,
 } from "@material-tailwind/react";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
@@ -118,13 +118,12 @@ export default function ReviewCreationPage() {
     };
 
     return (
-        
         <div
             className={`review-page-wrapper ${darkMode ? "dark" : "light"}`}
             data-theme={darkMode ? "dark" : "light"}
         >
             <NavBar />
-            
+
             <div className="review-page-stuff">
                 <TitleCard gameData={gameData} />
 
@@ -139,21 +138,22 @@ export default function ReviewCreationPage() {
                         setReviewText={setReviewText}
                     />
 
-
-<div className="spoiler-checkbox-container flex items-center mt-4 mb-4">
-    <Checkbox
-        checked={containsSpoiler}
-        onChange={() => setContainsSpoiler(!containsSpoiler)}
-        ripple={false}
-        className="spoiler-checkbox h-6 w-6 transition-all hover:scale-105"
-    />
-    <label className="ml-2 spoiler-label" style={{ color: darkMode ? "white" : "black" }}>
-        Contains spoilers
-    </label>
-</div>
-
-
-                    
+                    <div className="spoiler-checkbox-container flex items-center mt-4 mb-4">
+                        <Checkbox
+                            checked={containsSpoiler}
+                            onChange={() =>
+                                setContainsSpoiler(!containsSpoiler)
+                            }
+                            ripple={false}
+                            className="spoiler-checkbox h-6 w-6 transition-all hover:scale-105"
+                        />
+                        <label
+                            className="ml-2 spoiler-label"
+                            style={{ color: darkMode ? "white" : "black" }}
+                        >
+                            Contains spoilers
+                        </label>
+                    </div>
 
                     {/* Post Review Button */}
                     <button
