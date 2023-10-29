@@ -129,6 +129,12 @@ export async function fetchFriendsRecentReviews(numReviews, currentUserId) {
         }
     }
 
+    // Sort the reviews by timestamp and limit the number of reviews
+if (numReviews !== -1) {
+    allReviews.sort((a, b) => b.timestamp - a.timestamp);
+    allReviews = allReviews.slice(0, numReviews);
+}
+
     return allReviews;
 }
 

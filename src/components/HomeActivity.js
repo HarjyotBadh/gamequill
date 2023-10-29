@@ -12,7 +12,7 @@ function App() {
             if (authObj) {
                 const theUserId = authObj.uid;
 
-                fetchFriendsRecentReviews(2, theUserId)
+                fetchFriendsRecentReviews(3, theUserId)
                     .then(data => {
                         setReviews(data);
                     })
