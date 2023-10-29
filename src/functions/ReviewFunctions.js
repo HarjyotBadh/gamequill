@@ -88,7 +88,7 @@ export async function fetchFriendsRecentReviews(numReviews, currentUserId) {
     if (!userDoc.exists()) {
         throw new Error(`No user found for UID: ${currentUserId}`);
     }
-    const followersList = userDoc.data().followersList;
+    const followersList = userDoc.data().follows;
 
     if (!followersList || followersList.length === 0 || followersList[0] === "") {
         return [];

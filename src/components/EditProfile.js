@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Popup from "reactjs-popup";
-import { setDoc, doc, deleteDoc } from "firebase/firestore";
+import { setDoc, doc, deleteDoc, query, collection, where, getDocs, writeBatch, arrayRemove} from "firebase/firestore";
 import {
   getStorage,
   ref,
@@ -108,20 +108,44 @@ export default function EditProfile({ profileData, setProfileData }) {
     try {
       // Re-authenticate the user
       await handleReauthentication(password);
-
+  
       const user = auth.currentUser;
-
+  
+      // Delete the user's reviews from Firestore
+      let batch1 = writeBatch(db);
+      const reviewsQuery = query(collection(db, 'reviews'), where('uid', '==', user.uid));
+      const reviewsSnapshot = await getDocs(reviewsQuery);
+      reviewsSnapshot.forEach((doc) => {
+        batch1.delete(doc.ref);
+      });
+      await batch1.commit();
+  
+      // Remove the user's UID from the "follows" array of all other users
+      let batch2 = writeBatch(db);
+      const followersQuery = query(collection(db, 'profileData'), where('follows', 'array-contains', user.uid));
+      const followersSnapshot = await getDocs(followersQuery);
+      followersSnapshot.forEach((doc) => {
+        batch2.update(doc.ref, {
+          follows: arrayRemove(user.uid)
+        });
+      });
+      await batch2.commit();
+  
       // Delete the user's document from Firestore
       const userDocRef = doc(db, "profileData", user.uid);
       await deleteDoc(userDocRef);
-
+  
       const storage = getStorage();
-      const storageRef = ref(storage, `profilePictures/${uid}`);
-      await deleteObject(storageRef);
-
+      const storageRef = ref(storage, `profilePictures/${user.uid}`);
+      try {
+        await deleteObject(storageRef);
+      } catch (storageError) {
+        console.warn("No profile picture found to delete.", storageError);
+      }
+  
       // Delete the user's account from Firebase Authentication
       await deleteUser(user);
-
+  
       // Redirect to the login page after successful deletion
       window.location.href = "/login";
     } catch (error) {
@@ -129,6 +153,10 @@ export default function EditProfile({ profileData, setProfileData }) {
       setDeleteError(error.message || "Error deleting account");
     }
   };
+  
+  
+  
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
