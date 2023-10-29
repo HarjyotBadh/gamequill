@@ -32,7 +32,7 @@ function App() {
     return (
         <div>
             <div class="activity-container">
-                <h1 class="user-head">YOUR FRIENDS HAVE LIKED...</h1>
+                <h1 class="user-head">YOUR FRIENDS HAVE REVIEWED...</h1>
                 {reviews.map((review, index) => (
                     <div class="user-activity" key={index}>
                         <UserActivity
