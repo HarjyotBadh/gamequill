@@ -84,6 +84,7 @@ export default function ReviewCreationPage() {
                 reviewText: reviewText,
                 gameID: gameID,
                 gameName: gameData.name,
+                gameCover: gameData.cover.url,
                 containsSpoiler: containsSpoiler,
                 timestamp: new Date(),
                 uid: getAuth().currentUser.uid,
