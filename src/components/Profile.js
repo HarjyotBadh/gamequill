@@ -87,7 +87,7 @@ function Profile({ profileData, setProfileData, userId }) {
                 {profileData.pronouns}
               </div>
               <div className="follow-button">
-                {(!isUser) && <FollowUser target_uid={userId} />}
+                {!isUser && <FollowUser target_uid={userId} />}
               </div>
             </div>
             <div className="Bio border-2 dark:border-white border-black w-96 h-48 mx-4 p-2 dark:text-white text-black">
