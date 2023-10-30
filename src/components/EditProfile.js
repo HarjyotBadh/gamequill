@@ -183,9 +183,8 @@ export default function EditProfile({ profileData, setProfileData }) {
       nested
       contentStyle={{
         border: "2px solid white",
-        //color: "white",
-        height: 500,
-        width: 500,
+        height: 700,
+        width: 700,
         backgroundColor: "grey",
       }}
     >
@@ -193,50 +192,62 @@ export default function EditProfile({ profileData, setProfileData }) {
         <div className="modal">
           <form onSubmit={handleSubmit}>
             <div>
+              <label htmlFor="name">Name:</label>
               <input
                 type="text"
                 name="name"
+                id="name"
                 placeholder="Enter Name"
                 value={formData.name}
                 onChange={handleInputChange}
               />
             </div>
             <div>
+              <label htmlFor="username">Username:</label>
               <input
                 type="text"
                 name="username"
+                id="username"
                 placeholder="Enter Username"
                 value={formData.username}
                 onChange={handleInputChange}
               />
             </div>
             <div>
+              <label htmlFor="pronouns">Pronouns:</label>
               <input
                 type="text"
-                placeholder="Enter Pronouns"
                 name="pronouns"
+                id="pronouns"
+                placeholder="Enter Pronouns"
                 value={formData.pronouns}
                 onChange={handleInputChange}
               />
             </div>
             <div>
+              <label htmlFor="bio">Bio:</label>
               <input
                 type="text"
-                placeholder="Enter Bio"
                 name="bio"
+                id="bio"
+                placeholder="Enter Bio"
                 value={formData.bio}
                 onChange={handleInputChange}
               />
             </div>
             <div>
+              <label htmlFor="profilePicture">Profile Picture:</label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleFileUpload}
-                name="profile picture"
+                name="profilePicture"
+                id="profilePicture"
               />
             </div>
-            <button onClick={openDeleteModal}>Delete Account</button>
+            <button className="deleteButton" onClick={openDeleteModal}>
+              Delete Account
+            </button>
             <button type="submit">Save</button>
             <button
               type="close"

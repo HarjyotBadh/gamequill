@@ -9,11 +9,15 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import EditGenre from "./EditGenre";
 import { Link } from "react-router-dom";
 import FollowUser from "./FollowUser";
+import TitleCard from "./TitleCard";
+import { fetchGameDataFromIGDB } from "../pages/GamePage";
+import EditCurrentlyPlayingGame from "./EditCurrentlyPlayingGame";
 
 function Profile({ profileData, setProfileData, userId }) {
   const [gameCovers, setGameCovers] = useState([]);
   const [genres, setGenres] = useState([]);
   const [gameIds, setGameIds] = useState([]);
+  const [currentlyPlayingGame, setCurrentlyPlayingGame] = useState(null);
 
   const auth = getAuth();
   var isUser = false;
@@ -21,7 +25,6 @@ function Profile({ profileData, setProfileData, userId }) {
     isUser = true;
   }
   console.log("isUser:  " + isUser);
-  //var uid = auth.currentUser.uid;
 
   useEffect(() => {
     const corsAnywhereUrl = "http://localhost:8080/";
@@ -30,14 +33,11 @@ function Profile({ profileData, setProfileData, userId }) {
     const fetchCovers = async () => {
       if (auth.currentUser == null && userId == auth.currentUser.uid) {
         window.location.href = "/login";
-        //uid = "GPiU3AHpvyOhnbsVSzap";
       }
-      // else {
-      //   uid = auth.currentUser.uid;
-      // }
       const docRef = doc(db, "profileData", userId);
       const docSnapshot = await getDoc(docRef);
       const favoriteGames = docSnapshot.data().favoriteGames || [];
+      setCurrentlyPlayingGame(docSnapshot.data().currentlyPlayingGame);
       const coverPromises = favoriteGames.map(async (id) => {
         const response = await fetch(corsAnywhereUrl + apiUrl, {
           method: "POST",
@@ -57,6 +57,7 @@ function Profile({ profileData, setProfileData, userId }) {
 
       const covers = await Promise.all(coverPromises);
       setGameCovers(covers);
+
       setGenres(profileData.favoriteGenres);
 
       setGameIds(favoriteGames);
@@ -140,6 +141,34 @@ function Profile({ profileData, setProfileData, userId }) {
               </div>
             ))}
           </div>
+        </div>
+        <div className="currentlyPlaying dark:text-white text-black flex flex-col">
+          Currently Playing:
+          {currentlyPlayingGame ? (
+            <div className="currentlyPlayingFormat dark:text-white text-black flex flex-col w-50">
+              {isUser && (
+                <EditCurrentlyPlayingGame
+                  currentlyPlayingGame={currentlyPlayingGame}
+                  setCurrentlyPlayingGame={setCurrentlyPlayingGame}
+                />
+              )}
+              <div
+                style={{
+                  width: "150px",
+                  height: "200px",
+                  border: "2px solid white",
+                  borderRadius: "20px",
+                }}
+              >
+                <ProfileTitleCard
+                  className="currentlyPlayingGame"
+                  gameData={currentlyPlayingGame.cover.url}
+                />
+              </div>
+            </div>
+          ) : (
+            "None"
+          )}
         </div>
         {isUser && (
           <div className="menuButtons border-2 dark:border-white border-black w-72 h-100 ml-10 p-2 dark:text-white text-black flex flex-col">

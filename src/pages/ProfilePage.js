@@ -50,7 +50,7 @@ export default function ProfilePage({ userId }) {
     const docRef = doc(db, "profileData", uid);
     const snapshot = await getDoc(docRef);
 
-    if (!snapshot.empty) {
+    if (snapshot.exists()) {
       const docData = snapshot.data();
       const data = {
         profilePicture:
@@ -72,6 +72,7 @@ export default function ProfilePage({ userId }) {
       console.log("Doc data", snapshot.data());
     } else {
       console.log("Doc does not exist");
+      window.location.href = "/home";
     }
   };
 
