@@ -69,7 +69,7 @@ export default function TitleCard({ gameData }) {
           <GameLike gameID={gameData.id} />
         </div>
         <div class="play-button">
-        <AddWishlistButton />
+        <AddWishlistButton gameID={gameData.id} />
         </div>
       </div>
     </div>

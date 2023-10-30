@@ -12,6 +12,7 @@ import SearchPageWrapper from "./components/SearchPageWrapper";
 import RecentReviews from "./components/RecentReviews";
 import ReviewDetail from "./components/ReviewDetail";
 import ReviewPage from "./pages/ReviewPage";
+import Wishlist from "./components/Wishlist"; // Add this import
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
       <Route path="/registrationsuccess" element={<RegistrationSuccessPage />} />
       <Route path="/search" element={<SearchPageWrapper />} />
       <Route path="/review/:review_id" element={<ReviewPage />} />
+      <Route path="/wishlist" element={<Wishlist/>} />
     </Routes>
   );
 }
