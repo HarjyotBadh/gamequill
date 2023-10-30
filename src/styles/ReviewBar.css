@@ -138,3 +138,59 @@
     color: var(--star-color); 
 }
 
+.toggle-container {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.toggle-label {
+    display: inline-block;
+    position: relative;
+    padding-left: 60px;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--secondary-text-color);
+}
+
+.toggle-input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+    padding-left: 10px;
+}
+
+.slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 30px;
+    width: 60px;
+    background-color: #ccc;
+    border-radius: 34px;
+    transition: 0.4s;
+    margin-right: 10px;
+}
+
+.toggle-input:checked + .slider {
+    background-color: var(--rating-color);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+.toggle-input:checked + .slider:before {
+    transform: translateX(30px);
+}

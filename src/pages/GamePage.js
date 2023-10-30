@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, setDoc, query, collection, where, getDocs } from "firebase/firestore";
+import {
+    doc,
+    getDoc,
+    setDoc,
+    query,
+    collection,
+    where,
+    getDocs,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import NavBar from "../components/NavBar";
 import TitleCard from "../components/TitleCard";
@@ -9,6 +17,7 @@ import MediaPlayer from "../components/MediaPlayer";
 import DescriptionBox from "../components/DescriptionBox";
 import ReviewBar from "../components/ReviewBar";
 import ReviewSnapshot from "../components/ReviewSnapshot";
+import Footer from "../components/Footer";
 import "../styles/GamePage.css";
 
 export const fetchGameDataFromIGDB = async (game_id) => {
@@ -36,11 +45,13 @@ export const fetchGameDataFromIGDB = async (game_id) => {
 
             const screenshotUrls = game.screenshots
                 ? game.screenshots.map((s) =>
-                        s.url.replace("t_thumb", "t_1080p")
-                    )
+                      s.url.replace("t_thumb", "t_1080p")
+                  )
                 : [];
 
-            const videoIds = game.videos ? game.videos.map((v) => v.video_id) : [];
+            const videoIds = game.videos
+                ? game.videos.map((v) => v.video_id)
+                : [];
 
             return { game, screenshotUrls, videoIds };
         }
@@ -58,6 +69,8 @@ export default function GamePage({ game_id }) {
     const [videos, setVideos] = useState([]);
     const [searchParams] = useSearchParams();
     const [userHasReview, setUserHasReview] = useState(false);
+    const [showFriendReviews, setShowFriendReviews] = useState(false);
+    const [showSpoilers, setShowSpoilers] = useState(true);
     game_id = searchParams.get("game_id");
 
     useEffect(() => {
@@ -71,7 +84,6 @@ export default function GamePage({ game_id }) {
                 );
                 const reviewsSnapshot = await getDocs(reviewsQuery);
                 setUserHasReview(!reviewsSnapshot.empty);
-                
             } else {
                 window.location.href = "/login";
             }
@@ -109,8 +121,7 @@ export default function GamePage({ game_id }) {
                     return docSnap.data();
                 } else {
                     // Create a new document for the game
-                    await setDoc(doc(db, "games", game_id), {
-                    });
+                    await setDoc(doc(db, "games", game_id), {});
                 }
             };
 
@@ -128,29 +139,46 @@ export default function GamePage({ game_id }) {
     }, [game_id]);
 
     return (
-        <div className={`game-page-wrapper ${darkMode ? "dark" : "light"}`} data-theme={darkMode ? "dark" : "light"}>
+        <div
+            className={`game-page-wrapper ${darkMode ? "dark" : "light"}`}
+            data-theme={darkMode ? "dark" : "light"}
+        >
             <NavBar />
-    
+
             {gameData ? (
                 <div className="game-content-container">
                     <div className="left-content">
                         <TitleCard gameData={gameData} />
-                        <MediaPlayer screenshots={screenshots} youtubeLinks={videos} />
+                        <MediaPlayer
+                            screenshots={screenshots}
+                            youtubeLinks={videos}
+                        />
                     </div>
-    
+
                     <div className="right-content">
                         <DescriptionBox gameData={gameData} />
-                        <ReviewBar gameID={parseInt(game_id, 10)} userHasReview={userHasReview} gameData={gameData} />
-                        <ReviewSnapshot game_id={parseInt(game_id, 10)}/>
+                        <ReviewBar
+                            gameID={parseInt(game_id, 10)}
+                            userHasReview={userHasReview}
+                            gameData={gameData}
+                            showFriendReviews={showFriendReviews}
+                            setShowFriendReviews={setShowFriendReviews}
+                            showSpoilers={showSpoilers}
+                            setShowSpoilers={setShowSpoilers}
+                        />
+
+                        <ReviewSnapshot
+                            game_id={parseInt(game_id, 10)}
+                            showFriendReviews={showFriendReviews}
+                            showSpoilers={showSpoilers}
+                        />
                     </div>
-    
                 </div>
             ) : (
                 <div className="loading-container">Loading...</div>
             )}
-    
-            <NavBar />
+
+            <Footer />
         </div>
     );
-    
 }

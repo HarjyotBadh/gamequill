@@ -5,6 +5,7 @@ import HomeActivity from "../components/HomeActivity";
 import HomeRecommend from "../components/HomeRecommend";
 import "../styles/HomePage.css";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import Footer from "../components/Footer";
 
 function App() {
   useEffect(() => {
@@ -35,6 +36,7 @@ function App() {
           <HomeRecommend />
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }

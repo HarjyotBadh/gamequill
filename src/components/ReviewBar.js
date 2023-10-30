@@ -2,53 +2,74 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/ReviewBar.css";
 import { generateStars } from "../functions/RatingFunctions";
-import { fetchReviewsByGameId } from "../functions/ReviewFunctions";
+import { fetchReviewsByGameId, fetchFriendsRecentReviews } from "../functions/ReviewFunctions";
+import { calculateAverageRating } from "../functions/RatingFunctions";
+import { auth } from "../firebase";
 
-// export const fetchReviewsByGameId = async (gameID) => {
-//     const reviews = [];
-
-//     const q = query(collection(db, "reviews"), where("gameID", "==", gameID));
-
-//     const querySnapshot = await getDocs(q);
-//     querySnapshot.forEach((doc) => {
-//         // Add each review to the reviews array
-//         reviews.push({ id: doc.id, ...doc.data() });
-//     });
-
-//     return reviews;
-// };
-
-export default function ReviewBar({ gameID, userHasReview, gameData }) {
+export default function ReviewBar({
+    gameID,
+    userHasReview,
+    gameData,
+    showFriendReviews,
+    setShowFriendReviews,
+    showSpoilers,
+    setShowSpoilers,
+}) {
     const [numberOfReviews, setNumberOfReviews] = useState(0);
     const [averageRating, setAverageRating] = useState(0);
-
-    // Generate a random number (to the nearest 0.X) between 0 and 5
-    const randomRating = Math.round(Math.random() * 5 * 10) / 10;
+    const [numberOfFriendReviews, setNumberOfFriendReviews] = useState(0);
+    const [friendAverageRating, setFriendAverageRating] = useState(0);
+    const currentUserId = auth.currentUser.uid;
 
     useEffect(() => {
         fetchReviewsByGameId(gameID).then((reviews) => {
             setNumberOfReviews(reviews.length);
             const reviewRating = calculateAverageRating(reviews);
-            if (reviewRating === "NaN") {
-                setAverageRating("0.0");
-            } else {
-                setAverageRating(reviewRating);
-            }
+            setAverageRating(reviewRating === "NaN" ? "0.0" : reviewRating);
         });
-    }, [gameID]);
-
-    const calculateAverageRating = (reviews) => {
-        const totalRating = reviews.reduce(
-            (sum, review) => sum + review.starRating,
-            0
-        );
-        return (totalRating / reviews.length).toFixed(1);
-    };
+    
+        // Fetch friend reviews and update the state values
+        fetchFriendsRecentReviews(-1, currentUserId).then((allFriendReviews) => {
+            // Filter out reviews to match the current gameID
+            const relevantFriendReviews = allFriendReviews.filter(review => review.gameID === gameID);
+            
+            setNumberOfFriendReviews(relevantFriendReviews.length);
+            const friendReviewRating = calculateAverageRating(relevantFriendReviews);
+            setFriendAverageRating(friendReviewRating === "NaN" ? "0.0" : friendReviewRating);
+        });
+    
+    }, [gameID, currentUserId]);
+    
 
     return (
         <div className="review-bar">
             <div className="review-header-header">
                 <h1 className="review-title">Reviews</h1>
+                <div className="toggle-container">
+                    <label className="toggle-label">
+                        Show Spoilers
+                        <input
+                            type="checkbox"
+                            className="toggle-input"
+                            checked={showSpoilers}
+                            onChange={() => setShowSpoilers((prev) => !prev)}
+                        />
+                        <span className="slider"></span>
+                    </label>
+                    <label className="toggle-label">
+                        Friend Reviews Only
+                        <input
+                            type="checkbox"
+                            className="toggle-input"
+                            checked={showFriendReviews}
+                            onChange={() =>
+                                setShowFriendReviews((prev) => !prev)
+                            }
+                        />
+                        <span className="slider"></span>
+                    </label>
+                </div>
+
                 {!userHasReview && (
                     <Link
                         to="/reviewcreation"
@@ -74,9 +95,9 @@ export default function ReviewBar({ gameID, userHasReview, gameData }) {
                 <div className="review-stat">
                     <span className="stat-title">Friends' Reviews:</span>
                     <div className="stat-value">
-                        {generateStars(randomRating)}
-                        <span className="numericRating">{randomRating}</span>
-                        <span>({7} Reviews)</span>
+                    {generateStars(friendAverageRating)}
+                        <span className="numericRating">{friendAverageRating}</span>
+                        <span>({numberOfFriendReviews} Reviews)</span>
                     </div>
                 </div>
             </div>

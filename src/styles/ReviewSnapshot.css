@@ -65,7 +65,7 @@
     color: var(--secondary-text-color); /* Use secondary text color for the timestamp */
 }
 
-.review-text-snapshot {
+.review-text-snapshott {
     color: var(--secondary-text-color);
     line-height: 1.5;
     margin-bottom: 16px;
@@ -82,12 +82,12 @@
     gap: 5px;
 }
 
-.custom-avatar {
+.custom-avatarr {
     border-radius: 50%;
     object-fit: cover; /* Ensure the image covers the entire space without distortion */
 }
 
-.medium-avatar {
+.medium-avatarr {
     width: 50px;
     height: 50px;
 }

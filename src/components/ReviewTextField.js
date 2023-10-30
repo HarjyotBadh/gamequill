@@ -28,6 +28,14 @@ export default function ReviewTextField({ reviewText, setReviewText }) {
         setReviewText(content);
     };
 
+    const getTextFromHtml = (html) => {
+        const div = document.createElement("div");
+        div.innerHTML = html;
+        return div.textContent || div.innerText || "";
+    };
+
+    const textLength = getTextFromHtml(editorHtml).length;
+
     /**
      * This function handles the spoiler formatting when the user clicks on the spoiler button in the toolbar.
      * It gets the current selection range and checks if any text is selected. If text is selected, it checks if the selected text is already formatted as a spoiler.
@@ -77,12 +85,12 @@ export default function ReviewTextField({ reviewText, setReviewText }) {
                 ]}
             />
 
-            <div
+<div
                 className={`review-character-count ${
-                    editorHtml.length > maxLength ? "error-text" : ""
+                    textLength > maxLength ? "error-text" : ""
                 }`}
             >
-                {editorHtml.length} / {maxLength}
+                {textLength} / {maxLength}
             </div>
         </div>
     );

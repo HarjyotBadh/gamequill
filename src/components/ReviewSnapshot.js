@@ -8,11 +8,12 @@ import { generateStars } from "../functions/RatingFunctions";
 import {
     fetchReviewsByGameId,
     parseReviewWithSpoilersToHTML,
+    fetchFriendsRecentReviews
 } from "../functions/ReviewFunctions";
 import "../styles/ReviewSnapshot.css";
 import DOMPurify from "dompurify";
 
-export default function ReviewSnapshot({ game_id }) {
+export default function ReviewSnapshot({ game_id, showFriendReviews, showSpoilers }) {
     const [reviews, setReviews] = useState([]);
     const currentUserId = auth.currentUser.uid;
 
@@ -54,13 +55,27 @@ export default function ReviewSnapshot({ game_id }) {
     }
 
     useEffect(() => {
-        // Use the extracted function here
         async function getData() {
-            const reviewsData = await fetchReviewsByGameId(game_id);
+            let reviewsData = await fetchReviewsByGameId(game_id);
+    
+            // Filter out reviews that contain spoilers if showSpoilers is false
+            if (!showSpoilers) {
+                reviewsData = reviewsData.filter(review => !review.containsSpoiler);
+            }
+    
+            // If showing only friends' reviews, fetch and filter those based on game_id
+            if (showFriendReviews) {
+                const friendReviews = await fetchFriendsRecentReviews(-1, currentUserId);
+                const friendReviewIds = friendReviews.map(review => review.id);
+                reviewsData = reviewsData.filter(review => friendReviewIds.includes(review.id));
+            }
+    
             setReviews(reviewsData);
         }
+    
         getData();
-    }, [game_id]);
+    }, [game_id, showSpoilers, showFriendReviews, currentUserId]);
+    
 
     return (
         <div className="review-snapshot">
@@ -113,7 +128,7 @@ export default function ReviewSnapshot({ game_id }) {
                                 className="user-info-container"
                             >
                                 <Avatar
-                                    className="custom-avatar medium-avatar"
+                                    className="custom-avatarr medium-avatarr"
                                     src={review.profilePicture}
                                 />
                                 <div className="user-info">
@@ -137,7 +152,7 @@ export default function ReviewSnapshot({ game_id }) {
 
                         <Link to={`/review/${review.id}`}>
                             <p
-                                className="review-text-snapshot"
+                                className="review-text-snapshott"
                                 dangerouslySetInnerHTML={{
                                     __html: DOMPurify.sanitize(
                                         parseReviewWithSpoilersToHTML(

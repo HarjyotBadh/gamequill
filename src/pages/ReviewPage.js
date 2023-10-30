@@ -2,16 +2,13 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { fetchGameDataFromIGDB } from "./GamePage";
 import { Link } from "react-router-dom";
-import {
-    fetchReviewById,
-    parseReviewWithSpoilersToHTML,
-} from "../functions/ReviewFunctions";
+import { fetchReviewById } from "../functions/ReviewFunctions";
 import NavBar from "../components/NavBar";
 import TitleCard from "../components/TitleCard";
 import StarSelection from "../components/StarSelection";
 import ReviewProfile from "../components/ReviewProfile";
 import "../styles/ReviewPage.css";
-import DOMPurify from "dompurify";
+import Footer from "../components/Footer";
 
 export default function ReviewPage() {
     const { review_id } = useParams();
@@ -22,6 +19,7 @@ export default function ReviewPage() {
             window.matchMedia &&
             window.matchMedia("(prefers-color-scheme: dark)").matches
     );
+    const [showSpoilers, setShowSpoilers] = React.useState(false);
 
     React.useEffect(() => {
         const matcher = window.matchMedia("(prefers-color-scheme: dark)");
@@ -52,6 +50,24 @@ export default function ReviewPage() {
 
         fetchReviewAndGameData();
     }, [review_id]);
+
+    const toggleSpoilers = () => {
+        setShowSpoilers((prevState) => !prevState);
+    };
+
+    const toggleSpoilersInText = (text, showSpoilers) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, "text/html");
+        const spoilers = doc.querySelectorAll(".spoiler-effect");
+        spoilers.forEach((spoiler) => {
+            if (showSpoilers) {
+                spoiler.classList.remove("spoiler-effect");
+            } else {
+                spoiler.classList.add("spoiler-effect");
+            }
+        });
+        return doc.body.innerHTML;
+    };
 
     if (!reviewData) {
         return <div>Loading...</div>; // Show a loading state while fetching the data
@@ -88,18 +104,30 @@ export default function ReviewPage() {
                         setStarRating={() => {}}
                         readOnly
                     />
+                    <div className="toggle-spoilers">
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={showSpoilers}
+                                onChange={toggleSpoilers}
+                            />
+                            Show Spoilers
+                        </label>
+                    </div>
+
                     <div
-                        className="review-text-snapshot text-justify"
+                        className="review-text-snapshott text-justify"
                         dangerouslySetInnerHTML={{
-                            __html: DOMPurify.sanitize(
-                                parseReviewWithSpoilersToHTML(
-                                    reviewData.reviewText
-                                )
+                            __html: toggleSpoilersInText(
+                                reviewData.reviewText,
+                                showSpoilers
                             ),
                         }}
                     />
                 </div>
             </div>
+
+            <Footer />
         </div>
     );
 }
