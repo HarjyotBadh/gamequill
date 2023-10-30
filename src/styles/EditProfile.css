@@ -30,9 +30,18 @@
   margin: 10px;
   padding: 10px 20px;
   font-size: 16px;
-  border: 2px solid #007bff;
+  /* border: 2px solid #007bff; */
   border-radius: 5px;
   cursor: pointer;
+}
+
+.modal label {
+  font-size: 16px;
+  margin-bottom: 6px;
+  align-self: flex-start;
+  width: 80%;
+  text-align: center;
+  margin-right: 100px;
 }
 
 .modal button.button {
@@ -98,6 +107,29 @@
   border: 2px solid #34333358; /* Use a lighter grey border color */
   height: 50px;
 }
+
+.deleteButton {
+  background-color: #dc3545; /* Use a red background color */
+  color: white; /* Change text color to white */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Add rounded corners */
+  padding: 10px 20px; /* Add padding */
+  font-size: 16px; /* Increase font size */
+  cursor: pointer; /* Add cursor on hover */
+}
+
+.deleteButton:hover {
+  background-color: #c82333; /* Use a slightly darker red on hover */
+}
+
+.deleteButton:focus {
+  outline: none; /* Remove focus outline */
+}
+
+.deleteButton:active {
+  background-color: #bd2130; /* Use an even darker red when active */
+}
+
 
 .button:hover {
   background-color: #bbb; /* Use a slightly darker grey on hover */

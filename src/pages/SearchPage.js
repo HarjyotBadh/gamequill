@@ -54,8 +54,8 @@ const SearchPage = ({ searchQuery }) => {
       const usersCollection = collection(db, "profileData");
       const q = query(
         usersCollection,
-        where("username", ">=", searchQuery),
-        where("username", "<=", searchQuery + "\uf8ff"),
+        where("usernameLowerCase", ">=", searchQuery.toLowerCase()),
+        where("usernameLowerCase", "<=", searchQuery.toLowerCase() + "\uf8ff"),
         limit(10)
       );
       const querySnapshot = await getDocs(q);
