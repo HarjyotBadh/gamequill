@@ -150,7 +150,19 @@ function Profile({ profileData, setProfileData, userId }) {
                   setCurrentlyPlayingGame={setCurrentlyPlayingGame}
                 />
               )}
-              <TitleCard gameData={currentlyPlayingGame} />
+              <div
+                style={{
+                  width: "150px",
+                  height: "200px",
+                  border: "2px solid white",
+                  borderRadius: "20px",
+                }}
+              >
+                <ProfileTitleCard
+                  className="currentlyPlayingGame"
+                  gameData={currentlyPlayingGame.cover.url}
+                />
+              </div>
             </div>
           ) : (
             "None"
