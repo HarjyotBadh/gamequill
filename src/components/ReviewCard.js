@@ -59,8 +59,8 @@ return (
 });
 
 return (
-<div className="review-card" style={{ borderColor: ratingColor }}>
-<Link to={`/review/${review.id}`} className="game-name">{gameName}</Link>
+<Link to={`/review/${review.id}`} className="review-card" style={{ borderColor: ratingColor }}>
+<div className="game-name">{gameName}</div>
 <div className="stars-rating">{stars}</div>
 <div className="review-text">
 <p
@@ -77,13 +77,13 @@ parseReviewWithSpoilersToHTML(showFullText ? reviewFullText : reviewPreview)
 onClick={() => setShowFullText(!showFullText)}
 className="more-button"
 >
-{showFullText ? "Less" : "More"}
+{showFullText ? "Less" : "...More"}
 </button>
 )}
 </div>
 
 <div className="timestamp">Posted on {timestamp.toDate().toDateString()}</div>
-</div>
+</Link>
 );
 };
 

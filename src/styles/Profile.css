@@ -48,6 +48,24 @@
 }
   
 
+.button {
+  background-color: gray; /* Maintain the desired background color */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin: 4px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .follow-button {
   max-width: 100px;
+
 }
