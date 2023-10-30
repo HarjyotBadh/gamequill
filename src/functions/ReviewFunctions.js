@@ -1,6 +1,5 @@
 import { db } from "../firebase";
 import { doc, getDoc, getDocs, query, where, collection, orderBy, limit } from "firebase/firestore";
-import React from "react";
 
 /**
  * Fetches all reviews for a given game ID from the Firestore database.
@@ -89,18 +88,28 @@ export async function fetchFriendsRecentReviews(numReviews, currentUserId) {
     if (!userDoc.exists()) {
         throw new Error(`No user found for UID: ${currentUserId}`);
     }
-    const followersList = userDoc.data().followersList;
+    const followersList = userDoc.data().follows;
+
+    if (!followersList || followersList.length === 0 || followersList[0] === "") {
+        return [];
+    }
 
     let allReviews = [];
 
     // Loop through each friend's UID and fetch their reviews
     for (let uid of followersList) {
-        const reviewsQuery = query(
+
+        // Start with base query
+        let reviewsQuery = query(
             collection(db, "reviews"),
             where("uid", "==", uid),
-            orderBy("timestamp", "desc"),
-            numReviews === -1 ? undefined : limit(numReviews)
+            orderBy("timestamp", "desc")
         );
+        
+        // Add limit if numReviews isn't -1
+        if (numReviews !== -1) {
+            reviewsQuery = query(reviewsQuery, limit(numReviews));
+        }
 
         const reviewDocs = await getDocs(reviewsQuery);
 
@@ -120,8 +129,15 @@ export async function fetchFriendsRecentReviews(numReviews, currentUserId) {
         }
     }
 
+    // Sort the reviews by timestamp and limit the number of reviews
+if (numReviews !== -1) {
+    allReviews.sort((a, b) => b.timestamp - a.timestamp);
+    allReviews = allReviews.slice(0, numReviews);
+}
+
     return allReviews;
 }
+
 
 
 /**

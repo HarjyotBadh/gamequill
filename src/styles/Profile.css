@@ -47,6 +47,7 @@
   
 }
   
+
 .button {
   background-color: gray; /* Maintain the desired background color */
   color: white;
@@ -63,4 +64,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.follow-button {
+  max-width: 100px;
+
 }

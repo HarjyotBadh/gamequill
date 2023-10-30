@@ -85,6 +85,9 @@ function Profile({ profileData, setProfileData, userId }) {
               <div className="Pronouns dark:text-white text-black">
                 {profileData.pronouns}
               </div>
+              <div className="follow-button">
+                {(!isUser) && <FollowUser target_uid={userId} />}
+              </div>
             </div>
             <div className="Bio border-2 dark:border-white border-black w-96 h-48 mx-4 p-2 dark:text-white text-black">
               {profileData.bio}
@@ -126,7 +129,6 @@ function Profile({ profileData, setProfileData, userId }) {
           <div className="ml-20 dark:text-white text-black flex gap-4">
             Favorite Genres
             {isUser && <EditGenre genres={genres} setGenres={setGenres} />}
-            {/* {(!isUser) && <FollowUser />} */}
           </div>
           <div className="FavoriteGenres flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-whitetext-black">
             {profileData.favoriteGenres.map((genre, index) => (

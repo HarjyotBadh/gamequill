@@ -7,6 +7,7 @@ import GameColumn from "../components/GamesColumn";
 import UserColumn from "../components/UserColumn";
 import { db } from "../firebase";
 import { collection, query, where, getDocs, limit } from "firebase/firestore";
+import Footer from "../components/Footer";
 
 const SearchPage = ({ searchQuery }) => {
   const [games, setGames] = useState([]);
@@ -101,6 +102,7 @@ const SearchPage = ({ searchQuery }) => {
           <UserColumn users={users} />
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
