@@ -144,14 +144,14 @@ function Profile({ profileData, setProfileData, userId }) {
         </div>
         <div className="currentlyPlaying dark:text-white text-black flex flex-col">
           Currently Playing:
+          {isUser && (
+            <EditCurrentlyPlayingGame
+              currentlyPlayingGame={currentlyPlayingGame}
+              setCurrentlyPlayingGame={setCurrentlyPlayingGame}
+            />
+          )}
           {currentlyPlayingGame ? (
             <div className="currentlyPlayingFormat dark:text-white text-black flex flex-col w-50">
-              {isUser && (
-                <EditCurrentlyPlayingGame
-                  currentlyPlayingGame={currentlyPlayingGame}
-                  setCurrentlyPlayingGame={setCurrentlyPlayingGame}
-                />
-              )}
               <div
                 style={{
                   width: "150px",
