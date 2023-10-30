@@ -65,7 +65,7 @@
     color: var(--secondary-text-color); /* Use secondary text color for the timestamp */
 }
 
-.review-text-snapshot {
+.review-text-snapshott {
     color: var(--secondary-text-color);
     line-height: 1.5;
     margin-bottom: 16px;

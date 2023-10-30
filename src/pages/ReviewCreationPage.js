@@ -21,6 +21,7 @@ import StarSelection from "../components/StarSelection";
 import TitleCard from "../components/TitleCard";
 import ReviewTextField from "../components/ReviewTextField";
 import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 import "../styles/ReviewCreationPage.css";
 
 export default function ReviewCreationPage() {
@@ -54,12 +55,22 @@ export default function ReviewCreationPage() {
         setIsDialogOpen(true);
     };
 
+    const getTextFromHtml = (html) => {
+        const div = document.createElement("div");
+        div.innerHTML = html;
+        return div.textContent || div.innerText || "";
+    };
+
+    
+
     const handleSubmit = async () => {
         // Reset error state
         setError("");
 
+        const textLength = getTextFromHtml(reviewText).length;
+
         // Check if the inputs are filled
-        if (!starRating && !reviewText) {
+        if (!starRating && !textLength) {
             showErrorDialog(
                 "Please select a star rating and fill out the review text."
             );
@@ -67,12 +78,12 @@ export default function ReviewCreationPage() {
         } else if (!starRating) {
             showErrorDialog("Please select a star rating.");
             return;
-        } else if (!reviewText) {
+        } else if (!textLength) {
             showErrorDialog("Please fill out the review text.");
             return;
         }
 
-        if (reviewText.length > 5000) {
+        if (textLength > 5000) {
             showErrorDialog("Your review is too long.");
             return;
         }
@@ -167,44 +178,52 @@ export default function ReviewCreationPage() {
             </div>
 
             {isDialogOpen && (
-                <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="bg-black bg-opacity-50 absolute inset-0"></div>
-                    <Dialog
-                        open={isDialogOpen}
-                        handler={() => setIsDialogOpen(false)}
-                        size="md"
-                        dismiss={{
-                            enabled: true,
-                            escapeKey: true,
-                            outsidePress: true,
-                        }}
-                        animate={{
-                            mount: {
-                                transition: { duration: 0.5, type: "fade" },
-                            },
-                            unmount: {
-                                transition: { duration: 0.5, type: "fade" },
-                            },
-                        }}
-                        className="rounded-lg z-50 centered-dialog"
-                    >
-                        <DialogHeader className="bg-blue-500 text-white text-lg font-semibold p-4 rounded-t-lg">
-                            Error
-                        </DialogHeader>
-                        <DialogBody className="p-4">{error}</DialogBody>
-                        <DialogFooter className="flex justify-end bg-gray-100 p-4 rounded-b-lg">
-                            <Button
-                                color="green"
-                                onClick={() => setIsDialogOpen(false)}
-                                ripple="light"
-                                className="text-white font-semibold"
-                            >
-                                Okay
-                            </Button>
-                        </DialogFooter>
-                    </Dialog>
-                </div>
-            )}
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+        <div className="bg-black bg-opacity-50 absolute inset-0"></div>
+        <Dialog
+            open={isDialogOpen}
+            handler={() => setIsDialogOpen(false)}
+            size="md"
+            dismiss={{
+                enabled: true,
+                escapeKey: true,
+                outsidePress: true,
+            }}
+            animate={{
+                mount: {
+                    transition: { duration: 0.5, type: "fade" },
+                },
+                unmount: {
+                    transition: { duration: 0.5, type: "fade" },
+                },
+            }}
+            className={`rounded-lg z-50 max-w-xl ${darkMode ? "dark-dialog" : "light-dialog"}`}
+        >
+            <DialogHeader className="bg-red-500 text-white text-lg font-semibold p-4 rounded-t-lg flex items-center">
+                Error
+            </DialogHeader>
+            <DialogBody className="p-4">{error}</DialogBody>
+            <DialogFooter className="flex justify-end bg-gray-100 p-4 rounded-b-lg">
+                <Button
+                    onClick={() => setIsDialogOpen(false)}
+                    ripple="light"
+                    className="bg-gray-200 text-black font-semibold px-6 py-2"
+                >
+                    Okay
+                </Button>
+            </DialogFooter>
+        </Dialog>
+    </div>
+)}
+
+
+
+
+
+
+
+            <Footer />
+
         </div>
     );
 }

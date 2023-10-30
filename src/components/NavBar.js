@@ -39,10 +39,6 @@ function App() {
         };
     }, []);
 
-    const handleLogout = () => {
-        setShowLogoutConfirmation(true);
-    };
-
     const confirmLogout = async () => {
         const auth = getAuth();
 
@@ -54,10 +50,6 @@ function App() {
         } catch (error) {
             console.error("Error logging out:", error);
         }
-    };
-
-    const cancelLogout = () => {
-        setShowLogoutConfirmation(false);
     };
 
     const [searchQuery, setSearchQuery] = useState("");

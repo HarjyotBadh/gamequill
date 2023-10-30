@@ -31,21 +31,23 @@ function App() {
 
     return (
         <div>
-            <div class="activity-container">
-                <h1 class="user-head">YOUR FRIENDS HAVE REVIEWED...</h1>
-                {reviews.map((review, index) => (
-                    <div class="user-activity" key={index}>
-                        <UserActivity
-                            cover={review.gameCover.replace('t_thumb', 't_1080p')}
-                            username={review.username} // Assuming review object has username
-                            rating={review.starRating}
-                            note={review.reviewText}
-                            id={review.gameID} // Assuming review object has gameId
-                            reviewId={review.id} // Assuming review object has id
-                        />
-                    </div>
-                ))}
-            </div>
+            {reviews.length > 0 && (
+                <div className="activity-container">
+                    <h1 className="user-head">YOUR FRIENDS HAVE REVIEWED...</h1>
+                    {reviews.map((review, index) => (
+                        <div className="user-activity" key={index}>
+                            <UserActivity
+                                cover={review.gameCover.replace('t_thumb', 't_1080p')}
+                                username={review.username} // Assuming review object has username
+                                rating={review.starRating}
+                                note={review.reviewText}
+                                id={review.gameID} // Assuming review object has gameId
+                                reviewId={review.id} // Assuming review object has id
+                            />
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

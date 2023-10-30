@@ -2,20 +2,16 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { fetchGameDataFromIGDB } from "./GamePage";
 import { Link } from "react-router-dom";
-import {
-    fetchReviewById,
-    parseReviewWithSpoilersToHTML,
-} from "../functions/ReviewFunctions";
+import { fetchReviewById } from "../functions/ReviewFunctions";
 import NavBar from "../components/NavBar";
 import TitleCard from "../components/TitleCard";
 import StarSelection from "../components/StarSelection";
 import ReviewProfile from "../components/ReviewProfile";
 import "../styles/ReviewPage.css";
-import DOMPurify from "dompurify";
+import Footer from "../components/Footer";
 
 export default function ReviewPage() {
     const { review_id } = useParams();
-    const reviewTextRef = React.useRef(null);
     const [reviewData, setReviewData] = React.useState(null);
     const [gameData, setGameData] = React.useState(null);
     const [darkMode, setDarkMode] = React.useState(
@@ -24,9 +20,6 @@ export default function ReviewPage() {
             window.matchMedia("(prefers-color-scheme: dark)").matches
     );
     const [showSpoilers, setShowSpoilers] = React.useState(false);
-    const [sanitizedContent, setSanitizedContent] = React.useState("");
-    const [contentWithSpoilersHidden, setContentWithSpoilersHidden] =
-        React.useState("");
 
     React.useEffect(() => {
         const matcher = window.matchMedia("(prefers-color-scheme: dark)");
@@ -48,14 +41,6 @@ export default function ReviewPage() {
                     fetchedReview.gameID
                 );
                 setGameData(gameDataFromIGDB.game);
-                setSanitizedContent(
-                    DOMPurify.sanitize(fetchedReview.reviewText)
-                );
-                setContentWithSpoilersHidden(
-                    DOMPurify.sanitize(
-                        parseReviewWithSpoilersToHTML(fetchedReview.reviewText)
-                    )
-                );
             } catch (error) {
                 console.error("Error fetching review or game data: ", error);
                 // In case of an error or no document found, redirect user to home page.
@@ -67,26 +52,14 @@ export default function ReviewPage() {
     }, [review_id]);
 
     const toggleSpoilers = () => {
-        setShowSpoilers(prevState => !prevState);
-    };
-    
-
-    const handleSpoilerClick = (e) => {
-        if (e.target && e.target.classList.contains("spoiler")) {
-            e.target.style.backgroundColor = "transparent";
-            e.target.style.color = "inherit";
-        }
-    }
-
-    const removeSpoilerTags = (text) => {
-        return text.replace(/\[spoiler\](.*?)\[\/spoiler\]/g, '$1');
+        setShowSpoilers((prevState) => !prevState);
     };
 
     const toggleSpoilersInText = (text, showSpoilers) => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, "text/html");
         const spoilers = doc.querySelectorAll(".spoiler-effect");
-        spoilers.forEach(spoiler => {
+        spoilers.forEach((spoiler) => {
             if (showSpoilers) {
                 spoiler.classList.remove("spoiler-effect");
             } else {
@@ -95,13 +68,6 @@ export default function ReviewPage() {
         });
         return doc.body.innerHTML;
     };
-    
-    
-    
-    
-    
-
-    // ...
 
     if (!reviewData) {
         return <div>Loading...</div>; // Show a loading state while fetching the data
@@ -149,22 +115,19 @@ export default function ReviewPage() {
                         </label>
                     </div>
 
-
-
-                    <div 
-    className="review-text-snapshot text-justify" 
-    dangerouslySetInnerHTML={{
-        __html: toggleSpoilersInText(reviewData.reviewText, showSpoilers)
-    }}
-/>
-
-
-
-
-
-
+                    <div
+                        className="review-text-snapshott text-justify"
+                        dangerouslySetInnerHTML={{
+                            __html: toggleSpoilersInText(
+                                reviewData.reviewText,
+                                showSpoilers
+                            ),
+                        }}
+                    />
                 </div>
             </div>
+
+            <Footer />
         </div>
     );
 }

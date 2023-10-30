@@ -152,7 +152,7 @@ export default function ReviewSnapshot({ game_id, showFriendReviews, showSpoiler
 
                         <Link to={`/review/${review.id}`}>
                             <p
-                                className="review-text-snapshot"
+                                className="review-text-snapshott"
                                 dangerouslySetInnerHTML={{
                                     __html: DOMPurify.sanitize(
                                         parseReviewWithSpoilersToHTML(

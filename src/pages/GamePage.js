@@ -17,6 +17,7 @@ import MediaPlayer from "../components/MediaPlayer";
 import DescriptionBox from "../components/DescriptionBox";
 import ReviewBar from "../components/ReviewBar";
 import ReviewSnapshot from "../components/ReviewSnapshot";
+import Footer from "../components/Footer";
 import "../styles/GamePage.css";
 
 export const fetchGameDataFromIGDB = async (game_id) => {
@@ -177,7 +178,7 @@ export default function GamePage({ game_id }) {
                 <div className="loading-container">Loading...</div>
             )}
 
-            <NavBar />
+            <Footer />
         </div>
     );
 }
