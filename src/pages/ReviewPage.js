@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { fetchGameDataFromIGDB } from "./GamePage";
+import { fetchGameDataFromIGDB } from "../functions/GameFunctions";
 import { Link } from "react-router-dom";
 import { fetchReviewById } from "../functions/ReviewFunctions";
 import NavBar from "../components/NavBar";

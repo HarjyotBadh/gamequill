@@ -3,7 +3,7 @@ import Popup from "reactjs-popup";
 import ProfileTitleCard from "./ProfileTitleCard";
 import { doc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
-import { fetchGameDataFromIGDB } from "../pages/GamePage";
+import { fetchGameDataFromIGDB } from "../functions/GameFunctions";
 
 export default function EditCurrentlyPlayingGame({
   currentlyPlayingGame,
