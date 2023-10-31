@@ -3,7 +3,7 @@ import { db, auth } from '../firebase';
 import { doc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
 import './Wishlist.css'; // Import your CSS file
 import NavBar from "../components/NavBar";
-import { fetchGameDataFromIGDB } from '../pages/GamePage'; // Replace with the correct path to the filex
+import { fetchGameData } from '../functions/GameFunctions'; // Replace with the correct path to the filex
 
 const WishlistButton = ({ gameID, handleRemove }) => {
   const handleButtonClick = () => {
@@ -49,7 +49,7 @@ const Wishlist = () => {
 
         // Fetch game information for each game in the wishlist using the provided API call
         const gameInfoPromises = docWishlist.map(async (gameID) => {
-          const gameData = await fetchGameDataFromIGDB(gameID);
+          const gameData = await fetchGameData(gameID);
           return { gameID, gameData };
         });
 
