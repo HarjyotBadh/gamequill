@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { db, auth } from '../firebase';
-import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
 import './Wishlist.css'; // Import your CSS file
 import NavBar from "../components/NavBar";
+import { fetchGameDataFromIGDB } from '../pages/GamePage'; // Replace with the correct path to the filex
 
-const WishlistButton = ({ gameTitle, handleRemove }) => {
-  const [isInWishlist, setIsInWishlist] = useState(true);
-
-  const handleButtonClick = async () => {
-    setIsInWishlist(false);
-    handleRemove(gameTitle);
+const WishlistButton = ({ gameID, handleRemove }) => {
+  const handleButtonClick = () => {
+    handleRemove(gameID);
   };
 
   return (
@@ -24,16 +22,45 @@ const WishlistButton = ({ gameTitle, handleRemove }) => {
 
 const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
-  const [newGameTitle, setNewGameTitle] = useState('');
+  const [gameInfo, setGameInfo] = useState({});
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
+    const unsub = auth.onAuthStateChanged((authObj) => {
+      unsub();
+      if (authObj) {
+        const theuserId = authObj.uid;
+        setUserId(theuserId);
+        console.log(theuserId);
+        fetchWishlist();
+      } else {
+        // not logged in
+      }
+    });
+
     const fetchWishlist = async () => {
       try {
         const user = auth.currentUser.uid;
         const docRef = doc(db, 'profileData', user);
         const docSnap = await getDoc(docRef);
         const docWishlist = docSnap.data().wishlist || [];
+
         setWishlistItems(docWishlist);
+
+        // Fetch game information for each game in the wishlist using the provided API call
+        const gameInfoPromises = docWishlist.map(async (gameID) => {
+          const gameData = await fetchGameDataFromIGDB(gameID);
+          return { gameID, gameData };
+        });
+
+        const gameDataArray = await Promise.all(gameInfoPromises);
+        const gameDataMap = {};
+
+        gameDataArray.forEach((item) => {
+          gameDataMap[item.gameID] = item.gameData.game; // Assuming the structure of the data is the same
+        });
+
+        setGameInfo(gameDataMap);
       } catch (error) {
         console.error('Error fetching wishlist data from Firestore:', error);
       }
@@ -42,40 +69,19 @@ const Wishlist = () => {
     fetchWishlist();
   }, []);
 
-  const addGameToWishlist = async () => {
-    if (newGameTitle.trim() === '') {
-      return;
-    }
-
-    // Update Firestore with the new game added to the wishlist
+  const removeGameFromWishlist = async (gameID) => {
     const user = auth.currentUser.uid;
     const docRef = doc(db, 'profileData', user);
 
     try {
       await updateDoc(docRef, {
-        wishlist: arrayUnion(newGameTitle),
-      });
-    } catch (error) {
-      console.error('Error updating data in Firestore:', error);
-    }
-
-    setWishlistItems([...wishlistItems, newGameTitle]);
-    setNewGameTitle('');
-  };
-
-  const removeGameFromWishlist = async (gameTitle) => {
-    const user = auth.currentUser.uid;
-    const docRef = doc(db, 'profileData', user);
-
-    try {
-      await updateDoc(docRef, {
-        wishlist: arrayRemove(gameTitle),
+        wishlist: arrayRemove(gameID),
       });
     } catch (error) {
       console.error('Error removing data from Firestore:', error);
     }
 
-    setWishlistItems(wishlistItems.filter(item => item !== gameTitle));
+    setWishlistItems(wishlistItems.filter(item => item !== gameID));
   };
 
   return (
@@ -84,23 +90,15 @@ const Wishlist = () => {
       <div className="wishlist-container">
         <h1 className="wishlist-title">My Video Game Wishlist</h1>
         <div className="wishlist">
-          {wishlistItems.map((game, index) => (
+          {wishlistItems.map((gameID, index) => (
             <div key={index} className="game-box">
               <div className="game-info">
-                <span className="game-title">{game}</span>
-                <WishlistButton gameTitle={game} handleRemove={removeGameFromWishlist} />
+                <span className="profile-game-card">{gameInfo[gameID]?.name}</span>
+                <WishlistButton gameID={gameID} handleRemove={removeGameFromWishlist} />
               </div>
+              {/* Display other game information here */}
             </div>
           ))}
-        </div>
-        <div className="add-game-form">
-          <input
-            type="text"
-            placeholder="Enter a game title"
-            value={newGameTitle}
-            onChange={(e) => setNewGameTitle(e.target.value)}
-          />
-          <button onClick={addGameToWishlist}>Add</button>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
-// RecentReviews.js
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
-import { getAuth } from "firebase/auth";
+// import { getAuth } from "firebase/auth";
+import {auth} from "../firebase"
 import { collection, query, where, getDocs } from "firebase/firestore";
 import ReviewCard from "./ReviewCard";
 import NavBar from "../components/NavBar";
@@ -11,13 +11,27 @@ const RecentReviews = () => {
   const [userReviews, setUserReviews] = useState([]);
   const [sortByRating, setSortByRating] = useState(false);
   const [sortLowestToHighest, setSortLowestToHighest] = useState(false);
+  const [userId, setUserId] = useState("");
 
-  useEffect(() => {
-    const userId = getAuth().currentUser.uid;
-    const reviewsQuery = query(collection(db, "reviews"), where("uid", "==", userId));
+  // Load sorting preferences from browser cookies on component mount
+  useEffect(() => {    
+    const unsub = auth.onAuthStateChanged((authObj) => {
+      unsub();
+      if (authObj) {
+        const theuserId = authObj.uid;
+        setUserId(theuserId);
+        console.log(theuserId);
+        fetchReviews();
+      } else {
+        // not logged in
+      }
+    });
+
+
 
     const fetchReviews = async () => {
       try {
+        const reviewsQuery = query(collection(db, "reviews"), where("uid", "==", userId));
         const querySnapshot = await getDocs(reviewsQuery);
         const reviews = [];
         querySnapshot.forEach((doc) => {
@@ -40,8 +54,8 @@ const RecentReviews = () => {
       }
     };
 
-    fetchReviews();
-  }, [sortByRating, sortLowestToHighest]);
+    
+  }, [sortByRating, sortLowestToHighest, userReviews]);
 
   const handleSortByRatingToggle = (lowestToHighest) => {
     if (sortByRating && lowestToHighest === sortLowestToHighest) {
