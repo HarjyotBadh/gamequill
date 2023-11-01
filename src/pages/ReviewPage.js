@@ -39,14 +39,15 @@ export default function ReviewPage() {
                 setReviewData(fetchedReview);
 
                 const storedGameData = JSON.parse(localStorage.getItem(`gameData_${fetchedReview.gameID}`));
-                if (storedGameData) {
+                console.log("Game id is " + fetchedReview.gameID);
+                if (storedGameData && storedGameData.game && storedGameData.game.name) {
                     console.log("Loading gameData from localStorage");
                     setGameData(storedGameData);
                 } else {
                     // Get the game data from IGDB
                     console.log("Calling fetchGameData in ReviewPage.js");
                     const gameDataResult = await fetchGameData(fetchedReview.gameID);
-                    setGameData(gameDataResult.game);
+                    setGameData(gameDataResult);
 
                     // Store the fetched game data in localStorage
                     localStorage.setItem(`gameData_${fetchedReview.gameID}`, JSON.stringify(gameDataResult.game));

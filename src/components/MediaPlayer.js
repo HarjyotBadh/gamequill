@@ -14,7 +14,7 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
         setOpen(false);
         setSelectedImageIndex(null);
     };
-    const playerRef = useRef(null); // Step 1: Ref to hold the YouTube player instance
+    const playerRef = useRef(null);
 
     // Options for the YouTube player
     const opts = {
@@ -64,15 +64,17 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
 
                 {youtubeLinks.map((videoId) => (
                     <div key={videoId} className="youtube-video-wrapper">
-                        <YouTube
-                            videoId={videoId}
-                            opts={opts}
-                            onReady={(e) => {
-                                if (isMounted.current) {
-                                    playerRef.current = e.target;
-                                }
-                            }}
-                        />
+                        <YouTubeErrorBoundary>
+                            <YouTube
+                                videoId={videoId}
+                                opts={opts}
+                                onReady={(e) => {
+                                    if (isMounted.current) {
+                                        playerRef.current = e.target;
+                                    }
+                                }}
+                            />
+                        </YouTubeErrorBoundary>
                     </div>
                 ))}
             </Slider>
@@ -96,3 +98,29 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
 };
 
 export default MediaPlayer;
+
+class YouTubeErrorBoundary extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError(error) {
+        // Update state so the next render will show the fallback UI.
+        return { hasError: true };
+    }
+
+    componentDidCatch(error, errorInfo) {
+        // You can log the error to an error reporting service here
+        console.error("YouTubeErrorBoundary caught an error", error, errorInfo);
+    }
+
+    render() {
+        if (this.state.hasError) {
+            // You can render any custom fallback UI
+            return <div>Error loading YouTube video</div>;
+        }
+
+        return this.props.children;
+    }
+}
