@@ -175,7 +175,7 @@ function Profile({ profileData, setProfileData, userId }) {
           )}
         </div>
         {isUser && (
-          <div className="menuButtons border-2 dark:border-white border-black w-72 h-100 ml-10 p-2 dark:text-white text-black flex flex-col">
+          <div className="menuButtons border-2 dark:border-white border-black w-72 h-100 ml-10 p-2 dark:text-white text-black flex flex-col mh">
             <EditProfile
               profileData={profileData}
               setProfileData={setProfileData}
@@ -193,6 +193,7 @@ function Profile({ profileData, setProfileData, userId }) {
           </div>
         )}
       </div>
+      
     </div>
   );
 }

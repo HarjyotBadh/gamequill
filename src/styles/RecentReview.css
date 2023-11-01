@@ -1,21 +1,27 @@
 .rr-container {
-    width: 375px;
+    width: 600px;
     padding: 12px;
     border-radius: 25px;
     display: grid;
     grid-template-columns: repeat(24, 1fr);
     background: #ccc;
+    margin-top: 10px;
+    margin-left: 50px;
+}
+
+p {
+    margin-top: 0px !important;
 }
 
 .rr-cover {
-    grid-column: 1 / span 8;
+    grid-column: 1 / span 6;
 }
 
 .rr-cover-rounded {
     border-radius: 15px;
 }
 .rr-text {
-    grid-column: 10 / span 16;
+    grid-column: 8 / span 18;
 }
 
 .user-name-rating {
@@ -28,5 +34,11 @@
 
 .rr-note-more {
     color: gray;
-    margin-left: 5px;
+    margin-left: 0px;
+}
+
+
+.rr-timestamp {
+    text-align: right;
+    color: #888;
 }

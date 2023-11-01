@@ -6,7 +6,9 @@ import DOMPurify from 'dompurify';
 import { parseReviewWithSpoilersToHTML } from "../functions/ReviewFunctions";
 import { generateStars } from "../functions/RatingFunctions";
 
-export default function RecentReview({ cover, username, rating, note, id, reviewId }) {
+export default function RecentReview({ cover, username, rating, note, id, reviewId, time }) {
+    const date = time.toDate();
+    const dateString = date.toLocaleString();
 
     if (!cover) {
         cover = tempcover;
@@ -31,31 +33,34 @@ export default function RecentReview({ cover, username, rating, note, id, review
     const stars = generateStars(rating);
 
     return (
-        <div className={`rr-container ${darkMode ? "dark" : "light"}`} data-theme={darkMode ? "dark" : "light"}> 
-            <div className="rr-cover">
-                <Link to={`/game?game_id=${id}`}>
-                    <img className="rr-cover-rounded" src={cover} alt="Game Cover" />
-                </Link>
-            </div>
-            <div className="user-text">
-                <h5 className="user-name-rating">
-                    {username} - 
+        <div>
+            <div className={`rr-container ${darkMode ? "dark" : "light"}`} data-theme={darkMode ? "dark" : "light"}>
+                <div className="rr-cover">
+                    <Link to={`/game?game_id=${id}`}>
+                        <img className="rr-cover-rounded" src={cover} alt="Game Cover" />
+                    </Link>
+                </div>
+                <div className="rr-text">
+                    <h5 className="user-name-rating">
                         {stars.map((star, index) => (
                             <span key={index}>{star}</span>
                         ))}
-                </h5>
-                <Link to={`/review/${reviewId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <p
-                        className="review-text-snapshot"
-                        dangerouslySetInnerHTML={{
-                            __html: DOMPurify.sanitize(parseReviewWithSpoilersToHTML(displayText))
-                        }}
-                    >
-                        {/* Content will be inserted by dangerouslySetInnerHTML */}
-                    </p>
-                    <span className="user-note-more"> More ⇒</span>
-                </Link>
+                    </h5>
+                    <Link to={`/review/${reviewId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <p
+                            className="review-text-snapshot"
+                            dangerouslySetInnerHTML={{
+                                __html: DOMPurify.sanitize(parseReviewWithSpoilersToHTML(displayText))
+                            }}
+                        >
+                        </p>
+                        <span className="rr-note-more">More ⇒</span>
+                    </Link>
+                </div>
             </div>
+            <h5 class="rr-timestamp">
+                <i>Posted: {dateString}</i>
+            </h5>
         </div>
     );
 }
