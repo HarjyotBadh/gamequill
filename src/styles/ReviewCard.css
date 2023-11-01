@@ -14,11 +14,24 @@
   font-weight: bold;
 }
 
+.game-info {
+  display: flex; /* Display game name and cover side by side */
+  align-items: center; /* Vertically align the content */
+}
+
 .game-name {
-  font-size: 1.2rem; /* Adjust the font size as needed */
+  font-size: 1.2rem;
   font-weight: bold;
   color: #333;
   margin-bottom: 10px;
+  flex-grow: 1; /* Allow game name to grow and fill available space */
+}
+
+.review-card-game-cover {
+  max-width: 100px; /* Set a fixed width for the game cover image */
+  height: auto;
+  display: block;
+  margin-top: 10px;
 }
 
 .timestamp {
@@ -33,4 +46,3 @@
 }
 
 /* You can customize the color scheme further based on your project's design. */
-
