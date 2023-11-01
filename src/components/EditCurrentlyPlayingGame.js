@@ -89,8 +89,8 @@ export default function EditCurrentlyPlayingGame({
       nested
       contentStyle={{
         border: "2px solid white",
-        height: 800,
-        width: 800,
+        height: 550,
+        width: 550,
         backgroundColor: "grey",
       }}
     >

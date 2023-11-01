@@ -57,38 +57,40 @@ function App() {
         const docRef = doc(db, "profileData", userId);
         const docSnapshot = await getDoc(docRef);
         const genres = docSnapshot.data().favoriteGenres;
-        setFavoriteGenres(genres);
+        if (genres != null) {
+          setFavoriteGenres(genres);
 
-        const genrePromises = genres.map(async (genre) => {
-          const genreNumber = genreMapping[genre];
-          const response = await fetch(corsAnywhereUrl + apiUrl, {
-            method: "POST",
-            headers: {
-              Accept: "application/json",
-              "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-              Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
-            },
-            body: `fields name, genres, cover.url, id; where rating>70 & total_rating_count>5 & category = (0,8,9) & genres = (${genreNumber}); sort rating desc; limit:12;`,
+          const genrePromises = genres.map(async (genre) => {
+            const genreNumber = genreMapping[genre];
+            const response = await fetch(corsAnywhereUrl + apiUrl, {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+                Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
+              },
+              body: `fields name, genres, cover.url, id; where rating>70 & total_rating_count>5 & category = (0,8,9) & genres = (${genreNumber}); sort rating desc; limit:12;`,
+            });
+
+            const data = await response.json();
+            return data;
           });
 
-          const data = await response.json();
-          return data;
-        });
-
-        const genreResults = await Promise.all(genrePromises);
-        const randomGenreRecommendations = genreResults.map((genreData) => {
-          const randomGames = [];
-          while (randomGames.length < 3) {
-            const randomIndex = Math.floor(Math.random() * genreData.length);
-            const randomGame = genreData[randomIndex];
-            if (!randomGames.includes(randomGame)) {
-              randomGames.push(randomGame);
+          const genreResults = await Promise.all(genrePromises);
+          const randomGenreRecommendations = genreResults.map((genreData) => {
+            const randomGames = [];
+            while (randomGames.length < 3) {
+              const randomIndex = Math.floor(Math.random() * genreData.length);
+              const randomGame = genreData[randomIndex];
+              if (!randomGames.includes(randomGame)) {
+                randomGames.push(randomGame);
+              }
             }
-          }
-          return randomGames;
-        });
+            return randomGames;
+          });
 
-        setGenreRecommendations(randomGenreRecommendations);
+          setGenreRecommendations(randomGenreRecommendations);
+        }
 
         //setGenreRecommendations(genreResults);
       } catch (error) {
