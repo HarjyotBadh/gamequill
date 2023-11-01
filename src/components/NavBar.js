@@ -117,7 +117,7 @@ function App() {
                                                 to={`/Profile?user_id=${user.uid}`}
                                                 className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                                             >
-                                                Edit Profile
+                                                View Profile
                                             </Link>
                                             <button
                                                 onClick={confirmLogout}
