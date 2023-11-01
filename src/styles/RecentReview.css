@@ -1,0 +1,30 @@
+.rr-container {
+    width: 500px;
+    height: 300px;
+    display: grid;
+    grid-template-columns: repeat(24, 1fr);
+}
+
+.rr-cover {
+    grid-column: 1 / span 8;
+}
+
+.rr-cover-rounded {
+    border-radius: 15px;
+}
+.rr-text {
+    grid-column: 10 / span 16;
+}
+
+.rr-name-rating {
+    font-size: 20px;
+}
+
+.r-note {
+    font-size: 15.8px;
+}
+
+.rr-note-more {
+    color: gray;
+    margin-left: 5px;
+}

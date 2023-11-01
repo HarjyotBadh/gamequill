@@ -12,6 +12,7 @@ import FollowUser from "./FollowUser";
 import TitleCard from "./TitleCard";
 import { fetchGameDataFromIGDB } from "../pages/GamePage";
 import EditCurrentlyPlayingGame from "./EditCurrentlyPlayingGame";
+import FiveRecentReviews from "./FiveRecentReviews";
 
 function Profile({ profileData, setProfileData, userId }) {
   const [gameCovers, setGameCovers] = useState([]);
@@ -140,6 +141,9 @@ function Profile({ profileData, setProfileData, userId }) {
                 {genre}
               </div>
             ))}
+          </div>
+          <div>
+            <FiveRecentReviews />
           </div>
         </div>
         <div className="currentlyPlaying dark:text-white text-black flex flex-col">

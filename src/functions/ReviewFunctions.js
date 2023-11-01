@@ -105,7 +105,7 @@ export async function fetchFriendsRecentReviews(numReviews, currentUserId) {
             where("uid", "==", uid),
             orderBy("timestamp", "desc")
         );
-        
+
         // Add limit if numReviews isn't -1
         if (numReviews !== -1) {
             reviewsQuery = query(reviewsQuery, limit(numReviews));
@@ -130,14 +130,56 @@ export async function fetchFriendsRecentReviews(numReviews, currentUserId) {
     }
 
     // Sort the reviews by timestamp and limit the number of reviews
-if (numReviews !== -1) {
-    allReviews.sort((a, b) => b.timestamp - a.timestamp);
-    allReviews = allReviews.slice(0, numReviews);
-}
+    if (numReviews !== -1) {
+        allReviews.sort((a, b) => b.timestamp - a.timestamp);
+        allReviews = allReviews.slice(0, numReviews);
+    }
 
     return allReviews;
 }
 
+/**
+ * Fetches an array of recent reviews from the specified user.
+ * @param {number} num - The number of reviews you want to retrieve.
+ * @param {string} uid - The UID of the user you want to retrieve reviews from.
+ * @returns {Array} - The {num} most recent reviews from {uid}.
+ */
+export async function fetchUserRecentReviews(num, uid) {
+
+    let review_list = [];
+
+    // Base query
+    let reviewsQuery = query(
+        collection(db, "reviews"),
+        where("uid", "==", uid),
+        orderBy("timestamp", "desc")
+    );
+
+    // Add limit if numReviews isn't -1
+    if (num !== -1) {
+        reviewsQuery = query(reviewsQuery, limit(num));
+    }
+
+    const reviewDocs = await getDocs(reviewsQuery);
+
+    for (let reviewDoc of reviewDocs.docs) {
+        const reviewData = reviewDoc.data();
+        const userDataRef = doc(db, "profileData", uid);
+        const userDataDoc = await getDoc(userDataRef);
+        const userData = userDataDoc.data();
+
+        // Construct the review object
+        review_list.push({
+            id: reviewDoc.id,
+            username: userData.username,
+            profilePicture: userData.profilePicture,
+            ...reviewData,
+        });
+    }
+
+    return review_list;
+
+}
 
 
 /**
