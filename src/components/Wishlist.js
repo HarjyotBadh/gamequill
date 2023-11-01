@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { db, auth } from '../firebase';
-import { doc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
-import './Wishlist.css'; // Import your CSS file
+import React, { useState, useEffect } from "react";
+import { db, auth } from "../firebase";
+import { doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
+import "./Wishlist.css"; // Import your CSS file
 import NavBar from "../components/NavBar";
-import { fetchGameData } from '../functions/GameFunctions'; // Replace with the correct path to the filex
+
+import { fetchGameData } from "../functions/GameFunctions"; // Replace with the correct path to the filex
 import { Link } from "react-router-dom";
 
 const WishlistButton = ({ gameID, handleRemove }) => {
@@ -12,10 +13,7 @@ const WishlistButton = ({ gameID, handleRemove }) => {
   };
 
   return (
-    <button
-      className="wishlist-button remove"
-      onClick={handleButtonClick}
-    >
+    <button className="wishlist-button remove" onClick={handleButtonClick}>
       Remove
     </button>
   );
@@ -42,7 +40,7 @@ const Wishlist = () => {
     const fetchWishlist = async () => {
       try {
         const user = auth.currentUser.uid;
-        const docRef = doc(db, 'profileData', user);
+        const docRef = doc(db, "profileData", user);
         const docSnap = await getDoc(docRef);
         const docWishlist = docSnap.data().wishlist || [];
 
@@ -63,7 +61,7 @@ const Wishlist = () => {
 
         setGameInfo(gameDataMap);
       } catch (error) {
-        console.error('Error fetching wishlist data from Firestore:', error);
+        console.error("Error fetching wishlist data from Firestore:", error);
       }
     };
 
@@ -72,17 +70,17 @@ const Wishlist = () => {
 
   const removeGameFromWishlist = async (gameID) => {
     const user = auth.currentUser.uid;
-    const docRef = doc(db, 'profileData', user);
+    const docRef = doc(db, "profileData", user);
 
     try {
       await updateDoc(docRef, {
         wishlist: arrayRemove(gameID),
       });
     } catch (error) {
-      console.error('Error removing data from Firestore:', error);
+      console.error("Error removing data from Firestore:", error);
     }
 
-    setWishlistItems(wishlistItems.filter(item => item !== gameID));
+    setWishlistItems(wishlistItems.filter((item) => item !== gameID));
   };
 
   return (
@@ -91,22 +89,30 @@ const Wishlist = () => {
       <div className="wishlist-container">
         <h1 className="wishlist-title">My Video Game Wishlist</h1>
         <div className="wishlist">
-        {wishlistItems.map((gameID, index) => (
-  <div key={index} className="game-box">
-    <div className="game-info">
-      <Link to={`/game?game_id=${gameID}`}>
-        {gameInfo[gameID]?.cover && (
-          <img src={gameInfo[gameID].cover.url} alt={`${gameInfo[gameID].name} Cover`} />
-        )}
-        <span className="profile-game-card">{gameInfo[gameID]?.name}</span>
-      </Link>
-      <div>
-      <WishlistButton gameID={gameID} handleRemove={removeGameFromWishlist} />
-      </div>
-    </div>
-    {/* Display other game information here */}
-  </div>
-))}
+          {wishlistItems.map((gameID, index) => (
+            <div key={index} className="game-box">
+              <div className="game-info">
+                <Link to={`/game?game_id=${gameID}`}>
+                  {gameInfo[gameID]?.cover && (
+                    <img
+                      src={gameInfo[gameID].cover.url}
+                      alt={`${gameInfo[gameID].name} Cover`}
+                    />
+                  )}
+                  <span className="profile-game-card">
+                    {gameInfo[gameID]?.name}
+                  </span>
+                </Link>
+                <div>
+                  <WishlistButton
+                    gameID={gameID}
+                    handleRemove={removeGameFromWishlist}
+                  />
+                </div>
+              </div>
+              {/* Display other game information here */}
+            </div>
+          ))}
         </div>
       </div>
     </div>

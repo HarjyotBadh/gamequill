@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import {
-    query,
-    collection,
-    where,
-    getDocs,
-} from "firebase/firestore";
+import { query, collection, where, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import NavBar from "../components/NavBar";
 import TitleCard from "../components/TitleCard";
@@ -65,19 +60,38 @@ export default function GamePage({ game_id }) {
     }, []);
 
     useEffect(() => {
-        (async () => {
-            const gameData = await fetchGameData(game_id);
-    
-            if (gameData) {
-                setGameData(gameData.game);
-                setScreenshots(gameData.screenshotUrls);
-                setVideos(gameData.videoIds);
-            } else {
-                window.location.href = "/home";
-            }
-        })();
+        const storedGameData = JSON.parse(
+            localStorage.getItem(`gameData_${game_id}`)
+        );
+
+        if (storedGameData &&
+            storedGameData.game &&
+            storedGameData.game.name) {
+            console.log("Loading gameData from localStorage");
+            setGameData(storedGameData.game);
+            setScreenshots(storedGameData.screenshotUrls);
+            setVideos(storedGameData.videoIds);
+        } else {
+            (async () => {
+                console.log("Calling fetchGameData in GamePage.js");
+                const fetchedGameData = await fetchGameData(game_id);
+
+                if (fetchedGameData) {
+                    setGameData(fetchedGameData.game);
+                    setScreenshots(fetchedGameData.screenshotUrls);
+                    setVideos(fetchedGameData.videoIds);
+
+                    // Store the fetched data in localStorage
+                    localStorage.setItem(
+                        `gameData_${game_id}`,
+                        JSON.stringify(fetchedGameData)
+                    );
+                } else {
+                    window.location.href = "/home";
+                }
+            })();
+        }
     }, [game_id]);
-    
 
     return (
         <div

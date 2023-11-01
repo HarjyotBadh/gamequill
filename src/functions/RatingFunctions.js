@@ -1,3 +1,29 @@
+import { db } from "../firebase";
+
+/**
+ * Fetches reviews based on game_id and calculates the average rating.
+ * @param {string} game_id - The ID of the game.
+ * @returns {Promise<string>} The average rating as a string with one decimal point.
+ */
+export async function getAverageRatingByGameId(game_id) {
+    // Create a reference to the Firestore collection
+    const reviewsRef = db.collection('reviews'); // Assuming your reviews are stored in a collection named 'reviews'
+    
+    try {
+        // Query Firestore for reviews with the provided game_id
+        const snapshot = await reviewsRef.where('gameID', '==', game_id).get();
+        
+        // Extract review data from the snapshot
+        const reviews = snapshot.docs.map(doc => doc.data());
+        
+        // Calculate and return the average rating
+        return calculateAverageRating(reviews);
+    } catch (error) {
+        console.error("Error fetching reviews: ", error);
+        return "0.0";
+    }
+}
+
 /**
  * Calculates the average rating based on an array of reviews.
  * @param {Object[]} reviews - An array of review objects.

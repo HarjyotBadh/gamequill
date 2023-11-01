@@ -7,9 +7,6 @@ import { getDoc, doc } from "firebase/firestore";
 function App() {
   const [genreRecommendations, setGenreRecommendations] = useState([]);
   const [favoriteGenres, setFavoriteGenres] = useState([]);
-  const [userId, setUserId] = useState("");
-  //   const userIdd = auth.currentUser.uid;
-  //   console.log(userIdd);
 
   const genreMapping = {
     fighting: 4,
@@ -42,7 +39,6 @@ function App() {
       unsub();
       if (authObj) {
         const theuserId = authObj.uid;
-        setUserId(theuserId);
         console.log(theuserId);
         getGenres(theuserId);
       } else {
@@ -57,10 +53,11 @@ function App() {
         const docRef = doc(db, "profileData", userId);
         const docSnapshot = await getDoc(docRef);
         const genres = docSnapshot.data().favoriteGenres;
-        if (genres != null) {
-          setFavoriteGenres(genres);
 
-          const genrePromises = genres.map(async (genre) => {
+        setFavoriteGenres(genres);
+
+        const genrePromises = genres.map(async (genre) => {
+          if (genre != "") {
             const genreNumber = genreMapping[genre];
             const response = await fetch(corsAnywhereUrl + apiUrl, {
               method: "POST",
@@ -74,23 +71,23 @@ function App() {
 
             const data = await response.json();
             return data;
-          });
+          }
+        });
 
-          const genreResults = await Promise.all(genrePromises);
-          const randomGenreRecommendations = genreResults.map((genreData) => {
-            const randomGames = [];
-            while (randomGames.length < 3) {
-              const randomIndex = Math.floor(Math.random() * genreData.length);
-              const randomGame = genreData[randomIndex];
-              if (!randomGames.includes(randomGame)) {
-                randomGames.push(randomGame);
-              }
+        const genreResults = await Promise.all(genrePromises);
+        const randomGenreRecommendations = genreResults.map((genreData) => {
+          const randomGames = [];
+          while (randomGames.length < 3) {
+            const randomIndex = Math.floor(Math.random() * genreData.length);
+            const randomGame = genreData[randomIndex];
+            if (!randomGames.includes(randomGame)) {
+              randomGames.push(randomGame);
             }
-            return randomGames;
-          });
+          }
+          return randomGames;
+        });
 
-          setGenreRecommendations(randomGenreRecommendations);
-        }
+        setGenreRecommendations(randomGenreRecommendations);
 
         //setGenreRecommendations(genreResults);
       } catch (error) {
