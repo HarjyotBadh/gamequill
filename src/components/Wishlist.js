@@ -4,6 +4,7 @@ import { doc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
 import './Wishlist.css'; // Import your CSS file
 import NavBar from "../components/NavBar";
 import { fetchGameDataFromIGDB } from '../pages/GamePage'; // Replace with the correct path to the filex
+import { Link } from "react-router-dom";
 
 const WishlistButton = ({ gameID, handleRemove }) => {
   const handleButtonClick = () => {
@@ -90,15 +91,22 @@ const Wishlist = () => {
       <div className="wishlist-container">
         <h1 className="wishlist-title">My Video Game Wishlist</h1>
         <div className="wishlist">
-          {wishlistItems.map((gameID, index) => (
-            <div key={index} className="game-box">
-              <div className="game-info">
-                <span className="profile-game-card">{gameInfo[gameID]?.name}</span>
-                <WishlistButton gameID={gameID} handleRemove={removeGameFromWishlist} />
-              </div>
-              {/* Display other game information here */}
-            </div>
-          ))}
+        {wishlistItems.map((gameID, index) => (
+  <div key={index} className="game-box">
+    <div className="game-info">
+      <Link to={`/game?game_id=${gameID}`}>
+        {gameInfo[gameID]?.cover && (
+          <img src={gameInfo[gameID].cover.url} alt={`${gameInfo[gameID].name} Cover`} />
+        )}
+        <span className="profile-game-card">{gameInfo[gameID]?.name}</span>
+      </Link>
+      <div>
+      <WishlistButton gameID={gameID} handleRemove={removeGameFromWishlist} />
+      </div>
+    </div>
+    {/* Display other game information here */}
+  </div>
+))}
         </div>
       </div>
     </div>
