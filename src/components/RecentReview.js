@@ -31,8 +31,31 @@ export default function RecentReview({ cover, username, rating, note, id, review
     const stars = generateStars(rating);
 
     return (
-        <div class="rr-container">
-
+        <div className={`rr-container ${darkMode ? "dark" : "light"}`} data-theme={darkMode ? "dark" : "light"}> 
+            <div className="rr-cover">
+                <Link to={`/game?game_id=${id}`}>
+                    <img className="rr-cover-rounded" src={cover} alt="Game Cover" />
+                </Link>
+            </div>
+            <div className="user-text">
+                <h5 className="user-name-rating">
+                    {username} - 
+                        {stars.map((star, index) => (
+                            <span key={index}>{star}</span>
+                        ))}
+                </h5>
+                <Link to={`/review/${reviewId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <p
+                        className="review-text-snapshot"
+                        dangerouslySetInnerHTML={{
+                            __html: DOMPurify.sanitize(parseReviewWithSpoilersToHTML(displayText))
+                        }}
+                    >
+                        {/* Content will be inserted by dangerouslySetInnerHTML */}
+                    </p>
+                    <span className="user-note-more"> More ⇒</span>
+                </Link>
+            </div>
         </div>
     );
 }

@@ -1,8 +1,10 @@
 .rr-container {
-    width: 500px;
-    height: 300px;
+    width: 375px;
+    padding: 12px;
+    border-radius: 25px;
     display: grid;
     grid-template-columns: repeat(24, 1fr);
+    background: #ccc;
 }
 
 .rr-cover {
@@ -16,7 +18,7 @@
     grid-column: 10 / span 16;
 }
 
-.rr-name-rating {
+.user-name-rating {
     font-size: 20px;
 }
 
