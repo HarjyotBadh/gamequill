@@ -1,8 +1,19 @@
 import React from 'react';
 import '../styles/Featured2.css';
 import tempscreenshot from "../images/temp_images/tempscreenshot.png";
+import { calculateAverageRating } from "../functions/RatingFunctions"
+import { fetchReviewsByGameId } from "../functions/ReviewFunctions";
 
 export default function Featured1({ gameData, screenshots }) {
+    const [averageRating, setAverageRating] = React.useState(null);
+
+    React.useEffect(() => {
+        if (gameData.id) {
+          fetchReviewsByGameId(gameData.id).then((reviews) => {
+            setAverageRating(calculateAverageRating(reviews));
+          });
+        }
+      }, [gameData]);
     
     if (!gameData) {
         return (
@@ -15,14 +26,8 @@ export default function Featured1({ gameData, screenshots }) {
     }
     var imageUrl = screenshots[0];
     var company = gameData.involved_companies[0].company.name;
-    var rating = Math.floor((gameData.aggregated_rating / 20) * 100) / 100
+    var rating = averageRating;
 
-    // Find the image element with the id "game-screenshot"
-    var imageElement = document.getElementById("game-screenshot");
-    
-    
-    
-    // Rating logic ends
 
     return (
         <div class="image-cont rounded-corners">

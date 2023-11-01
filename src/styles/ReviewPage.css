@@ -72,4 +72,19 @@
 }
 
 
-/* You can continue adding specific styles for other components and elements as needed. */
+.delete-review-btn {
+    background-color: #ff4d4d; /* Red background */
+    color: #ffffff; /* White text */
+    border: none;
+    width: 20%;
+    margin-left: auto;
+    border-radius: 5px; 
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.delete-review-btn:hover {
+    background-color: #ff1a1a; /* Darker red on hover */
+}
