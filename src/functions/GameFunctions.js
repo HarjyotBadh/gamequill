@@ -8,7 +8,6 @@ import { db } from "../firebase";
  * and then returns the fetched data.
  *
  * @param {number} game_id - The ID of the game to fetch.
- * @param {Object} db - Firestore database instance.
  * @returns {Object|null} The game data, or null if not found.
  */
 export const fetchGameData = async (game_id) => {
@@ -36,13 +35,11 @@ export const fetchGameData = async (game_id) => {
 
         if (gameDataFromIGDB) {
             // Store the fetched game data in Firestore
-            console.log("Game Data from IGDB2: ", gameDataFromIGDB);
             const gameDataForFirestore = {
                 ...gameDataFromIGDB.game,
                 screenshotUrls: gameDataFromIGDB.screenshotUrls,
                 videoIds: gameDataFromIGDB.videoIds
             };
-            console.log("Game Data for Firestore: ", gameDataForFirestore);
             await setDoc(doc(db, "games", game_id.toString()), gameDataForFirestore);
 
             // Return the game data
@@ -60,7 +57,6 @@ export const fetchGameData = async (game_id) => {
  * The fetched data is then stored in Firestore for future reference.
  *
  * @param {number[]} game_ids - Array of game IDs to fetch.
- * @param {Object} db - Firestore database instance.
  * @returns {Object[]} Array of game data.
  */
 export const fetchMultipleGameData = async (game_ids) => {

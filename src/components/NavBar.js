@@ -1,20 +1,19 @@
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import logo from "../images/gamequill.png";
-import { getAuth, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
+import { auth, db } from "../firebase";
 import { Avatar } from "@material-tailwind/react";
 import { doc, getDoc } from "firebase/firestore";
-import { getFirestore } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 function App() {
     const [user, setUser] = useState(null);
     const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
     const [profilePic, setProfilePic] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const auth = getAuth();
-        const db = getFirestore();
-
         const unsubscribe = auth.onAuthStateChanged(async (authUser) => {
             if (authUser) {
                 // User is logged in
@@ -40,13 +39,11 @@ function App() {
     }, []);
 
     const confirmLogout = async () => {
-        const auth = getAuth();
-
         try {
             await signOut(auth);
             setShowLogoutConfirmation(false);
             // Redirect to the home page or another desired page after logging out.
-            window.location.href = "/home";
+            navigate("/");
         } catch (error) {
             console.error("Error logging out:", error);
         }
@@ -58,9 +55,7 @@ function App() {
     };
     const handleSearch = () => {
         // Redirect to the search page with the search query as a parameter
-        window.location.href = `/search?query=${encodeURIComponent(
-            searchQuery
-        )}`;
+        navigate(`/Search?query=${searchQuery}`);
     };
 
     const handleEnterKey = (e) => {
@@ -100,8 +95,6 @@ function App() {
                     id="navbar-default"
                 >
                     <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-gray-600 md:bg-gray-600 border-gray-700">
-                        
-                        
                         <li>
                             {user ? (
                                 <div className="relative">
@@ -119,9 +112,9 @@ function App() {
                                     />
 
                                     {showLogoutConfirmation && (
-                                        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg">
+                                        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-10">
                                             <Link
-                                               to={`/Profile?user_id=${user.uid}`}
+                                                to={`/Profile?user_id=${user.uid}`}
                                                 className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                                             >
                                                 Edit Profile
@@ -134,6 +127,7 @@ function App() {
                                             </button>
                                         </div>
                                     )}
+                                    
                                 </div>
                             ) : (
                                 <Link

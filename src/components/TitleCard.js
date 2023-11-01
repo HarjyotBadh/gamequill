@@ -16,8 +16,6 @@ export default function TitleCard({ gameData }) {
             window.matchMedia("(prefers-color-scheme: dark)").matches
     );
 
-    console.log("gameData: ", gameData);
-
     React.useEffect(() => {
         const matcher = window.matchMedia("(prefers-color-scheme: dark)");
         const onChange = (e) => setDarkMode(e.matches);
@@ -42,7 +40,7 @@ export default function TitleCard({ gameData }) {
     const bigCoverUrl = gameData.cover
         ? gameData.cover.url.replace("/t_thumb/", "/t_cover_big/")
         : null;
-    const textSizeClass = gameData.name.length > 25 ? "text-xl" : "text-4xl";
+    // const textSizeClass = gameData.name.length > 25 ? "text-xl" : "text-4xl";
 
     const stars = generateStars(averageRating);
 
