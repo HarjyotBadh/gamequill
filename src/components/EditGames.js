@@ -52,7 +52,7 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
         await updateDoc(docRef, {
           favoriteGames: gameIds,
         });
-        console.log("Favorite games updated successfully");
+        console.log("Fåavorite games updated successfully");
       } catch (error) {
         console.error("Error updating favorite games:", error);
       }
