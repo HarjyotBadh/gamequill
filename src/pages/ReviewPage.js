@@ -1,28 +1,27 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import {
-  fetchGameDataFromIGDB,
-  fetchGameData,
-} from "../functions/GameFunctions";
+import { fetchGameData } from "../functions/GameFunctions";
 import { Link } from "react-router-dom";
 import { fetchReviewById } from "../functions/ReviewFunctions";
 import NavBar from "../components/NavBar";
 import TitleCard from "../components/TitleCard";
 import StarSelection from "../components/StarSelection";
 import ReviewProfile from "../components/ReviewProfile";
+import { useNavigate } from "react-router-dom";
 import "../styles/ReviewPage.css";
 import Footer from "../components/Footer";
 
 export default function ReviewPage() {
-  const { review_id } = useParams();
-  const [reviewData, setReviewData] = React.useState(null);
-  const [gameData, setGameData] = React.useState(null);
-  const [darkMode, setDarkMode] = React.useState(
-    () =>
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-  );
-  const [showSpoilers, setShowSpoilers] = React.useState(false);
+    const { review_id } = useParams();
+    const [reviewData, setReviewData] = React.useState(null);
+    const [gameData, setGameData] = React.useState(null);
+    const [darkMode, setDarkMode] = React.useState(
+        () =>
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches
+    );
+    const [showSpoilers, setShowSpoilers] = React.useState(false);
+    const navigate = useNavigate();
 
   React.useEffect(() => {
     const matcher = window.matchMedia("(prefers-color-scheme: dark)");
@@ -39,18 +38,29 @@ export default function ReviewPage() {
         const fetchedReview = await fetchReviewById(review_id);
         setReviewData(fetchedReview);
 
-        // Get the game data from IGDB
-        const gameData = await fetchGameData(fetchedReview.gameID);
-        setGameData(gameData.game);
-      } catch (error) {
-        console.error("Error fetching review or game data: ", error);
-        // In case of an error or no document found, redirect user to home page.
-        window.location.href = "/home";
-      }
-    };
+                const storedGameData = JSON.parse(localStorage.getItem(`gameData_${fetchedReview.gameID}`));
+                console.log("Game id is " + fetchedReview.gameID);
+                if (storedGameData && storedGameData.game && storedGameData.game.name) {
+                    console.log("Loading gameData from localStorage");
+                    setGameData(storedGameData);
+                } else {
+                    // Get the game data from IGDB
+                    console.log("Calling fetchGameData in ReviewPage.js");
+                    const gameDataResult = await fetchGameData(fetchedReview.gameID);
+                    setGameData(gameDataResult);
 
-    fetchReviewAndGameData();
-  }, [review_id]);
+                    // Store the fetched game data in localStorage
+                    localStorage.setItem(`gameData_${fetchedReview.gameID}`, JSON.stringify(gameDataResult.game));
+                }
+            } catch (error) {
+                console.error("Error fetching review or game data: ", error);
+                // In case of an error or no document found, redirect user to home page.
+                navigate("/");
+            }
+        };
+
+        fetchReviewAndGameData();
+    }, [review_id]);
 
   const toggleSpoilers = () => {
     setShowSpoilers((prevState) => !prevState);
@@ -94,7 +104,7 @@ export default function ReviewPage() {
               profilePicture={reviewData.profilePicture}
             />
           </Link>
-          <TitleCard gameData={gameData} />
+          <TitleCard gameData={gameData.game} />
         </div>
 
         {/* Right side */}

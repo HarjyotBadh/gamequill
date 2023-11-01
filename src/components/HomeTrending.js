@@ -12,10 +12,22 @@ function App() {
     const game_ids = [96437, 148241, 213639, 233307, 78511];
 
     useEffect(() => {
-        (async () => {
-            const fetchedGamesData = await fetchMultipleGameData(game_ids);
-            setGamesData(fetchedGamesData);
-        })();
+        // Check if gamesData exists in sessionStorage
+        const storedGamesData = JSON.parse(sessionStorage.getItem('gamesData'));
+
+        if (storedGamesData) {
+            console.log("Loading gamesData from sessionStorage");
+            setGamesData(storedGamesData);
+        } else {
+            (async () => {
+                console.log("Calling fetchMultipleGameData in HomeTrending.js");
+                const fetchedGamesData = await fetchMultipleGameData(game_ids);
+                setGamesData(fetchedGamesData);
+                
+                // Store the fetched data in sessionStorage
+                sessionStorage.setItem('gamesData', JSON.stringify(fetchedGamesData));
+            })();
+        }
     }, []);
 
     // Wait until gamesData is populated to render the page.
