@@ -7,9 +7,6 @@ import { getDoc, doc } from "firebase/firestore";
 function App() {
   const [genreRecommendations, setGenreRecommendations] = useState([]);
   const [favoriteGenres, setFavoriteGenres] = useState([]);
-  const [userId, setUserId] = useState("");
-  //   const userIdd = auth.currentUser.uid;
-  //   console.log(userIdd);
 
   const genreMapping = {
     fighting: 4,
@@ -42,7 +39,6 @@ function App() {
       unsub();
       if (authObj) {
         const theuserId = authObj.uid;
-        setUserId(theuserId);
         console.log(theuserId);
         getGenres(theuserId);
       } else {

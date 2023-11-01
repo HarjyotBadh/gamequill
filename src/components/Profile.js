@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { getDoc, doc, updateDoc } from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 import EditProfile from "./EditProfile";
 import ProfileTitleCard from "./ProfileTitleCard";
 import EditGames from "./EditGames";
 import "../styles/Profile.css";
 import { db } from "../firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import EditGenre from "./EditGenre";
 import { Link } from "react-router-dom";
 import FollowUser from "./FollowUser";
-import TitleCard from "./TitleCard";
-import { fetchGameDataFromIGDB } from "../pages/GamePage";
 import EditCurrentlyPlayingGame from "./EditCurrentlyPlayingGame";
 
 function Profile({ profileData, setProfileData, userId }) {
@@ -21,7 +19,7 @@ function Profile({ profileData, setProfileData, userId }) {
 
   const auth = getAuth();
   var isUser = false;
-  if (auth.currentUser != null && userId == auth.currentUser.uid) {
+  if (auth.currentUser != null && userId === auth.currentUser.uid) {
     isUser = true;
   }
   console.log("isUser:  " + isUser);
@@ -31,7 +29,7 @@ function Profile({ profileData, setProfileData, userId }) {
     const apiUrl = "https://api.igdb.com/v4/covers";
 
     const fetchCovers = async () => {
-      if (auth.currentUser == null && userId == auth.currentUser.uid) {
+      if (auth.currentUser === null && userId === auth.currentUser.uid) {
         window.location.href = "/login";
       }
       const docRef = doc(db, "profileData", userId);

@@ -81,7 +81,7 @@ function App() {
                         onChange={handleSearchInputChange}
                         onKeyDown={handleEnterKey}
                         placeholder="Search for games or users"
-                        className="bg-gray-200 p-2 rounded mr-2"
+                        className="bg-gray-200 p-2 rounded mr-2 w-96"
                     />
                     <button
                         onClick={handleSearch}
