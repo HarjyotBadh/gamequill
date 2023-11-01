@@ -160,10 +160,12 @@ function Profile({ profileData, setProfileData, userId }) {
                   borderRadius: "20px",
                 }}
               >
-                <ProfileTitleCard
-                  className="currentlyPlayingGame"
-                  gameData={currentlyPlayingGame.cover.url}
-                />
+                <Link to={`/game?game_id=${currentlyPlayingGame.id}`}>
+                  <ProfileTitleCard
+                    className="currentlyPlayingGame"
+                    gameData={currentlyPlayingGame.cover.url}
+                  />
+                </Link>
               </div>
             </div>
           ) : (
