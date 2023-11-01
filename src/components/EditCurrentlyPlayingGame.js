@@ -3,8 +3,8 @@ import Popup from "reactjs-popup";
 import ProfileTitleCard from "./ProfileTitleCard";
 import { doc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
-import { fetchGameDataFromIGDB } from "../functions/GameFunctions";
-
+import { fetchGameData } from "../functions/GameFunctions";
+import "../styles/EditCurrentlyPlayingGame.css";
 export default function EditCurrentlyPlayingGame({
   currentlyPlayingGame,
   setCurrentlyPlayingGame,
@@ -51,7 +51,7 @@ export default function EditCurrentlyPlayingGame({
   const handleSetCurrentlyPlaying = async () => {
     if (selectedGame) {
       const docRef = doc(db, "profileData", uid);
-      const gameData = await fetchGameDataFromIGDB(selectedGame.id);
+      const gameData = await fetchGameData(selectedGame.id);
       try {
         await updateDoc(docRef, {
           currentlyPlayingGame: gameData.game,
@@ -126,7 +126,11 @@ export default function EditCurrentlyPlayingGame({
                     </div>
                   ))}
                 </div>
-                <button type="button" onClick={handleSetCurrentlyPlaying}>
+                <button
+                  className="saveButton"
+                  type="button"
+                  onClick={handleSetCurrentlyPlaying}
+                >
                   Save
                 </button>
               </div>

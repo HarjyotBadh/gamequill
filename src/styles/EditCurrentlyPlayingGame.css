@@ -1,0 +1,9 @@
+.searchedGamesBox {
+    border-radius: 20px;
+}
+.searchedGamesBox > div {
+    border-radius: 20px;
+}
+.saveButton {
+    background-color: #007bff;
+}
