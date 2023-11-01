@@ -2,9 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
-    doc,
-    getDoc,
-    setDoc,
     query,
     collection,
     where,
@@ -17,51 +14,9 @@ import MediaPlayer from "../components/MediaPlayer";
 import DescriptionBox from "../components/DescriptionBox";
 import ReviewBar from "../components/ReviewBar";
 import ReviewSnapshot from "../components/ReviewSnapshot";
+import { fetchGameData } from "../functions/GameFunctions";
 import Footer from "../components/Footer";
 import "../styles/GamePage.css";
-
-export const fetchGameDataFromIGDB = async (game_id) => {
-    const corsAnywhereUrl = "http://localhost:8080/";
-    const apiUrl = "https://api.igdb.com/v4/games";
-
-    try {
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
-            },
-            body: `
-                fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*;
-                where id = ${game_id};
-            `,
-        });
-
-        const data = await response.json();
-
-        if (data.length) {
-            const game = data[0];
-
-            const screenshotUrls = game.screenshots
-                ? game.screenshots.map((s) =>
-                      s.url.replace("t_thumb", "t_1080p")
-                  )
-                : [];
-
-            const videoIds = game.videos
-                ? game.videos.map((v) => v.video_id)
-                : [];
-
-            return { game, screenshotUrls, videoIds };
-        }
-
-        return null;
-    } catch (err) {
-        console.error(err);
-        return null;
-    }
-};
 
 export default function GamePage({ game_id }) {
     const [gameData, setGameData] = useState(null);
@@ -109,34 +64,20 @@ export default function GamePage({ game_id }) {
         };
     }, []);
 
-    // Fetch game data from IGDB API
     useEffect(() => {
         (async () => {
-            const getGameData = async (game_id) => {
-                // Get the game document from Firebase
-                const gameRef = doc(db, "games", game_id);
-                const docSnap = await getDoc(gameRef);
-                if (docSnap.exists()) {
-                    // Return the game data
-                    return docSnap.data();
-                } else {
-                    // Create a new document for the game
-                    await setDoc(doc(db, "games", game_id), {});
-                }
-            };
-
-            // Get the game data from Firebase
-            await getGameData(game_id);
-
-            const gameDataFromIGDB = await fetchGameDataFromIGDB(game_id);
-
-            if (gameDataFromIGDB) {
-                setGameData(gameDataFromIGDB.game);
-                setScreenshots(gameDataFromIGDB.screenshotUrls);
-                setVideos(gameDataFromIGDB.videoIds);
+            const gameData = await fetchGameData(game_id);
+    
+            if (gameData) {
+                setGameData(gameData.game);
+                setScreenshots(gameData.screenshotUrls);
+                setVideos(gameData.videoIds);
+            } else {
+                window.location.href = "/home";
             }
         })();
     }, [game_id]);
+    
 
     return (
         <div

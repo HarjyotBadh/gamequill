@@ -50,7 +50,7 @@ const Wishlist = () => {
 
         // Fetch game information for each game in the wishlist using the provided API call
         const gameInfoPromises = docWishlist.map(async (gameID) => {
-          const gameData = await fetchGameDataFromIGDB(gameID);
+          const gameData = await fetchGameData(gameID);
           return { gameID, gameData };
         });
 

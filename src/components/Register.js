@@ -113,10 +113,12 @@ function Register() {
       const userData = {
         bio: "",
         username,
+        usernameLowerCase: username.toLowerCase(),
         email,
         pronouns: "",
         favoriteGames: ["", "", "", ""],
         favoriteGenres: ["", "", "", ""],
+        currentlyPlayingGame: "",
         name: "",
         profilePicture:
           "https://firebasestorage.googleapis.com/v0/b/gamequill-3bab8.appspot.com/o/profilePictures%2FdefaultProfilePicture.png?alt=media&token=3d964f48-c8b6-4fab-8f5e-d7ebf6addc61",
