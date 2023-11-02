@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import FollowUser from "./FollowUser";
 import EditCurrentlyPlayingGame from "./EditCurrentlyPlayingGame";
 import FiveRecentReviews from "./FiveRecentReviews";
+import Footer from "./Footer";
 
 function Profile({ profileData, setProfileData, userId }) {
   const [gameCovers, setGameCovers] = useState([]);
@@ -193,7 +194,7 @@ function Profile({ profileData, setProfileData, userId }) {
           </div>
         )}
       </div>
-      
+      <Footer />
     </div>
   );
 }
