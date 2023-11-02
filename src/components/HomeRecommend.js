@@ -95,6 +95,7 @@ function App() {
     };
     //getGenres();
   }, []);
+  
   const formatCoverUrl = (url) => {
     return url ? url.replace("/t_thumb/", "/t_cover_big/") : "";
   };
