@@ -19,7 +19,7 @@ export default function Featured1({ gameData, screenshots }) {
         return (
             <div class="image-cont rounded-corners">
                 <div class="image-container2">
-                    <img src={tempscreenshot} alt="Pikmin Test"/>
+                    <img src={tempscreenshot} alt="Error Loading Image"/>
                 </div>
             </div>
         )
@@ -41,7 +41,7 @@ if (gameData.involved_companies && gameData.involved_companies.length > 0) {
     return (
         <div class="image-cont rounded-corners">
             <div class="image-container2">
-                <img src={imageUrl} alt="Pikmin Test"/>
+                <img src={imageUrl} alt="Error Loading Image"/>
             </div>
             <div class="overlay"></div>
             <div class="text-overlay">

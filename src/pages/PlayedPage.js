@@ -47,19 +47,25 @@ const PlayedPage = () => {
             }
 
             if (idsToFetch.length > 0) {
-                const newGameDataArray = await fetchMultipleGameData(idsToFetch);
+                const newGameDataArray = await fetchMultipleGameData(
+                    idsToFetch
+                );
                 for (const data of newGameDataArray) {
                     localStorage.setItem(
                         `gameData_${data.id}`,
                         JSON.stringify({ game: data })
                     );
                 }
-                const updatedGameData = newGameDataArray.map(data => data.game);
-    setGameDataArray([...storedGamesArray, ...updatedGameData]);
+                const updatedGameData = newGameDataArray.map(
+                    (data) => data.game
+                );
+                setGameDataArray([...storedGamesArray, ...updatedGameData]);
             } else {
                 // Extract only the .game property for each item in storedGamesArray
-    const storedGameData = storedGamesArray.map(data => data.game);
-    setGameDataArray(storedGameData);
+                const storedGameData = storedGamesArray.map(
+                    (data) => data.game
+                );
+                setGameDataArray(storedGameData);
             }
         };
 
@@ -75,7 +81,7 @@ const PlayedPage = () => {
         return () => {
             unsub();
         };
-    }, [playedItems]);
+    }, []);
 
     return (
         <div>

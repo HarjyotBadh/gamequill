@@ -21,16 +21,22 @@ function HomePerRecommend() {
                     const docSnap = await getDoc(docRef);
     
                     if (docSnap.exists()) {
+                        console.log("ONE");
                         const userData = docSnap.data();
                         const game_ids = [...userData.likes, ...userData.plays];
-                        
+                        console.log("TWO");
+
                         // Fetch genres and themes of liked and played games
                         const userGamesData = await fetchMultipleGameData(game_ids);
+                        console.log("THREE");
                         const genres = [...new Set(userGamesData.flatMap(g => g.game.genres || []))];
                         const themes = [...new Set(userGamesData.flatMap(g => g.game.themes || []))];
+                        console.log("FOUR");
                         
                         // Fetch similar games based on those genres and themes
+                        console.log("FIVE");
                         const recommendedGames = await fetchSimilarGames(genres, themes);
+                        console.log("SIX");
                         setGamesData(recommendedGames);
                         console.log("Recommended Games: " + recommendedGames);
                         console.log("Screenshots: " + recommendedGames[0].screenshotUrls);
