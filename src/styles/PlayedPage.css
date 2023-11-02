@@ -1,0 +1,50 @@
+/* likes.css */
+.plays-container {
+    text-align: center;
+    padding: 100px;
+    background-color: #e3f2fd; /* Slightly different shade for differentiation */
+    font-family: Arial, sans-serif;
+}
+
+.plays-title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.plays {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 2fr));
+    gap: 20px;
+    justify-content: center;
+}
+
+.title-card-box {
+    background-color: #ffe5b4; /* Slightly different shade for differentiation */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.title-card-box:hover {
+    transform: translateY(-5px);
+}
+
+.title-card-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title-card-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 10px;
+    color: #333;
+}

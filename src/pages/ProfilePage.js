@@ -10,6 +10,36 @@ export default function ProfilePage({ userId }) {
 
   var uid;
   useEffect(() => {
+    const fetchData = async (uid) => {
+      const docRef = doc(db, "profileData", uid);
+      const snapshot = await getDoc(docRef);
+  
+      if (snapshot.exists()) {
+        const docData = snapshot.data();
+        const data = {
+          profilePicture:
+            docData.profilePicture || defaultProfileData.profilePicture,
+          bio: docData.bio || defaultProfileData.bio,
+          pronouns: docData.pronouns || defaultProfileData.pronouns,
+          favoriteGames:
+            docData.favoriteGames || defaultProfileData.favoriteGames,
+          favoriteGenres:
+            docData.favoriteGenres || defaultProfileData.favoriteGenres,
+          name: docData.name || defaultProfileData.name,
+          username: docData.username || defaultProfileData.username,
+        };
+        setProfileData(data);
+      } else {
+        setProfileData(defaultProfileData);
+      }
+      if (snapshot.exists()) {
+        console.log("Doc data", snapshot.data());
+      } else {
+        console.log("Doc does not exist");
+        window.location.href = "/home";
+      }
+    };
+    
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -32,7 +62,7 @@ export default function ProfilePage({ userId }) {
 
     // Cleanup the subscription on unmount
     return () => unsubscribe();
-  }, []);
+  }, [userId]);
 
   const defaultProfileData = {
     profilePicture: "",
@@ -46,35 +76,7 @@ export default function ProfilePage({ userId }) {
 
   const [profileData, setProfileData] = useState(defaultProfileData);
 
-  const fetchData = async (uid) => {
-    const docRef = doc(db, "profileData", uid);
-    const snapshot = await getDoc(docRef);
-
-    if (snapshot.exists()) {
-      const docData = snapshot.data();
-      const data = {
-        profilePicture:
-          docData.profilePicture || defaultProfileData.profilePicture,
-        bio: docData.bio || defaultProfileData.bio,
-        pronouns: docData.pronouns || defaultProfileData.pronouns,
-        favoriteGames:
-          docData.favoriteGames || defaultProfileData.favoriteGames,
-        favoriteGenres:
-          docData.favoriteGenres || defaultProfileData.favoriteGenres,
-        name: docData.name || defaultProfileData.name,
-        username: docData.username || defaultProfileData.username,
-      };
-      setProfileData(data);
-    } else {
-      setProfileData(defaultProfileData);
-    }
-    if (snapshot.exists()) {
-      console.log("Doc data", snapshot.data());
-    } else {
-      console.log("Doc does not exist");
-      window.location.href = "/home";
-    }
-  };
+  
 
   if (loading) {
     return <div>Loading...</div>;

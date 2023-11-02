@@ -62,7 +62,7 @@ function Profile({ profileData, setProfileData, userId }) {
     };
 
     fetchCovers();
-  }, []);
+  }, [userId]);
 
   return (
     <div className="bg-white dark:bg-gray-500 h-screen">
@@ -184,6 +184,16 @@ function Profile({ profileData, setProfileData, userId }) {
             <p>
               <Link to="/wishlist" className="button">
                 Wishlist
+              </Link>
+            </p>
+            <p>
+              <Link to="/likes" className="button">
+                Liked Games
+              </Link>
+            </p>
+            <p>
+              <Link to="/played" className="button">
+                Played Games
               </Link>
             </p>
           </div>

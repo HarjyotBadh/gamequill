@@ -12,7 +12,9 @@ import SearchPageWrapper from "./components/SearchPageWrapper";
 import RecentReviews from "./components/RecentReviews";
 import ReviewDetail from "./components/ReviewDetail";
 import ReviewPage from "./pages/ReviewPage";
-import Wishlist from "./components/Wishlist"; // Add this import
+import Wishlist from "./components/Wishlist";
+import Likes from "./pages/LikesPage";
+import PlayedPage from "./pages/PlayedPage";
 
 function App() {
   return (
@@ -31,6 +33,8 @@ function App() {
       <Route path="/search" element={<SearchPageWrapper />} />
       <Route path="/review/:review_id" element={<ReviewPage />} />
       <Route path="/wishlist" element={<Wishlist/>} />
+      <Route path="/likes" element={<Likes/>} />
+      <Route path="/played" element={<PlayedPage/>} />
     </Routes>
   );
 }
