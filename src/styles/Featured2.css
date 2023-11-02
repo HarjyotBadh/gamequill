@@ -36,9 +36,6 @@ img {
 }
 
 
-
-
-/* Style the gradient overlay */
 .image-container2::before {
     content: ''; /* Required for the pseudo-element to be displayed */
     position: absolute;
@@ -62,6 +59,6 @@ img {
 
 .rounded-corners {
     border-radius: 25px; /* You can adjust the value to control the roundness */
-    background-color: #f0f0f0; /* Optional background color */
+    background-color: red; /* Optional background color */
     /* Other CSS properties for styling */
 }
