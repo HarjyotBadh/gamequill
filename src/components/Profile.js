@@ -10,6 +10,8 @@ import EditGenre from "./EditGenre";
 import { Link } from "react-router-dom";
 import FollowUser from "./FollowUser";
 import EditCurrentlyPlayingGame from "./EditCurrentlyPlayingGame";
+import FiveRecentReviews from "./FiveRecentReviews";
+import Footer from "./Footer";
 
 function Profile({ profileData, setProfileData, userId }) {
   const [gameCovers, setGameCovers] = useState([]);
@@ -139,6 +141,9 @@ function Profile({ profileData, setProfileData, userId }) {
               </div>
             ))}
           </div>
+          <div class="five-recent">
+            <FiveRecentReviews />
+          </div>
         </div>
         <div className="currentlyPlaying dark:text-white text-black flex flex-col">
           Currently Playing:
@@ -171,7 +176,7 @@ function Profile({ profileData, setProfileData, userId }) {
           )}
         </div>
         {isUser && (
-          <div className="menuButtons border-2 dark:border-white border-black w-72 h-100 ml-10 p-2 dark:text-white text-black flex flex-col">
+          <div className="menuButtons border-2 dark:border-white border-black w-72 h-100 ml-10 p-2 dark:text-white text-black flex flex-col mh">
             <EditProfile
               profileData={profileData}
               setProfileData={setProfileData}
@@ -199,6 +204,7 @@ function Profile({ profileData, setProfileData, userId }) {
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 }

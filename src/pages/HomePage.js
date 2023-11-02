@@ -38,7 +38,7 @@ function App() {
           <HomeRecommend />
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
