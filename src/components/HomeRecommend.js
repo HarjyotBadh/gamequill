@@ -66,7 +66,7 @@ function App() {
                 "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
                 Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
               },
-              body: `fields name, genres, cover.url, id; where rating>70 & total_rating_count>5 & category = (0,8,9) & genres = (${genreNumber}); sort rating desc; limit:12;`,
+              body: `fields name, genres, cover.url, id; where rating>70 & total_rating_count>5 & category = (0,8,9) & genres = (${genreNumber}); sort rating desc; limit:100;`,
             });
 
             const data = await response.json();
@@ -75,28 +75,21 @@ function App() {
         });
 
         const genreResults = await Promise.all(genrePromises);
+
         const randomGenreRecommendations = genreResults.map((genreData) => {
-          const randomGames = [];
-          while (randomGames.length < 3) {
-            const randomIndex = Math.floor(Math.random() * genreData.length);
-            const randomGame = genreData[randomIndex];
-            if (!randomGames.includes(randomGame)) {
-              randomGames.push(randomGame);
-            }
-          }
-          return randomGames;
+          let genreRandom = genreData.sort(() => Math.random() - 0.5);
+          genreRandom = genreData.slice(0, 3);
+          return genreRandom;
         });
 
         setGenreRecommendations(randomGenreRecommendations);
-
-        //setGenreRecommendations(genreResults);
       } catch (error) {
         console.error(error);
       }
     };
     //getGenres();
   }, []);
-  
+
   const formatCoverUrl = (url) => {
     return url ? url.replace("/t_thumb/", "/t_cover_big/") : "";
   };
