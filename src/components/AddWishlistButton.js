@@ -9,7 +9,7 @@ import {
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
-import "../styles/wishlist.css";
+import "../styles/WishListButton.css";
 
 const WishlistButton = ({ gameID }) => {
   const [isClicked, setIsClicked] = useState(false);

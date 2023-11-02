@@ -6,6 +6,7 @@ import HomeRecommend from "../components/HomeRecommend";
 import "../styles/HomePage.css";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Footer from "../components/Footer";
+import HomePerRecommend from "../components/HomePerRecommend";
 
 function App() {
   useEffect(() => {
@@ -23,16 +24,17 @@ function App() {
     <div>
       <NavBar />
       <div class="grid-container">
-        <div class="grid-pad"></div>
+        {/* <div class="grid-pad"></div> */}
         <div class="grid-featured">
           <HomeTrending />
         </div>
         <div class="grid-activity">
           <HomeActivity />
         </div>
-        <div class="grid-pad"></div>
-        <div class="grid-pad"></div>
+        {/* <div class="grid-pad"></div> */}
+        {/* <div class="grid-pad"></div> */}
         <div class="grid-recommend">
+          <HomePerRecommend />
           <HomeRecommend />
         </div>
       </div>

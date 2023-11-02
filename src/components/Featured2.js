@@ -24,8 +24,17 @@ export default function Featured1({ gameData, screenshots }) {
             </div>
         )
     }
+
+    // Ensure game_ids is always an array
+    // if (!Array.isArray(screenshots)) {
+    //     screenshots = [screenshots];
+    // }
     var imageUrl = screenshots[0];
-    var company = gameData.involved_companies[0].company.name;
+    let company = '';
+if (gameData.involved_companies && gameData.involved_companies.length > 0) {
+    company = gameData.involved_companies[0].company.name;
+}
+
     var rating = averageRating;
 
 

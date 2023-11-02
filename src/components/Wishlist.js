@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../firebase";
 import { doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
-import "./Wishlist.css"; // Import your CSS file
+import "../styles/Wishlist.css";
 import NavBar from "../components/NavBar";
-
-import { fetchGameData } from "../functions/GameFunctions"; // Replace with the correct path to the filex
+import { fetchGameData } from "../functions/GameFunctions";
 import { Link } from "react-router-dom";
 
 const WishlistButton = ({ gameID, handleRemove }) => {

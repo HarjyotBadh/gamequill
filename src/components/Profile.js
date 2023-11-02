@@ -191,6 +191,16 @@ function Profile({ profileData, setProfileData, userId }) {
                 Wishlist
               </Link>
             </p>
+            <p>
+              <Link to="/likes" className="button">
+                Liked Games
+              </Link>
+            </p>
+            <p>
+              <Link to="/played" className="button">
+                Played Games
+              </Link>
+            </p>
           </div>
         )}
       </div>
