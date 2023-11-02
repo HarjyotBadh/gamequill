@@ -63,7 +63,7 @@ function Profile({ profileData, setProfileData, userId }) {
     };
 
     fetchCovers();
-  }, []);
+  }, [userId]);
 
   return (
     <div className="bg-white dark:bg-gray-500 h-screen">
