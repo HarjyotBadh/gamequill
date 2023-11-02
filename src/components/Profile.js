@@ -142,7 +142,7 @@ function Profile({ profileData, setProfileData, userId }) {
             ))}
           </div>
           <div class="five-recent">
-            <FiveRecentReviews />
+            <FiveRecentReviews user_id={userId}/>
           </div>
         </div>
         <div className="currentlyPlaying dark:text-white text-black flex flex-col">

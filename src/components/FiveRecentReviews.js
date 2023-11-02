@@ -6,7 +6,7 @@ import RecentReview from "./RecentReview";
 import UserActivity from "./UserActivity";
 import "../styles/FiveRecentReviews.css";
 
-export default function FiveRecentReviews() {
+export default function FiveRecentReviews({user_id}) {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ export default function FiveRecentReviews() {
       if (authObj) {
         const theUserId = authObj.uid;
 
-        fetchUserRecentReviews(5, theUserId)
+        fetchUserRecentReviews(5, user_id)
           .then((data) => {
             setReviews(data);
           })
