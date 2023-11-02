@@ -4,8 +4,7 @@ import Profile from "../components/Profile";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import Footer from "../components/Footer";
-import Gap from "../components/Gap";
+import "../styles/ProfilePage.css";
 export default function ProfilePage({ userId }) {
   const [loading, setLoading] = useState(true);
 
@@ -89,9 +88,6 @@ export default function ProfilePage({ userId }) {
         setProfileData={setProfileData}
         userId={userId}
       />
-      <Gap />
-
-      <Footer />
     </div>
   );
 }
