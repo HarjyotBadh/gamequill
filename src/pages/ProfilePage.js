@@ -32,7 +32,7 @@ export default function ProfilePage({ userId }) {
 
     // Cleanup the subscription on unmount
     return () => unsubscribe();
-  }, []);
+  }, [userId]);
 
   const defaultProfileData = {
     profilePicture: "",
@@ -90,7 +90,6 @@ export default function ProfilePage({ userId }) {
       />
 
       <Footer />
-
     </div>
   );
 }
