@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../firebase";
 import { doc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
-import "../styles/Wishlist.css";
+import "../styles/wishlist.css";
 import NavBar from "../components/NavBar";
 import { fetchGameData } from "../functions/GameFunctions";
 import { Link } from "react-router-dom";

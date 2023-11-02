@@ -23,7 +23,7 @@ function HomePerRecommend() {
                     if (docSnap.exists()) {
                         const userData = docSnap.data();
                         const game_ids = [...userData.likes, ...userData.plays];
-                        
+
                         // Fetch genres and themes of liked and played games
                         const userGamesData = await fetchMultipleGameData(game_ids);
                         const genres = [...new Set(userGamesData.flatMap(g => g.game.genres || []))];
@@ -32,11 +32,9 @@ function HomePerRecommend() {
                         // Fetch similar games based on those genres and themes
                         const recommendedGames = await fetchSimilarGames(genres, themes);
                         setGamesData(recommendedGames);
-                        console.log("Recommended Games: " + recommendedGames);
-                        console.log("Screenshots: " + recommendedGames[0].screenshotUrls);
                         setLoading(false);
                     } else {
-                        console.log("No such user document!");
+                        console.error("No such user document!");
                     }
                     
                 } catch (error) {
@@ -60,7 +58,7 @@ function HomePerRecommend() {
             <h1 className="home-trending-head text-3xl font-semibold mb-6">RECOMMENDED FOR YOU</h1>
             <div className="home-recommend-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {gamesData.map((gameData, index) => (
-                    <Link key={index} to={`/game?game_id=${gameData.id}`} className="rounded overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <Link key={index} to={`/game?game_id=${gameData.id}`} className="rounded overflow-hidden">
                         <Featured2
                             gameData={gameData}
                             screenshots={gameData.screenshotUrls}
