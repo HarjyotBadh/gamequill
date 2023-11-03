@@ -43,7 +43,7 @@ function App() {
             </div>
             {gamesData.slice(1).map((gameData, index) => (
                 <Link key={index} to={`/game?game_id=${gameData.game.id}`}>
-                    <Featured2 gameData={gameData.game} screenshots={gameData.screenshotUrls} />
+                    <Featured2 gameData={gameData.game} screenshots={gameData.screenshotUrls} limitSize={false} />
                 </Link>
             ))}
         </div>
