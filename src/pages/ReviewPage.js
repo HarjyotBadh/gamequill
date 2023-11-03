@@ -24,6 +24,7 @@ export default function ReviewPage() {
     );
     const [showSpoilers, setShowSpoilers] = React.useState(false);
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
+    const [gameID, setGameID] = React.useState(null);
     const currentUserUid = auth.currentUser?.uid;
     const navigate = useNavigate();
 
@@ -45,7 +46,7 @@ export default function ReviewPage() {
                 const storedGameData = JSON.parse(
                     localStorage.getItem(`gameData_${fetchedReview.gameID}`)
                 );
-                console.log("Game id is " + fetchedReview.gameID);
+                setGameID(fetchedReview.gameID);
                 if (
                     storedGameData &&
                     storedGameData.game &&
@@ -108,16 +109,13 @@ export default function ReviewPage() {
     };
 
     const handleConfirmDelete = async () => {
-        // Here you can add any password validation if required.
-        // For now, I'm skipping that part and directly attempting to delete the review.
-
         const isDeleted = await deleteReview(review_id);
         if (isDeleted) {
-            navigate("/");
+            navigate(`/game?game_id=${gameID}`);
         } else {
-            // Handle error (maybe show an error message in the modal)
+            console.error("Error deleting review");
         }
-        closeDeleteModal(); // Close the modal after deletion attempt
+        closeDeleteModal();
     };
 
     const deleteReview = async (reviewId) => {

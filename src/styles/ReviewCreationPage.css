@@ -125,5 +125,18 @@
     transition: transform 0.3s ease;
 }
 
+.dialog-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.reset-margins {
+    margin: 0 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+}
+
+
 
 
