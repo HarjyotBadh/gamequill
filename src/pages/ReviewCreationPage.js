@@ -61,8 +61,6 @@ export default function ReviewCreationPage() {
         return div.textContent || div.innerText || "";
     };
 
-    
-
     const handleSubmit = async () => {
         // Reset error state
         setError("");
@@ -178,52 +176,55 @@ export default function ReviewCreationPage() {
             </div>
 
             {isDialogOpen && (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-        <div className="bg-black bg-opacity-50 absolute inset-0"></div>
-        <Dialog
-            open={isDialogOpen}
-            handler={() => setIsDialogOpen(false)}
-            size="md"
-            dismiss={{
-                enabled: true,
-                escapeKey: true,
-                outsidePress: true,
-            }}
-            animate={{
-                mount: {
-                    transition: { duration: 0.5, type: "fade" },
-                },
-                unmount: {
-                    transition: { duration: 0.5, type: "fade" },
-                },
-            }}
-            className={`rounded-lg z-50 max-w-xl ${darkMode ? "dark-dialog" : "light-dialog"}`}
-        >
-            <DialogHeader className="bg-red-500 text-white text-lg font-semibold p-4 rounded-t-lg flex items-center">
-                Error
-            </DialogHeader>
-            <DialogBody className="p-4">{error}</DialogBody>
-            <DialogFooter className="flex justify-end bg-gray-100 p-4 rounded-b-lg">
-                <Button
-                    onClick={() => setIsDialogOpen(false)}
-                    ripple="light"
-                    className="bg-gray-200 text-black font-semibold px-6 py-2"
-                >
-                    Okay
-                </Button>
-            </DialogFooter>
-        </Dialog>
-    </div>
-)}
-
-
-
-
-
-
+                <div className="fixed inset-0 flex justify-center z-50">
+                    <div className="bg-black bg-opacity-50 absolute inset-0"></div>
+                    <Dialog
+                        open={isDialogOpen}
+                        handler={() => setIsDialogOpen(false)}
+                        size="md"
+                        dismiss={{
+                            enabled: true,
+                            escapeKey: true,
+                            outsidePress: true,
+                        }}
+                        animate={{
+                            mount: {
+                                transition: { duration: 0.5, type: "fade" },
+                            },
+                            unmount: {
+                                transition: { duration: 0.5, type: "fade" },
+                            },
+                        }}
+                        style={{
+                            position: 'fixed',
+                            top: '40%',
+                            left: '37%',
+                            bottom: 'auto',
+                            right: 'auto',
+                            transform: 'translate(-50%, -50%)'
+                        }}
+                        className={`rounded-lg z-50 max-w-xl ${
+                            darkMode ? "dark-dialog" : "light-dialog"
+                        }`}
+                    >
+                        <DialogHeader className="bg-red-500 text-white text-lg font-semibold p-4 rounded-t-lg flex items-center">
+                            Error
+                        </DialogHeader>
+                        <DialogBody className="p-4">{error}</DialogBody>
+                        <DialogFooter className="flex justify-end bg-gray-100 p-4 rounded-b-lg">
+                            <Button
+                                onClick={() => setIsDialogOpen(false)}
+                                ripple="light"
+                                className="bg-gray-200 text-black font-semibold px-6 py-2"
+                            >
+                                Okay
+                            </Button>
+                        </DialogFooter>
+                    </Dialog>
+                </div>
+            )}
 
             <Footer />
-
         </div>
     );
 }

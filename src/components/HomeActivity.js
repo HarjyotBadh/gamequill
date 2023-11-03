@@ -38,11 +38,12 @@ function App() {
                         <div className="user-activity" key={index}>
                             <UserActivity
                                 cover={review.gameCover.replace('t_thumb', 't_1080p')}
-                                username={review.username} // Assuming review object has username
+                                username={review.username}
                                 rating={review.starRating}
                                 note={review.reviewText}
-                                id={review.gameID} // Assuming review object has gameId
-                                reviewId={review.id} // Assuming review object has id
+                                id={review.gameID}
+                                reviewId={review.id}
+                                uid={review.uid}
                             />
                         </div>
                     ))}

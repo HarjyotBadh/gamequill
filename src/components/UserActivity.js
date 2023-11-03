@@ -6,7 +6,7 @@ import DOMPurify from 'dompurify';
 import { parseReviewWithSpoilersToHTML } from "../functions/ReviewFunctions";
 import { generateStars } from "../functions/RatingFunctions";
 
-export default function UserActivity({ cover, username, rating, note, id, reviewId }) {
+export default function UserActivity({ cover, username, rating, note, id, reviewId, uid }) {
 
     if (!cover) {
         cover = tempcover;
@@ -38,12 +38,16 @@ export default function UserActivity({ cover, username, rating, note, id, review
                 </Link>
             </div>
             <div className="user-text">
+                
                 <h5 className="user-name-rating">
+                <Link to={`/Profile?user_id=${uid}`}>
                     {username} - 
                         {stars.map((star, index) => (
                             <span key={index}>{star}</span>
                         ))}
+                        </Link>
                 </h5>
+                
                 <Link to={`/review/${reviewId}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <p
                         className="review-text-snapshot"
