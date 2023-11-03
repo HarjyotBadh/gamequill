@@ -28,47 +28,27 @@ const PlayedPage = () => {
         };
 
         const fetchGameDatas = async () => {
-            const storedGamesArray = [];
-            const idsToFetch = [];
-
-            for (const gameID of playedItems) {
-                let storedGameData = JSON.parse(
-                    localStorage.getItem(`gameData_${gameID}`)
-                );
-
-                if (
-                    storedGameData &&
-                    storedGameData.game &&
-                    storedGameData.game.name
-                ) {
-                    storedGamesArray.push(storedGameData.game);
-                } else {
-                    idsToFetch.push(gameID);
+            // Assuming playedItems is an array of game IDs that you want to fetch data for
+            if (playedItems.length > 0) {
+                try {
+                    // Fetch the game data for all the IDs in playedItems
+                    const gameDataArray = await fetchMultipleGameData(playedItems);
+        
+                    // After fetching, you can directly set the game data array
+                    // with the fetched data if needed
+                    // Make sure to access the correct property if gameDataArray contains objects with a 'game' property
+                    // const updatedGameData = gameDataArray.map(data => data.game);
+                    setGameDataArray(gameDataArray);
+                } catch (error) {
+                    console.error('Failed to fetch game data:', error);
+                    // Handle the error appropriately
                 }
-            }
-
-            if (idsToFetch.length > 0) {
-                const newGameDataArray = await fetchMultipleGameData(
-                    idsToFetch
-                );
-                for (const data of newGameDataArray) {
-                    localStorage.setItem(
-                        `gameData_${data.id}`,
-                        JSON.stringify({ game: data })
-                    );
-                }
-                // const updatedGameData = newGameDataArray.map(
-                //     (data) => data.game
-                // );
-                setGameDataArray([...storedGamesArray, ...newGameDataArray]);
             } else {
-                // Extract only the .game property for each item in storedGamesArray
-                // const storedGameData = storedGamesArray.map(
-                //     (data) => data.game
-                // );
-                setGameDataArray(storedGamesArray);
+                // If there are no played items, set an empty array or handle accordingly
+                setGameDataArray([]);
             }
         };
+        
 
         const unsub = auth.onAuthStateChanged((authObj) => {
             if (authObj) {
@@ -93,7 +73,7 @@ const PlayedPage = () => {
                 <h1 className="plays-title">My Played Games</h1>
                 <div className="plays">
                     {gameDataArray.map((gameData) => (
-                        <TitleCard key={gameData.id} gameData={gameData} />
+                        <TitleCard key={gameData.id} gameData={gameData.game} />
                     ))}
                 </div>
             </div>
