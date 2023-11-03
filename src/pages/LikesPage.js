@@ -10,57 +10,49 @@ const Likes = () => {
     const [likedItems, setLikedItems] = useState([]);
     const [gameDataArray, setGameDataArray] = useState([]);
 
-    useEffect(() => {
-        const fetchLikes = async () => {
+    // Fetch game data based on the played items
+    const fetchGameDatas = async () => {
+        if (likedItems.length > 0) {
             try {
-                const user = auth.currentUser.uid;
-                const docRef = doc(db, "profileData", user);
-                const docSnap = await getDoc(docRef);
-                const docLikes = docSnap.data().likes || [];
-                setLikedItems(docLikes);
+                const gameDataArray = await fetchMultipleGameData(likedItems);
+                setGameDataArray(gameDataArray);
             } catch (error) {
-                console.error(
-                    "Error fetching likes data from Firestore:",
-                    error
-                );
+                console.error('Failed to fetch game data:', error);
             }
-        };
+        } else {
+            setGameDataArray([]);
+        }
+    };
 
-        const fetchGameDatas = async () => {
-            // Assuming playedItems is an array of game IDs that you want to fetch data for
-            if (likedItems.length > 0) {
-                try {
-                    const gameDataArray = await fetchMultipleGameData(likedItems);
-        
-                    setGameDataArray(gameDataArray);
-                } catch (error) {
-                    console.error('Failed to fetch game data:', error);
-                    // Handle the error appropriately
-                }
-            } else {
-                // If there are no played items, set an empty array or handle accordingly
-                setGameDataArray([]);
-            }
-        };
+    // Fetches plays from the user's document in Firestore
+    const fetchPlays = async () => {
+        try {
+            const user = auth.currentUser.uid;
+            const docRef = doc(db, "profileData", user);
+            const docSnap = await getDoc(docRef);
+            const docPlays = docSnap.data().likes || [];
+            setLikedItems(docPlays);
+        } catch (error) {
+            console.error("Error fetching plays data from Firestore:", error);
+        }
+    };
 
+    // Effect for auth state changed
+    useEffect(() => {
         const unsub = auth.onAuthStateChanged((authObj) => {
             if (authObj) {
-                fetchLikes().then(() => {
-                    fetchGameDatas();
-                });
+                fetchPlays();
             }
         });
 
         // Cleanup
-        return () => {
-            unsub();
-        };
-    }, [likedItems]);
+        return () => unsub();
+    }, []);
 
-    // Print the game data array whenever it changes
+    // Effect for fetching game data when playedItems changes
     useEffect(() => {
-        console.log("All fetched game data:", gameDataArray);
-    }, [gameDataArray]);
+        fetchGameDatas();
+    }, [likedItems]);
 
     return (
         <div>

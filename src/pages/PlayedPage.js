@@ -10,60 +10,48 @@ const PlayedPage = () => {
     const [playedItems, setPlayedItems] = useState([]);
     const [gameDataArray, setGameDataArray] = useState([]);
 
-    useEffect(() => {
-        const fetchPlays = async () => {
+    // Fetch game data based on the played items
+    const fetchGameDatas = async () => {
+        if (playedItems.length > 0) {
             try {
-                const user = auth.currentUser.uid;
-                const docRef = doc(db, "profileData", user);
-                const docSnap = await getDoc(docRef);
-                const docPlays = docSnap.data().plays || [];
-                setPlayedItems(docPlays);
-                console.log("docPlays:", docPlays);
+                const gameDataArray = await fetchMultipleGameData(playedItems);
+                setGameDataArray(gameDataArray);
             } catch (error) {
-                console.error(
-                    "Error fetching plays data from Firestore:",
-                    error
-                );
+                console.error('Failed to fetch game data:', error);
             }
-        };
+        } else {
+            setGameDataArray([]);
+        }
+    };
 
-        const fetchGameDatas = async () => {
-            // Assuming playedItems is an array of game IDs that you want to fetch data for
-            if (playedItems.length > 0) {
-                try {
-                    // Fetch the game data for all the IDs in playedItems
-                    const gameDataArray = await fetchMultipleGameData(playedItems);
-        
-                    // After fetching, you can directly set the game data array
-                    // with the fetched data if needed
-                    // Make sure to access the correct property if gameDataArray contains objects with a 'game' property
-                    // const updatedGameData = gameDataArray.map(data => data.game);
-                    setGameDataArray(gameDataArray);
-                } catch (error) {
-                    console.error('Failed to fetch game data:', error);
-                    // Handle the error appropriately
-                }
-            } else {
-                // If there are no played items, set an empty array or handle accordingly
-                setGameDataArray([]);
-            }
-        };
-        
+    // Fetches plays from the user's document in Firestore
+    const fetchPlays = async () => {
+        try {
+            const user = auth.currentUser.uid;
+            const docRef = doc(db, "profileData", user);
+            const docSnap = await getDoc(docRef);
+            const docPlays = docSnap.data().plays || [];
+            setPlayedItems(docPlays);
+        } catch (error) {
+            console.error("Error fetching plays data from Firestore:", error);
+        }
+    };
 
+    // Effect for auth state changed
+    useEffect(() => {
         const unsub = auth.onAuthStateChanged((authObj) => {
             if (authObj) {
-                fetchPlays().then(() => {
-                    fetchGameDatas();
-                    // print out the gameDataArray
-                    console.log("gameDataArray:", gameDataArray);
-                });
+                fetchPlays();
             }
         });
 
         // Cleanup
-        return () => {
-            unsub();
-        };
+        return () => unsub();
+    }, []);
+
+    // Effect for fetching game data when playedItems changes
+    useEffect(() => {
+        fetchGameDatas();
     }, [playedItems]);
 
     return (
