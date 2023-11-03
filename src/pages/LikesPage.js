@@ -27,39 +27,19 @@ const Likes = () => {
         };
 
         const fetchGameDatas = async () => {
-            const storedGamesArray = [];
-            const idsToFetch = [];
-
-            for (const gameID of likedItems) {
-                let storedGameData = JSON.parse(
-                    localStorage.getItem(`gameData_${gameID}`)
-                );
-
-                if (
-                    storedGameData &&
-                    storedGameData.game &&
-                    storedGameData.game.name
-                ) {
-                    storedGamesArray.push(storedGameData.game);
-                } else {
-                    idsToFetch.push(gameID);
+            // Assuming playedItems is an array of game IDs that you want to fetch data for
+            if (likedItems.length > 0) {
+                try {
+                    const gameDataArray = await fetchMultipleGameData(likedItems);
+        
+                    setGameDataArray(gameDataArray);
+                } catch (error) {
+                    console.error('Failed to fetch game data:', error);
+                    // Handle the error appropriately
                 }
-            }
-
-            if (idsToFetch.length > 0) {
-                const newGameDataArray = await fetchMultipleGameData(idsToFetch);
-                for (const data of newGameDataArray) {
-                    localStorage.setItem(
-                        `gameData_${data.id}`,
-                        JSON.stringify({ game: data })
-                    );
-                }
-                const updatedGameData = newGameDataArray.map(data => data.game);
-    setGameDataArray([...storedGamesArray, ...updatedGameData]);
             } else {
-                // Extract only the .game property for each item in storedGamesArray
-    const storedGameData = storedGamesArray.map(data => data.game);
-    setGameDataArray(storedGameData);
+                // If there are no played items, set an empty array or handle accordingly
+                setGameDataArray([]);
             }
         };
 
@@ -89,7 +69,7 @@ const Likes = () => {
                 <h1 className="likes-title">My Liked Games</h1>
                 <div className="likes">
                     {gameDataArray.map((gameData) => (
-                        <TitleCard key={gameData.id} gameData={gameData} />
+                        <TitleCard key={gameData.id} gameData={gameData.game} />
                     ))}
                 </div>
             </div>
