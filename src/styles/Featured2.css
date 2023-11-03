@@ -54,7 +54,7 @@ img {
     width: 100%;
     height: auto;
     z-index: 2; /* Place the image above the overlay */
-    max-height: 300px;
+    /* max-height: 300px; */
 }
 
 
@@ -62,4 +62,8 @@ img {
     border-radius: 25px; /* You can adjust the value to control the roundness */
     background-color: red; /* Optional background color */
     /* Other CSS properties for styling */
+}
+
+.limited-height {
+    max-height: 165px;
 }

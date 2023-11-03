@@ -62,6 +62,7 @@ function HomePerRecommend() {
                         <Featured2
                             gameData={gameData}
                             screenshots={gameData.screenshotUrls}
+                            limitSize={true}
                         />
                     </Link>
                 ))}

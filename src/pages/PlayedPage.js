@@ -18,6 +18,7 @@ const PlayedPage = () => {
                 const docSnap = await getDoc(docRef);
                 const docPlays = docSnap.data().plays || [];
                 setPlayedItems(docPlays);
+                console.log("docPlays:", docPlays);
             } catch (error) {
                 console.error(
                     "Error fetching plays data from Firestore:",
@@ -56,16 +57,16 @@ const PlayedPage = () => {
                         JSON.stringify({ game: data })
                     );
                 }
-                const updatedGameData = newGameDataArray.map(
-                    (data) => data.game
-                );
-                setGameDataArray([...storedGamesArray, ...updatedGameData]);
+                // const updatedGameData = newGameDataArray.map(
+                //     (data) => data.game
+                // );
+                setGameDataArray([...storedGamesArray, ...newGameDataArray]);
             } else {
                 // Extract only the .game property for each item in storedGamesArray
-                const storedGameData = storedGamesArray.map(
-                    (data) => data.game
-                );
-                setGameDataArray(storedGameData);
+                // const storedGameData = storedGamesArray.map(
+                //     (data) => data.game
+                // );
+                setGameDataArray(storedGamesArray);
             }
         };
 
@@ -73,6 +74,8 @@ const PlayedPage = () => {
             if (authObj) {
                 fetchPlays().then(() => {
                     fetchGameDatas();
+                    // print out the gameDataArray
+                    console.log("gameDataArray:", gameDataArray);
                 });
             }
         });
@@ -81,7 +84,7 @@ const PlayedPage = () => {
         return () => {
             unsub();
         };
-    }, []);
+    }, [playedItems]);
 
     return (
         <div>
