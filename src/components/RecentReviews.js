@@ -91,14 +91,18 @@ const RecentReviews = () => {
           </label>
         </div>
         <div className="review-list">
-          {userReviews.map((review) => (
-            <ReviewCard
-              key={review.id}
-              review={review}
-              gameName={review.gameName}
-              starAverage={review.starRating}
-            />
-          ))}
+          {userReviews.length === 0 ? (
+             <p className="no-reviews-message">No reviews found.</p>
+          ) : (
+            userReviews.map((review) => (
+              <ReviewCard
+                key={review.id}
+                review={review}
+                gameName={review.gameName}
+                starAverage={review.starRating}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>

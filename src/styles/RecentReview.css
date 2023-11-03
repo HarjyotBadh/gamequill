@@ -42,3 +42,10 @@ p {
     text-align: right;
     color: #888;
 }
+
+.no-reviews-message {
+    text-align: left;
+    font-size: 19px;
+    color: black; /* You can change the color to your preference */
+    margin: 20px 0; /* Adjust margin as needed */
+  }

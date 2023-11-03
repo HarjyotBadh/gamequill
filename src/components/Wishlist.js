@@ -88,32 +88,36 @@ const Wishlist = () => {
       <NavBar />
       <div className="wishlist-container">
         <h1 className="wishlist-title">My Video Game Wishlist</h1>
-        <div className="wishlist">
-          {wishlistItems.map((gameID, index) => (
-            <div key={index} className="game-box">
-              <div className="game-info">
-                <Link to={`/game?game_id=${gameID}`}>
-                  {gameInfo[gameID]?.cover && (
-                    <img
-                      src={gameInfo[gameID].cover.url}
-                      alt={`${gameInfo[gameID].name} Cover`}
+        {wishlistItems.length === 0 ? (
+          <p className="empty-wishlist-message">No games in your wishlist yet. Start adding some!</p>
+        ) : (
+          <div className="wishlist">
+            {wishlistItems.map((gameID, index) => (
+              <div key={index} className="game-box">
+                <div className="game-info">
+                  <Link to={`/game?game_id=${gameID}`}>
+                    {gameInfo[gameID]?.cover && (
+                      <img
+                        src={gameInfo[gameID].cover.url}
+                        alt={`${gameInfo[gameID].name} Cover`}
+                      />
+                    )}
+                    <span className="profile-game-card">
+                      {gameInfo[gameID]?.name}
+                    </span>
+                  </Link>
+                  <div>
+                    <WishlistButton
+                      gameID={gameID}
+                      handleRemove={removeGameFromWishlist}
                     />
-                  )}
-                  <span className="profile-game-card">
-                    {gameInfo[gameID]?.name}
-                  </span>
-                </Link>
-                <div>
-                  <WishlistButton
-                    gameID={gameID}
-                    handleRemove={removeGameFromWishlist}
-                  />
+                  </div>
                 </div>
+                {/* Display other game information here */}
               </div>
-              {/* Display other game information here */}
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
