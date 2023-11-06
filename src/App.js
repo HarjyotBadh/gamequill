@@ -15,6 +15,7 @@ import ReviewPage from "./pages/ReviewPage";
 import Wishlist from "./components/Wishlist";
 import Likes from "./pages/LikesPage";
 import PlayedPage from "./pages/PlayedPage";
+import ListPage from "./pages/ListPage";
 
 function App() {
   return (
@@ -26,15 +27,22 @@ function App() {
       <Route path="/reset-password" element={<ResetPassword />} />{" "}
       <Route path="/home" element={<HomePage />} />
       <Route path="/game" element={<GamePageWrapper />} />
-      <Route path="/registrationsuccess" element={<RegistrationSuccessPage />} />
+      <Route
+        path="/registrationsuccess"
+        element={<RegistrationSuccessPage />}
+      />
       <Route path="/recent-reviews" element={<RecentReviews />} />
       <Route path="/reviewcreation" element={<ReviewCreationPage />} />
-      <Route path="/registrationsuccess" element={<RegistrationSuccessPage />} />
+      <Route
+        path="/registrationsuccess"
+        element={<RegistrationSuccessPage />}
+      />
       <Route path="/search" element={<SearchPageWrapper />} />
       <Route path="/review/:review_id" element={<ReviewPage />} />
-      <Route path="/wishlist" element={<Wishlist/>} />
-      <Route path="/likes" element={<Likes/>} />
-      <Route path="/played" element={<PlayedPage/>} />
+      <Route path="/list/:list_id" element={<ListPage />} />
+      <Route path="/wishlist" element={<Wishlist />} />
+      <Route path="/likes" element={<Likes />} />
+      <Route path="/played" element={<PlayedPage />} />
     </Routes>
   );
 }
