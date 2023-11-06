@@ -2,63 +2,81 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   height: 100vh;
+  background-color: #f7f7f7; /* Background color */
 }
 
 .image-container {
-  width: 45%; /* Adjust the width as desired */
-  height: 45%; /* Adjust the height as desired */
-  /* You can also add other styles as needed */
-}
-
-.logo {
   max-width: 200px;
   margin-bottom: 20px;
 }
 
-.form-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.login-page-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333; /* Title color */
+}
+
+form {
+  width: 100%;
+  max-width: 350px;
+  padding: 20px;
+  background-color: #fff; /* Form background color */
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Box shadow */
 }
 
 .form-input {
-  display: flex;
-  align-items: center;
   margin-bottom: 20px;
-  background-color: #f2f2f2;
-  padding: 10px;
-  border-radius: 5px;
 }
 
 label {
-  margin-right: 10px;
-  margin-left: 100px;
+  display: block;
+  font-size: 16px;
+  color: #333; /* Label color */
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc; /* Input border color */
+  border-radius: 5px;
+  font-size: 16px;
 }
 
 .login-button {
-  background-color: blue; 
+  background-color: #007bff; /* Button background color */
   border: none;
-  color: white; 
-  padding: 15px 32px;
+  margin-left: 70px;
+  color: white;
+  padding: 15px;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  border-radius: 5px; 
+  display: block;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 50%; /* Added to make the button full width */
 }
 
 .login-button:hover {
-  background-color: darkblue; 
+  background-color: #0056b3; /* Hover color */
 }
 
 .link-to-register {
-  color: blue; 
-  text-decoration: none; 
-  transition: color 0.2s; 
+  color: #007bff; /* Link color */
+  text-decoration: none;
+  transition: color 0.2s;
 }
 
 .link-to-register:hover {
-  color: darkblue; 
+  color: #0056b3; /* Hover color */
+}
+
+.error-message {
+  color: #ff6347; /* Error message color */
+  font-size: 16px;
+  margin-top: 10px;
 }
