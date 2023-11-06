@@ -58,7 +58,7 @@ const Wishlist = () => {
         <div>
             <NavBar />
             <div className="likes-container">
-                <h1 className="likes-title">My Liked Games</h1>
+                <h1 className="likes-title">My Wishlist</h1>
                 <div className="likes">
                     {gameDataArray.map((gameData) => (
                         <TitleCard key={gameData.id} gameData={gameData.game} />
