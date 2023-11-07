@@ -129,9 +129,7 @@ function Register() {
 
       console.log("Registration successful. Verification email sent:", user);
 
-      // Redirecting or showing a message that verification email is sent and user should verify email
       window.location.href = "/registrationsuccess"; // You might want to change this part to wait until the user verifies their email.
-      // For now, you can redirect them to a "Please verify your email" page or show a message.
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;

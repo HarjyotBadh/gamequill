@@ -10,38 +10,46 @@ function HomePerRecommend() {
     const [gamesData, setGamesData] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const unsub = auth.onAuthStateChanged(async (authObj) => {
-            if (authObj) {
-                const theuserId = authObj.uid;
-    
-                try {
-                    // Fetch user data from Firestore
-                    const docRef = doc(db, "profileData", theuserId);
-                    const docSnap = await getDoc(docRef);
-    
-                    if (docSnap.exists()) {
-                        const userData = docSnap.data();
-                        const game_ids = [...userData.likes, ...userData.plays];
+    // Abstracted data fetching logic
+    const fetchUserDataAndRecommendations = async (userId) => {
+        try {
+            // Fetch user data from Firestore
+            const docRef = doc(db, "profileData", userId);
+            const docSnap = await getDoc(docRef);
 
-                        // Fetch genres and themes of liked and played games
-                        const userGamesData = await fetchMultipleGameData(game_ids);
-                        const genres = [...new Set(userGamesData.flatMap(g => g.game.genres || []))];
-                        const themes = [...new Set(userGamesData.flatMap(g => g.game.themes || []))];
-                        
-                        // Fetch similar games based on those genres and themes
-                        const recommendedGames = await fetchSimilarGames(genres, themes);
-                        setGamesData(recommendedGames);
-                        setLoading(false);
-                    } else {
-                        console.error("No such user document!");
-                    }
-                    
-                } catch (error) {
-                    console.error("Error fetching user data and games:", error);
-                }
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                const game_ids = [...userData.likes, ...userData.plays];
+
+                // Fetch genres and themes of liked and played games
+                const userGamesData = await fetchMultipleGameData(game_ids);
+                const genres = [...new Set(userGamesData.flatMap(g => g.game.genres || []))];
+                const themes = [...new Set(userGamesData.flatMap(g => g.game.themes || []))];
+                
+                // Fetch similar games based on those genres and themes
+                const recommendedGames = await fetchSimilarGames(genres, themes);
+                setGamesData(recommendedGames);
             } else {
-                console.log("User not logged in");
+                console.error("No such user document!");
+            }
+        } catch (error) {
+            console.error("Error fetching user data and games:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        // Immediately invoke the function if the user is already logged in
+        const currentUser = auth.currentUser;
+        if (currentUser) {
+            fetchUserDataAndRecommendations(currentUser.uid);
+        }
+
+        // Set up the listener for future auth state changes
+        const unsub = auth.onAuthStateChanged((authObj) => {
+            if (authObj) {
+                fetchUserDataAndRecommendations(authObj.uid);
             }
         });
     
@@ -50,7 +58,6 @@ function HomePerRecommend() {
         };
     }, []);
     
-
     if (loading) return <div>Loading...</div>;
 
     return (

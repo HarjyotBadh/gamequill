@@ -137,7 +137,7 @@ export const fetchGameDataFromIGDB = async (game_ids) => {
                 Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
             },
             body: `
-                fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,themes.*,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*;
+                fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*;
                 where id = (${game_ids.join(",")});
             `,
         });
@@ -164,25 +164,25 @@ export async function fetchSimilarGames(genres, themes) {
     const corsAnywhereUrl = "http://localhost:8080/";
     const apiUrl = "https://api.igdb.com/v4/games";
 
-    // Remove duplicates and extract the top 5 genre and theme IDs
-    const uniqueGenreIds = [...new Set(genres.map(genre => genre.id))].slice(0, 3);
-    const uniqueThemeIds = [...new Set(themes.map(theme => theme.id))].slice(0, 3);
+    // Extracting ids from genres and themes
+    const genreIds = genres.map(genre => genre.id);
+    const themeIds = themes.map(theme => theme.id);
 
-    console.log("uniqueGenreIds:", uniqueGenreIds);
-    console.log("uniqueThemeIds:", uniqueThemeIds);
+    console.log("genreIds:", genreIds);
+    console.log("themeIds:", themeIds);
 
     // Constructing genres and themes conditions for the API request
     let conditions = "rating > 70 & total_rating_count > 5";
 
-    if (uniqueGenreIds && uniqueGenreIds.length > 0) {
-        conditions += " & genres = (" + uniqueGenreIds.join(",") + ")";
+    if (genreIds && genreIds.length > 0) {
+        conditions += " & genres = (" + genreIds.join(",") + ")";
     }
 
-    if (uniqueThemeIds && uniqueThemeIds.length > 0) {
-        conditions += " & themes = (" + uniqueThemeIds.join(",") + ")";
+    if (themeIds && themeIds.length > 0) {
+        conditions += " & themes = (" + themeIds.join(",") + ")";
     }
 
-    const requestBody = "fields name, id, rating, involved_companies.company.name, total_rating_count, screenshots.url; where " + conditions + ";limit 100;";
+    const requestBody = "fields name, id, rating, involved_companies.company.name, total_rating_count, screenshots.url; where " + conditions + "; sort rating desc; limit 8;";
 
     try {
         const response = await fetch(corsAnywhereUrl + apiUrl, {
@@ -196,13 +196,7 @@ export async function fetchSimilarGames(genres, themes) {
         });
 
         // Parse the response to JSON
-        let data = await response.json();
-
-        // Shuffle the array
-        data.sort(() => Math.random() - 0.5);
-
-        // Get the first 8 games
-        data = data.slice(0, 8);
+        const data = await response.json();
 
         // Format the screenshot URLs
         const formattedData = data.map(game => {

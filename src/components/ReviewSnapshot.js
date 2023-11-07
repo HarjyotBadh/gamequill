@@ -8,12 +8,24 @@ import { generateStars } from "../functions/RatingFunctions";
 import {
     fetchReviewsByGameId,
     parseReviewWithSpoilersToHTML,
-    fetchFriendsRecentReviews
+    fetchFriendsRecentReviews,
 } from "../functions/ReviewFunctions";
 import "../styles/ReviewSnapshot.css";
 import DOMPurify from "dompurify";
 
-export default function ReviewSnapshot({ game_id, showFriendReviews, showSpoilers }) {
+/**
+ * Renders a snapshot of reviews for a given game, with options to filter by spoilers and friends' reviews.
+ * @param {string} game_id - The ID of the game to fetch reviews for.
+ * @param {boolean} showSpoilers - Whether to show reviews containing spoilers or not.
+ * @param {boolean} showFriendReviews - Whether to show only reviews from friends or not.
+ * @param {string} currentUserId - The ID of the current user.
+ * @returns {JSX.Element} A div containing the rendered reviews.
+ */
+export default function ReviewSnapshot({
+    game_id,
+    showFriendReviews,
+    showSpoilers,
+}) {
     const [reviews, setReviews] = useState([]);
     const currentUserId = auth.currentUser.uid;
 
@@ -57,25 +69,33 @@ export default function ReviewSnapshot({ game_id, showFriendReviews, showSpoiler
     useEffect(() => {
         async function getData() {
             let reviewsData = await fetchReviewsByGameId(game_id);
-    
+
             // Filter out reviews that contain spoilers if showSpoilers is false
             if (!showSpoilers) {
-                reviewsData = reviewsData.filter(review => !review.containsSpoiler);
+                reviewsData = reviewsData.filter(
+                    (review) => !review.containsSpoiler
+                );
             }
-    
+
             // If showing only friends' reviews, fetch and filter those based on game_id
             if (showFriendReviews) {
-                const friendReviews = await fetchFriendsRecentReviews(-1, currentUserId);
-                const friendReviewIds = friendReviews.map(review => review.id);
-                reviewsData = reviewsData.filter(review => friendReviewIds.includes(review.id));
+                const friendReviews = await fetchFriendsRecentReviews(
+                    -1,
+                    currentUserId
+                );
+                const friendReviewIds = friendReviews.map(
+                    (review) => review.id
+                );
+                reviewsData = reviewsData.filter((review) =>
+                    friendReviewIds.includes(review.id)
+                );
             }
-    
+
             setReviews(reviewsData);
         }
-    
+
         getData();
     }, [game_id, showSpoilers, showFriendReviews, currentUserId]);
-    
 
     return (
         <div className="review-snapshot">

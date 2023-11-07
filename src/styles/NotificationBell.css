@@ -1,0 +1,25 @@
+.notification-icon-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .notification-badge {
+    position: absolute;
+    bottom: 0; /* Position at the bottom */
+    right: 0; /* Position at the right */
+    transform: translate(50%, 50%); /* Move the badge to overlap the icon */
+    padding: 0.25em 0.6em; /* Adjust padding */
+    border-radius: 9999px; /* Rounded corners */
+    background-color: red; /* Badge background color */
+    color: white; /* Badge text color */
+    font-size: 0.75rem; /* Badge text size */
+    font-weight: 600; /* Font weight for the badge */
+    min-width: 1.5em; /* Minimum width */
+    height: 1.5em; /* Height of the badge */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid white; /* White border to separate badge from icon */
+    box-shadow: 0 0 0 2px red; /* Shadow effect to create a border look */
+  }
+  
