@@ -6,9 +6,17 @@ import {
   addDoc,
   doc,
   arrayUnion,
+  query,
+  where,
+  limit,
+  getDocs,
 } from "firebase/firestore";
+import "../styles/AddToList.css";
 export default function ListButton({ gameID }) {
   const [showPopup, setShowPopup] = useState(false);
+  const [listName, setListName] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredLists, setFilteredLists] = useState([]);
   const handleAddToList = () => {
     setShowPopup(true);
   };
@@ -16,15 +24,55 @@ export default function ListButton({ gameID }) {
   const handleClosePopup = () => {
     setShowPopup(false);
   };
+  const handleListNameChange = (e) => {
+    setListName(e.target.value);
+  };
+  const handleSearchChange = async (e) => {
+    setSearchQuery(e.target.value);
+
+    // Filter lists based on the search query
+    const listsCollection = collection(db, "lists");
+    const q = query(
+      listsCollection,
+      where("owner", "==", auth.currentUser.uid),
+      where("name", ">=", e.target.value),
+      where("name", "<=", e.target.value + "\uf8ff"),
+      limit(10)
+    );
+
+    const listResults = [];
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      const listData = doc.data();
+      listResults.push({
+        id: doc.id,
+        name: listData.name,
+      });
+    });
+    setFilteredLists(listResults);
+
+    // getDocs(q)
+    //   .then((querySnapshot) => {
+    //     querySnapshot.forEach((doc) => {
+    //       const listData = doc.data();
+    //       listResults.push({
+    //         id: doc.id,
+    //         name: listData.name,
+    //       });
+    //     });
+    //     setFilteredLists(listResults);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error searching lists:", error);
+    //   });
+  };
   const handleCreateNewList = async () => {
-    // Redirect to a new page to create a new list
-    // You can use React Router or any routing library for this
-    // Set up a route like '/createList'
-    // Pass the game data as a prop to the new page
     try {
       const userId = auth.currentUser.uid;
       const newListRef = await addDoc(collection(db, "lists"), {
         games: [gameID],
+        name: listName,
+        owner: userId,
       });
 
       const newListId = newListRef.id;
@@ -39,6 +87,20 @@ export default function ListButton({ gameID }) {
       window.location.href = `/list/${newListId}`;
     } catch (error) {
       console.error("Error creating new list:", error);
+    }
+  };
+  const handleAddToExistingList = async (listId) => {
+    try {
+      // Add the game to the existing list
+      const listDocRef = doc(db, "lists", listId);
+      await updateDoc(listDocRef, {
+        games: arrayUnion(gameID), // Assuming game is available in scope
+      });
+
+      // Redirect the user to the list page
+      window.location.href = `list/${listId}`;
+    } catch (error) {
+      console.error("Error adding game to existing list:", error);
     }
   };
   return (
@@ -60,6 +122,27 @@ export default function ListButton({ gameID }) {
       </svg>
       {showPopup && (
         <div className="popup">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Search for a list"
+          />
+          <ul>
+            {filteredLists.map((list) => (
+              <li key={list.id}>
+                <button onClick={() => handleAddToExistingList(list.id)}>
+                  Add to {list.name}
+                </button>
+              </li>
+            ))}
+          </ul>
+          <input
+            type="text"
+            value={listName}
+            onChange={handleListNameChange}
+            placeholder="Enter new list name"
+          />
           <button onClick={handleCreateNewList}>Create New List</button>
           <button onClick={handleClosePopup}>Close</button>
           {/* Display existing lists here */}

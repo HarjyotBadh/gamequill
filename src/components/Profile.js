@@ -142,7 +142,7 @@ function Profile({ profileData, setProfileData, userId }) {
             ))}
           </div>
           <div class="five-recent">
-            <FiveRecentReviews user_id={userId}/>
+            <FiveRecentReviews user_id={userId} />
           </div>
         </div>
         <div className="currentlyPlaying dark:text-white text-black flex flex-col">
@@ -199,6 +199,11 @@ function Profile({ profileData, setProfileData, userId }) {
             <p>
               <Link to="/played" className="button">
                 Played Games
+              </Link>
+            </p>
+            <p>
+              <Link to="/lists" className="button">
+                My Lists
               </Link>
             </p>
           </div>

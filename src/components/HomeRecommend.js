@@ -87,7 +87,6 @@ function App() {
         console.error(error);
       }
     };
-    //getGenres();
   }, []);
 
   const formatCoverUrl = (url) => {
