@@ -59,6 +59,7 @@ const ListPage = () => {
   }, []);
   useEffect(() => {
     fetchGameDatas();
+    console.log(gameDataArray);
   }, [gameIds]);
   //fetchListData();
 
@@ -85,7 +86,6 @@ const ListPage = () => {
             id: game.id,
             aggregated_rating: game.aggregated_rating || 0,
           }));
-          console.log(gamesData);
           gamesData.sort((a, b) => b.aggregated_rating - a.aggregated_rating);
           setSearchResults(gamesData);
         }
@@ -171,7 +171,7 @@ const ListPage = () => {
               <div className="removeButtonContainer">
                 <button
                   className="removeFromListButton"
-                  onClick={() => handleRemoveFromList(gameData.id)}
+                  onClick={() => handleRemoveFromList(gameData.game.id)}
                 >
                   Remove from List
                 </button>
