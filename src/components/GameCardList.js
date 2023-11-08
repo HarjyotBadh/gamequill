@@ -2,7 +2,7 @@ import React from "react";
 import { Spinner } from "@material-tailwind/react";
 import { fetchReviewsByGameId } from "../functions/ReviewFunctions";
 import { Link } from "react-router-dom";
-import "../styles/TitleCard.css";
+import "../styles/GameCardList.css";
 import GameLog from "./GameLog";
 import GameLike from "./GameLike";
 import AddWishlistButton from "./AddWishlistButton";
@@ -50,7 +50,7 @@ export default function TitleCard({ gameData }) {
 
   return (
     <div
-      className={`game-card ${darkMode ? "dark" : "light"}`}
+      className={`game-card-list ${darkMode ? "dark" : "light"}`}
       data-theme={darkMode ? "dark" : "light"}
     >
       {bigCoverUrl && (

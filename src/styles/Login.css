@@ -18,7 +18,7 @@
   color: #333; /* Title color */
 }
 
-form {
+.form-container {
   width: 100%;
   max-width: 350px;
   padding: 20px;
