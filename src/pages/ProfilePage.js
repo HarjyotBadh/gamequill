@@ -5,6 +5,7 @@ import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "../styles/ProfilePage.css";
+import Footer from "../components/Footer";
 export default function ProfilePage({ userId }) {
   const [loading, setLoading] = useState(true);
 

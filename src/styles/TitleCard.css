@@ -1,35 +1,3 @@
-:root {
-    /* Light theme */
-    --background-light: #fafafa;
-    --text-color-light: #333;
-    --secondary-text-color-light: #555;
-    --rating-color-light: #618edb;
-    --star-color-light: #bbbac0;
-
-    /* Dark theme */
-    --background-dark: #4b5563;
-    --text-color-dark: #f5f5f5;
-    --secondary-text-color-dark: #CAC7C7;
-    --rating-color-dark: #92a8d1;
-    --star-color-dark: #bbbac0;
-}
-
-[data-theme="dark"] {
-    --background: var(--background-dark);
-    --text-color: var(--text-color-dark);
-    --secondary-text-color: var(--secondary-text-color-dark);
-    --rating-color: var(--rating-color-dark);
-    --star-color: var(--star-color-dark);
-}
-
-[data-theme="light"] {
-    --background: var(--background-light);
-    --text-color: var(--text-color-light);
-    --secondary-text-color: var(--secondary-text-color-light);
-    --rating-color: var(--rating-color-light);
-    --star-color: var(--star-color-light);
-}
-
 .game-card {
     background-color: var(--background);
     border: 1px solid var(--background);

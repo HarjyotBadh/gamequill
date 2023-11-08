@@ -26,7 +26,7 @@ export default function FiveRecentReviews({user_id}) {
       // Clean up the listener
       return () => unsub();
     });
-  }, []);
+  }, [user_id]);
 
   return (
     <div>
