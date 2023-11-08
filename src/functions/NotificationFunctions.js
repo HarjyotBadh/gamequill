@@ -1,42 +1,153 @@
 import { db } from "../firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
-export async function sendLikeNotification(receiverUID, senderUID, reviewID /* or we could do reviewObject? */) {
+/**
+ * Sends a like notification to the receiver's profile data document in Firestore.
+ * If the notification already exists, it will not send a new one.
+ * If there are more than 25 notifications, it will remove the oldest one.
+ * @param {string} receiverUID - The UID of the receiver's profile data document.
+ * @param {string} senderUID - The UID of the sender.
+ * @param {Object} reviewObject - The review object containing the review ID, game ID, game name, and game cover URL.
+ * @returns {Promise<void>} - A promise that resolves when the notification has been sent successfully.
+ */
+export async function sendLikeNotification(receiverUID, senderUID, reviewObject) {
 
-    // Check if that like notification is already in the receiver's notifications
-    // If it is, then don't send another notification
+    // If the sender and receiver are the same, do not send a notification
+    if (senderUID === receiverUID) {
+        console.log("User liked their own review, no notification sent.");
+        return;
+    }
 
-    // Check how many notifications the receiver has, if they have more than 25, then
-    // delete the oldest one
+    const profileDataRef = doc(db, "profileData", receiverUID);
 
-    // Send the notification
-    const notificationRef = doc(db, "notifications", receiverUID);
+    try {
+        // Get the current profile data
+        const profileDataSnap = await getDoc(profileDataRef);
 
+        // If the document exists
+        if (profileDataSnap.exists()) {
+            const profileData = profileDataSnap.data();
 
+            // Check for existing notifications
+            const existingNotification = profileData.notifications?.find(notification =>
+                notification.type === 'like' &&
+                notification.senderUID === senderUID &&
+                notification.reviewID === reviewObject.reviewID
+            );
+
+            // If the notification already exists, do not send a new one
+            if (existingNotification) {
+                console.log("Notification already sent.");
+                return;
+            }
+
+            // Prepare the new notification object
+            const newNotification = {
+                type: 'like',
+                senderUID: senderUID,
+                reviewID: reviewObject.reviewID,
+                gameID: reviewObject.gameID,
+                gameName: reviewObject.gameName,
+                gameCoverUrl: reviewObject.gameCoverUrl,
+                timestamp: new Date() // Current time
+            };
+
+            // If there are more than 25 notifications, remove the oldest one
+            if (profileData.notifications && profileData.notifications.length >= 25) {
+
+                // Sort notifications by timestamp to find the oldest
+                const sortedNotifications = profileData.notifications.sort((a, b) => a.timestamp - b.timestamp);
+                const oldestNotification = sortedNotifications[0];
+
+                // Remove the oldest notification
+                await updateDoc(profileDataRef, {
+                    notifications: arrayRemove(oldestNotification)
+                });
+            }
+
+            // Add the new notification
+            await updateDoc(profileDataRef, {
+                notifications: arrayUnion(newNotification)
+            });
+
+            console.log("Notification sent successfully.");
+        } else {
+            console.log("Receiver profile data does not exist.");
+        }
+    } catch (error) {
+        console.error("Error sending notification:", error);
+    }
 }
 
-/*
-
-Notification Object:
-
-Like Notification:
-type: "like"
-senderUID: "uid"
-reviewID: "review_id"
-gameID: "game_id"
-gameName: "game_name"
-gameCoverUrl: "game_cover_url"
-timestamp: "timestamp"
-
-
-Follower Notification:
-type: "follow"
-senderUID: "uid"
-timestamp: "timestamp"
-
-
-*/
-
+/**
+ * Sends a follower notification to the receiver's profile data document in Firestore.
+ * If the notification already exists, it will not send a new one.
+ * If there are more than 25 notifications, it will remove the oldest one.
+ * @param {string} receiverUID - The UID of the receiver's profile data document.
+ * @param {string} senderUID - The UID of the sender.
+ * @returns {Promise<void>} - A promise that resolves when the notification has been sent successfully.
+ */
 export async function sendFollowerNotification(receiverUID, senderUID) {
+    console.log("Sending follow notification...");
+    const profileDataRef = doc(db, "profileData", receiverUID);
+
+    try {
+        // Get the current profile data
+        const profileDataSnap = await getDoc(profileDataRef);
+
+        // If the document exists
+        if (profileDataSnap.exists()) {
+            const profileData = profileDataSnap.data();
+
+            // Check for existing follow notifications from the same sender
+            const existingNotification = profileData.notifications?.find(notification =>
+                notification.type === 'follow' &&
+                notification.senderUID === senderUID
+            );
+
+            console.log("Existing notification:");
+
+            // If the notification already exists, do not send a new one
+            if (existingNotification) {
+                console.log("Follow notification already sent.");
+                return;
+            }
+
+            // Prepare the new follow notification object
+            const newNotification = {
+                type: 'follow',
+                senderUID: senderUID,
+                timestamp: new Date()
+            };
+
+            // If there are more than 25 notifications, remove the oldest one
+            if (profileData.notifications && profileData.notifications.length >= 25) {
+
+                // Sort notifications by timestamp to find the oldest
+                const sortedNotifications = profileData.notifications.sort((a, b) => a.timestamp - b.timestamp);
+                const oldestNotification = sortedNotifications[0];
+
+                // Remove the oldest notification
+                await updateDoc(profileDataRef, {
+                    notifications: arrayRemove(oldestNotification)
+                });
+            }
+
+            // Add the new follow notification
+            await updateDoc(profileDataRef, {
+                notifications: arrayUnion(newNotification)
+            });
+
+            console.log("Follow notification sent successfully.");
+        } else {
+            console.log("Receiver profile data does not exist.");
+        }
+    } catch (error) {
+        console.error("Error sending follow notification:", error);
+    }
+}
+
+// @TODO: Create a notification for when a user reposts.
+export async function sendRepostNotification(receiverUID, senderUID) {
 
 }

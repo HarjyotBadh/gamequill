@@ -3,27 +3,6 @@
     display: inline-block;
 }
 
-.notification-badge {
-    position: absolute;
-    top: -1px;
-    right: -1px;
-    padding: 0.25em 0.4em;
-    border-radius: 9999px;
-    background-color: red;
-    color: white;
-    font-size: 0.75rem;
-    height: 1.5em;
-    width: 1.5em;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.3s ease;
-}
-
-.notification-badge:hover {
-    transform: scale(1.1);
-}
-
 .relative {
     position: relative;
     display: inline-block;
@@ -43,7 +22,6 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
 }
-
 
 .notification-item {
     display: flex;
@@ -68,6 +46,9 @@
     margin-right: 1rem;
 }
 
+.notification-item .game-cover-wrapper {
+    margin-right: 1.5rem; /* Adjust the right margin as needed */
+}
 
 .notification-item span {
     word-wrap: break-word;

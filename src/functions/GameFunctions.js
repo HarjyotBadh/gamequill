@@ -160,6 +160,14 @@ export const fetchGameDataFromIGDB = async (game_ids) => {
     }
 };
 
+/**
+ * Fetches similar games based on the provided genres and themes. It constructs a request to the IGDB API
+ * with the given conditions and returns a list of games sorted by rating in descending order.
+ *
+ * @param {Object[]} genres - An array of genre objects.
+ * @param {Object[]} themes - An array of theme objects.
+ * @returns {Object[]} An array of game objects with formatted screenshot URLs.
+ */
 export async function fetchSimilarGames(genres, themes) {
     const corsAnywhereUrl = "http://localhost:8080/";
     const apiUrl = "https://api.igdb.com/v4/games";
@@ -214,9 +222,3 @@ export async function fetchSimilarGames(genres, themes) {
         return [];
     }
 }
-
-
-
-
-
-

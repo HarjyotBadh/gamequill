@@ -12,6 +12,7 @@ import {
 } from "../functions/ReviewFunctions";
 import "../styles/ReviewSnapshot.css";
 import DOMPurify from "dompurify";
+import { sendLikeNotification } from "../functions/NotificationFunctions";
 
 /**
  * Renders a snapshot of reviews for a given game, with options to filter by spoilers and friends' reviews.
@@ -37,6 +38,14 @@ export default function ReviewSnapshot({
         // Clone the userLikes array
         let updatedUserLikes = [...(review.userLikes || [])];
 
+        // Construct the review object to pass to the notification function
+        const reviewObject = {
+            reviewID: review.id,
+            gameID: review.gameID, // Make sure the review object contains the gameId
+            gameName: review.gameName, // Make sure the review object contains the gameName
+            gameCoverUrl: review.gameCover, // Make sure the review object contains the gameCoverUrl
+        };
+
         // Add or remove the user's ID based on the current like status
         if (isLiked) {
             updatedUserLikes = updatedUserLikes.filter(
@@ -44,6 +53,9 @@ export default function ReviewSnapshot({
             );
         } else {
             updatedUserLikes.push(currentUserId);
+
+            // Send the like notification only if it's a new like
+            await sendLikeNotification(review.uid, currentUserId, reviewObject);
         }
 
         // Update the review in the database
