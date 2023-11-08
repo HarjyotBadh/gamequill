@@ -208,9 +208,6 @@ export async function fetchSimilarGames(genres, themes) {
             };
         });
 
-        // Log the data for debugging purposes
-        console.log("Fetched similar games:", formattedData);
-
         return formattedData;
     } catch (error) {
         console.error("Error fetching similar games:", error);

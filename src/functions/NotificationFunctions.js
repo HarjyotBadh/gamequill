@@ -31,7 +31,6 @@ timestamp: "timestamp"
 
 Follower Notification:
 type: "follow"
-receiverUID: "uid"
 senderUID: "uid"
 timestamp: "timestamp"
 
