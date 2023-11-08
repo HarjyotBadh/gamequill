@@ -209,7 +209,7 @@ function Profile({ profileData, setProfileData, userId }) {
           </div>
         )}
       </div>
-     
+      <Footer />
     </div>
   );
 }

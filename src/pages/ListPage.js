@@ -23,6 +23,7 @@ const ListPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
+  const [listType, setListType] = useState("unranked");
 
   // Fetch game data based on the played items
   const fetchGameDatas = async () => {
@@ -53,6 +54,9 @@ const ListPage = () => {
     const fetchListData = async (userId) => {
       const docRef = doc(db, "lists", list_id);
       const snapshot = await getDoc(docRef);
+      if (snapshot.data() && snapshot.data().ranked !== undefined) {
+        setListType(snapshot.data().ranked ? "ranked" : "unranked");
+      }
       setListData(snapshot.data());
       setGameIds(snapshot.data().games);
     };
@@ -100,11 +104,17 @@ const ListPage = () => {
         // Add the game to the existing list
         const listDocRef = doc(db, "lists", list_id);
         await updateDoc(listDocRef, {
-          games: arrayUnion(selectedGame.id), // Assuming game is available in scope
+          games: arrayUnion(selectedGame.id),
         });
+        setGameIds((prevIds) => [...prevIds, selectedGame.id]);
+        setGameDataArray((prevData) => [
+          ...prevData,
+          { id: selectedGame.id, game: selectedGame },
+        ]);
+        setSearchResults([]);
+        setSelectedGame(null);
 
-        // Redirect the user to the list page
-        window.location.reload();
+        //window.location.reload();
       } catch (error) {
         console.error("Error removing game from existing list:", error);
       }
@@ -116,9 +126,24 @@ const ListPage = () => {
       await updateDoc(listDocRef, {
         games: arrayRemove(gameId),
       });
-      window.location.reload();
+      setGameIds((prevIds) => prevIds.filter((id) => id !== gameId));
+      setGameDataArray((prevData) =>
+        prevData.filter((data) => data.id !== gameId)
+      );
+      //window.location.reload();
     } catch (error) {
       console.error("Error removing game from list:", error);
+    }
+  };
+  const handleToggleListType = async () => {
+    try {
+      const docRef = doc(db, "lists", list_id);
+      await updateDoc(docRef, {
+        ranked: listType === "unranked", // Convert to boolean value
+      });
+      setListType(listType === "ranked" ? "unranked" : "ranked");
+    } catch (error) {
+      console.error("Error updating list type:", error);
     }
   };
 
@@ -129,6 +154,11 @@ const ListPage = () => {
         <h1 className="list-title text-black dark:text-white">
           {listData.name}
         </h1>
+        <div className="toggle-button-container">
+          <button className="toggle-button" onClick={handleToggleListType}>
+            {listType === "ranked" ? "Switch to Unranked" : "Switch to Ranked"}
+          </button>
+        </div>
         <div className="search-container">
           <input
             type="text"
@@ -165,8 +195,14 @@ const ListPage = () => {
           </div>
         )}
         <div className="list">
-          {gameDataArray.map((gameData) => (
-            <div key={gameData.id} className="game-item">
+          {gameDataArray.map((gameData, index) => (
+            <div
+              key={gameData.id}
+              className="game-item text-black dark:text-white"
+            >
+              {listType === "ranked" && (
+                <span className="rank-number">{index + 1}</span>
+              )}
               <GameCardList gameData={gameData.game} />
               <div className="removeButtonContainer">
                 <button
