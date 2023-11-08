@@ -1,4 +1,4 @@
-.popup {
+.list-popup {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -14,7 +14,7 @@
     overflow-y: auto; /* Add scrollbar if content overflows */
   }
   
-  .popup button {
+  .list-popup button {
     margin: 5px;
     padding: 8px 16px;
     background-color: #007bff;
@@ -25,11 +25,11 @@
     font-size: 14px;
   }
   
-  .popup button:hover {
+  .list-popup button:hover {
     background-color: #0056b3;
   }
   
-  .popup input {
+  .list-popup input {
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
