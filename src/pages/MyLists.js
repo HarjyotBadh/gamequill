@@ -5,6 +5,9 @@ import { Link } from "react-router-dom";
 import { db, auth } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import NavBar from "../components/NavBar";
+import ListPreview from "../components/ListPreview";
+import { getListData, getMultipleListData } from "../functions/ListFunctions";
+import "../styles/MyLists.css";
 
 const MyListsPage = ({ userId }) => {
   const [lists, setLists] = useState([]);
@@ -15,16 +18,7 @@ const MyListsPage = ({ userId }) => {
       const docSnap = await getDoc(docRef);
       const listIds = docSnap.data().lists || [];
 
-      const listsData = await Promise.all(
-        listIds.map(async (listId) => {
-          const listDocRef = doc(db, "lists", listId);
-          const listDoc = await getDoc(listDocRef);
-          return {
-            id: listDoc.id,
-            name: listDoc.data().name || `List ${listDoc.id}`,
-          };
-        })
-      );
+      const listsData = await getMultipleListData(listIds);
 
       setLists(listsData);
     } catch (error) {
@@ -45,16 +39,14 @@ const MyListsPage = ({ userId }) => {
   }, []);
 
   return (
-    <div>
+    <div className="bg-white dark:bg-gray-500 h-screen">
       <NavBar />
-      <h2>My Lists</h2>
-      <ul>
+      <h2 className="listPageTitle text-black dark:text-white">My Lists</h2>
+      <div className="my-lists-container bg-white dark:bg-gray-500">
         {lists.map((list) => (
-          <li key={list.id}>
-            <Link to={`/list/${list.id}`}>{list.name}</Link>
-          </li>
+          <ListPreview key={list.id} list={list} />
         ))}
-      </ul>
+      </div>
     </div>
   );
 };
