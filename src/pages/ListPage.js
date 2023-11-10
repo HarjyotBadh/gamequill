@@ -8,6 +8,7 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
+  deleteDoc,
 } from "firebase/firestore";
 import { useEffect } from "react";
 import { fetchMultipleGameData } from "../functions/GameFunctions";
@@ -146,6 +147,27 @@ const ListPage = () => {
       console.error("Error updating list type:", error);
     }
   };
+  const handleDeleteList = async () => {
+    try {
+      const listDocRef = doc(db, "lists", list_id);
+      await deleteDoc(listDocRef);
+      const user = auth.currentUser;
+      if (user) {
+        const userDocRef = doc(db, "profileData", user.uid);
+        const userSnapshot = await getDoc(userDocRef);
+
+        if (userSnapshot.exists()) {
+          const userData = userSnapshot.data();
+          const updatedLists = userData.lists.filter((id) => id !== list_id);
+
+          await updateDoc(userDocRef, { lists: updatedLists });
+        }
+      }
+      window.location.href = "/lists";
+    } catch (error) {
+      console.error("Error deleting list:", error);
+    }
+  };
 
   return (
     <div className="listPage bg-white dark:bg-gray-500">
@@ -154,9 +176,16 @@ const ListPage = () => {
         <h1 className="list-title text-black dark:text-white">
           {listData.name}
         </h1>
-        <div className="toggle-button-container">
-          <button className="toggle-button" onClick={handleToggleListType}>
-            {listType === "ranked" ? "Switch to Unranked" : "Switch to Ranked"}
+        <div className="list-buttons-container flex flex-row">
+          <div className="toggle-button-container">
+            <button className="toggle-button" onClick={handleToggleListType}>
+              {listType === "ranked"
+                ? "Switch to Unranked"
+                : "Switch to Ranked"}
+            </button>
+          </div>
+          <button className="deleteListButton" onClick={handleDeleteList}>
+            Delete List
           </button>
         </div>
         <div className="search-container">
