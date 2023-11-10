@@ -18,7 +18,7 @@ import {
 function App() {
   const [gamesData, setGamesData] = useState([]);
 
-  const game_ids = [96437, 148241, 213639, 127044, 78511];
+  const game_ids = [96437, 254339, 213639, 127044, 78511];
 
   useEffect(() => {
     // Check if gamesData exists in sessionStorage
@@ -40,9 +40,12 @@ function App() {
         const querySnapshot = await getDocs(q);
 
         const trendingGamesData = querySnapshot.docs.map((doc) => doc.data());
+        const sortedGamesData = trendingGamesData.sort(
+          (a, b) => b.reviews.length - a.reviews.length
+        );
 
         // Extract game IDs from the retrieved data
-        const trendingGameIds = trendingGamesData.map((game) => game.id);
+        const trendingGameIds = sortedGamesData.map((game) => game.id);
 
         // Fetch additional game data using the retrieved IDs
         const fetchedGamesData = await fetchMultipleGameData(trendingGameIds);
@@ -55,15 +58,15 @@ function App() {
         console.error("Error fetching trending games:", error);
       }
     };
-    // (async () => {
-    //     console.log("Calling fetchMultipleGameData in HomeTrending.js");
-    //     const fetchedGamesData = await fetchMultipleGameData(game_ids);
-    //     setGamesData(fetchedGamesData);
+    (async () => {
+      console.log("Calling fetchMultipleGameData in HomeTrending.js");
+      const fetchedGamesData = await fetchMultipleGameData(game_ids);
+      setGamesData(fetchedGamesData);
 
-    //     // Store the fetched data in sessionStorage
-    //     sessionStorage.setItem('gamesData', JSON.stringify(fetchedGamesData));
-    // })();
-    fetchTrendingGames();
+      // Store the fetched data in sessionStorage
+      sessionStorage.setItem("gamesData", JSON.stringify(fetchedGamesData));
+    })();
+    //fetchTrendingGames();
     // }
   }, []);
 
