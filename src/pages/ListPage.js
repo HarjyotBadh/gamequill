@@ -25,6 +25,8 @@ const ListPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
   const [listType, setListType] = useState("unranked");
+  const [viewMode, setViewMode] = useState("grid");
+  const [activeButton, setActiveButton] = useState("grid");
 
   // Fetch game data based on the played items
   const fetchGameDatas = async () => {
@@ -168,9 +170,21 @@ const ListPage = () => {
       console.error("Error deleting list:", error);
     }
   };
+  const toggleViewMode = () => {
+    setViewMode((prevMode) => (prevMode === "grid" ? "list" : "grid"));
+  };
+  const switchToGridView = () => {
+    setViewMode("grid");
+    setActiveButton("grid");
+  };
+
+  const switchToListView = () => {
+    setViewMode("list");
+    setActiveButton("list");
+  };
 
   return (
-    <div className="listPage bg-white dark:bg-gray-500">
+    <div className="listPage bg-white dark:bg-gray-500 ${viewMode}">
       <Navbar />
       <div className="list-container bg-white dark:bg-gray-500">
         <h1 className="list-title text-black dark:text-white">
@@ -184,6 +198,48 @@ const ListPage = () => {
                 : "Switch to Ranked"}
             </button>
           </div>
+          <button
+            className={`toggle-viewmode-button ${
+              activeButton === "grid" ? "active" : ""
+            }`}
+            onClick={switchToGridView}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0112 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m0 0h7.5"
+              />
+            </svg>
+          </button>
+          <button
+            className={`toggle-viewmode-button ${
+              activeButton === "list" ? "active" : ""
+            }`}
+            onClick={switchToListView}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"
+              />
+            </svg>
+          </button>
           <button className="deleteListButton" onClick={handleDeleteList}>
             Delete List
           </button>
@@ -223,7 +279,7 @@ const ListPage = () => {
             </button>
           </div>
         )}
-        <div className="list">
+        <div className={`list ${viewMode === "list" ? "list-view" : ""}`}>
           {gameDataArray.map((gameData, index) => (
             <div
               key={gameData.id}
@@ -232,7 +288,7 @@ const ListPage = () => {
               {listType === "ranked" && (
                 <span className="rank-number">{index + 1}</span>
               )}
-              <GameCardList gameData={gameData.game} />
+              <GameCardList gameData={gameData.game} viewMode={viewMode} />
               <div className="removeButtonContainer">
                 <button
                   className="removeFromListButton"

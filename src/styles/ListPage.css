@@ -17,22 +17,33 @@
   }
   
   .list {
-    display: grid; /* Display the title cards in a grid */
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Set the grid layout */
-    gap: 20px; /* Add some space between the title cards */
+    display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
   }
-  
-  .title-card {
-    /* Add specific styles for your TitleCard component */
-    /* You can customize this further based on your TitleCard component's structure and styles */
-  }
-  .game-card-list {
+  .list.list-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+  .game-card-list.grid {
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     transition: transform 0.2s;
     width: 200px;
+    height: 650px;
+  }
+  .game-card-list.list{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s;
+    width: 400px;
   }
   .search-container {
     display: flex;
@@ -105,31 +116,45 @@
     text-align: center;
   }
   
-  .toggle-button {
+  .toggle-button , .toggle-viewmode-button{
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
+    background-color: var(--background);
+    color: var(--text-color);
+    border: 1px solid;
+    border-color: var(--text-color);
     cursor: pointer;
     border-radius: 5px;
+  }
+  .toggle-viewmode-button.active {
+    background-color: #1f2937;
+    color: #fff;
+  }
+  
+  .toggle-viewmode-button:hover, .toggle-button:hover {
+    background-color: #374151;
+    color: white;
   }
   .list-buttons-container {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
+    gap:20px;
   }
   
   .deleteListButton {
     background-color: #dc3545; /* Set the background color to red */
     color: #fff; /* Set the text color to white */
-    border: none;
-    padding: 8px 16px;
+    border: 1px solid;
+    border-color: white;
+    padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
-    margin-left: 10px; /* Add some space between the buttons */
+  }
+  .deleteListButton:hover {
+    background-color: #c82333;
   }
   
   

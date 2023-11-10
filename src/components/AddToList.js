@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { db, auth } from "../firebase";
 import {
   collection,
@@ -12,6 +12,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import "../styles/AddToList.css";
+import Popup from "reactjs-popup";
 export default function ListButton({ gameID }) {
   const [showPopup, setShowPopup] = useState(false);
   const [listName, setListName] = useState("");
@@ -29,43 +30,36 @@ export default function ListButton({ gameID }) {
   };
   const handleSearchChange = async (e) => {
     setSearchQuery(e.target.value);
-
-    // Filter lists based on the search query
-    const listsCollection = collection(db, "lists");
-    const q = query(
-      listsCollection,
-      where("owner", "==", auth.currentUser.uid),
-      where("name", ">=", e.target.value),
-      where("name", "<=", e.target.value + "\uf8ff"),
-      limit(10)
-    );
-
-    const listResults = [];
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      const listData = doc.data();
-      listResults.push({
-        id: doc.id,
-        name: listData.name,
-      });
-    });
-    setFilteredLists(listResults);
-
-    // getDocs(q)
-    //   .then((querySnapshot) => {
-    //     querySnapshot.forEach((doc) => {
-    //       const listData = doc.data();
-    //       listResults.push({
-    //         id: doc.id,
-    //         name: listData.name,
-    //       });
-    //     });
-    //     setFilteredLists(listResults);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error searching lists:", error);
-    //   });
   };
+  useEffect(() => {
+    const filterLists = async () => {
+      if (searchQuery !== "") {
+        // Filter lists based on the search query
+        const listsCollection = collection(db, "lists");
+        const q = query(
+          listsCollection,
+          where("owner", "==", auth.currentUser.uid),
+          where("name", ">=", searchQuery),
+          where("name", "<=", searchQuery + "\uf8ff"),
+          limit(10)
+        );
+
+        const listResults = [];
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          const listData = doc.data();
+          listResults.push({
+            id: doc.id,
+            name: listData.name,
+          });
+        });
+        setFilteredLists(listResults);
+      } else {
+        setFilteredLists([]);
+      }
+    };
+    filterLists();
+  }, [searchQuery]);
   const handleCreateNewList = async () => {
     try {
       const userId = auth.currentUser.uid;
@@ -109,18 +103,18 @@ export default function ListButton({ gameID }) {
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
-        stroke-width="1.5"
+        strokeWidth="1.5"
         stroke="currentColor"
-        class="w-6 h-6"
+        className="w-6 h-6"
         onClick={handleAddToList}
       >
         <path
-          strokeLineCap="round"
-          strokeLineJoin="round"
+          strokeLinecap="round"
+          strokeLinejoin="round"
           d="M12 4.5v15m7.5-7.5h-15"
         />
       </svg>
-      {showPopup && (
+      <Popup open={showPopup} onClose={handleClosePopup}>
         <div className="list-popup">
           <input
             type="text"
@@ -147,7 +141,7 @@ export default function ListButton({ gameID }) {
           <button onClick={handleClosePopup}>Close</button>
           {/* Display existing lists here */}
         </div>
-      )}
+      </Popup>
     </div>
   );
 }

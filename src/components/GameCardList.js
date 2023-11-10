@@ -12,7 +12,7 @@ import {
   generateStars,
 } from "../functions/RatingFunctions";
 
-export default function TitleCard({ gameData }) {
+export default function TitleCard({ gameData, viewMode }) {
   const [averageRating, setAverageRating] = React.useState(0);
   const [darkMode, setDarkMode] = React.useState(
     () =>
@@ -50,7 +50,7 @@ export default function TitleCard({ gameData }) {
 
   return (
     <div
-      className={`game-card-list ${darkMode ? "dark" : "light"}`}
+      className={`game-card-list ${darkMode ? "dark" : "light"} ${viewMode}`}
       data-theme={darkMode ? "dark" : "light"}
     >
       {bigCoverUrl && (
