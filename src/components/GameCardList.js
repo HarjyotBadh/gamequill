@@ -11,8 +11,17 @@ import {
   calculateAverageRating,
   generateStars,
 } from "../functions/RatingFunctions";
+import { doc, updateDoc, arrayRemove } from "firebase/firestore";
+import { db, auth } from "../firebase";
 
-export default function TitleCard({ gameData, viewMode }) {
+export default function TitleCard({
+  gameData,
+  viewMode,
+  list_id,
+  setGameIds,
+  setGameDataArray,
+  listOwner,
+}) {
   const [averageRating, setAverageRating] = React.useState(0);
   const [darkMode, setDarkMode] = React.useState(
     () =>
@@ -47,6 +56,23 @@ export default function TitleCard({ gameData, viewMode }) {
   // const textSizeClass = gameData.name.length > 25 ? "text-xl" : "text-4xl";
 
   const stars = generateStars(averageRating);
+  const isListOwner = auth.currentUser && auth.currentUser.uid === listOwner;
+
+  const handleRemoveFromList = async (gameId) => {
+    try {
+      const listDocRef = doc(db, "lists", list_id);
+      await updateDoc(listDocRef, {
+        games: arrayRemove(gameId),
+      });
+      setGameIds((prevIds) => prevIds.filter((id) => id !== gameId));
+      setGameDataArray((prevData) =>
+        prevData.filter((data) => data.id !== gameId)
+      );
+      //window.location.reload();
+    } catch (error) {
+      console.error("Error removing game from list:", error);
+    }
+  };
 
   return (
     <div
@@ -76,10 +102,16 @@ export default function TitleCard({ gameData, viewMode }) {
       <div class="play-button">
         <AddWishlistButton gameID={gameData.id} />
       </div>
-      <div class="add-to-list flex flex-row text-black dark:text-white">
-        Add to list
+      {isListOwner ? (
+        <button
+          className="removeFromListButton"
+          onClick={() => handleRemoveFromList(gameData.id)}
+        >
+          Remove from List
+        </button>
+      ) : (
         <AddToList gameID={gameData.id} />
-      </div>
+      )}
     </div>
   );
 }

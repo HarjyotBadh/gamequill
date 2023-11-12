@@ -288,15 +288,22 @@ const ListPage = () => {
               {listType === "ranked" && (
                 <span className="rank-number">{index + 1}</span>
               )}
-              <GameCardList gameData={gameData.game} viewMode={viewMode} />
-              <div className="removeButtonContainer">
+              <GameCardList
+                gameData={gameData.game}
+                viewMode={viewMode}
+                list_id={list_id}
+                setGameDataArray={setGameDataArray}
+                setGameIds={setGameIds}
+                listOwner={listData.owner}
+              />
+              {/* <div className="removeButtonContainer">
                 <button
                   className="removeFromListButton"
                   onClick={() => handleRemoveFromList(gameData.game.id)}
                 >
                   Remove from List
                 </button>
-              </div>
+              </div> */}
             </div>
           ))}
         </div>
