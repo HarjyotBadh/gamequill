@@ -67,7 +67,7 @@ function Profile({ profileData, setProfileData, userId }) {
   }, [userId]);
 
   return (
-    <div className="bg-white dark:bg-gray-500 h-screen">
+    <div className="bg-white dark:bg-gray-500">
       <div className="formattingBox h-16 dark:bg-gray-500 bg-white"></div>
       <div className="profileScreen bg-white dark:bg-gray-500 flex flex-row">
         <div className="profileAndFavorites dark:bg-gray-500 bg-white flex flex-col">

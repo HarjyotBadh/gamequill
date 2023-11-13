@@ -72,7 +72,7 @@ const ListPage = () => {
   //fetchListData();
 
   const handleSearch = (e) => {
-    e.preventDefault();
+    //e.preventDefault();
     const corsAnywhereUrl = "http://localhost:8080/";
     const apiUrl = "https://api.igdb.com/v4/games";
 
@@ -123,6 +123,10 @@ const ListPage = () => {
         console.error("Error removing game from existing list:", error);
       }
     }
+  };
+  const handleClearSearch = () => {
+    setSearchResults([]);
+    setSelectedGame(null);
   };
   const handleRemoveFromList = async (gameId) => {
     try {
@@ -182,6 +186,11 @@ const ListPage = () => {
   const switchToListView = () => {
     setViewMode("list");
     setActiveButton("list");
+  };
+  const handleEnterKey = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
@@ -250,6 +259,7 @@ const ListPage = () => {
             type="text"
             placeholder="Search for games to add to list..."
             value={searchQuery}
+            onKeyDown={handleEnterKey}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
           <button onClick={handleSearch}>Search</button>
@@ -277,6 +287,13 @@ const ListPage = () => {
               onClick={handleAddToList}
             >
               Add to List
+            </button>
+            <button
+              className="clearSearchButton"
+              type="button"
+              onClick={handleClearSearch}
+            >
+              Clear Search
             </button>
           </div>
         )}

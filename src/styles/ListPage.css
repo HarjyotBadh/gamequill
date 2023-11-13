@@ -81,6 +81,10 @@
     display: none;
     margin: 20px auto;
   }
+  .clearSearchButton {
+    display: none;
+    margin: 20px auto;
+  }
   .userHasSearched .addToListButton {
     display: block; /* Show the button when a game is selected */
     padding: 8px 16px;
@@ -88,7 +92,14 @@
     background-color: #007bff;
     color: #fff;
   }
-  .removeFromListButton {
+  .userHasSearched .clearSearchButton {
+    display: block; /* Show the button when a game is selected */
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #dc3545;
+    color: #fff;
+  }
+  .removeFromListButton  {
     background-color: #dc3545;
     color: #fff;
     border: none;
