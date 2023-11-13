@@ -15,12 +15,14 @@ import { doc, updateDoc, arrayRemove } from "firebase/firestore";
 import { db, auth } from "../firebase";
 
 export default function TitleCard({
+  gameDataArray,
   gameData,
   viewMode,
   list_id,
   setGameIds,
   setGameDataArray,
   listOwner,
+  index,
 }) {
   const [averageRating, setAverageRating] = React.useState(0);
   const [darkMode, setDarkMode] = React.useState(
@@ -74,10 +76,42 @@ export default function TitleCard({
     }
   };
 
+  const handleDragStart = (e) => {
+    e.dataTransfer.setData("text/plain", index.toString());
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    const draggedIndex = parseInt(e.dataTransfer.getData("text/plain"), 10);
+    const hoverIndex = index;
+
+    if (draggedIndex === hoverIndex) return;
+
+    const newDataArray = [...gameDataArray];
+    const [draggedItem] = newDataArray.splice(draggedIndex, 1);
+    newDataArray.splice(hoverIndex, 0, draggedItem);
+
+    setGameDataArray(newDataArray);
+    const newGameIds = newDataArray.map((data) => data.game.id);
+    setGameIds(newGameIds);
+    const listDocRef = doc(db, "lists", list_id);
+    await updateDoc(listDocRef, {
+      games: newGameIds,
+    });
+  };
+
   return (
     <div
       className={`game-card-list ${darkMode ? "dark" : "light"} ${viewMode}`}
       data-theme={darkMode ? "dark" : "light"}
+      draggable="true"
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
     >
       {bigCoverUrl && (
         <Link to={`/game?game_id=${gameData.id}`}>

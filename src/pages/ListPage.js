@@ -15,6 +15,7 @@ import { fetchMultipleGameData } from "../functions/GameFunctions";
 import GameCardList from "../components/GameCardList";
 import ProfileTitleCard from "../components/ProfileTitleCard";
 import "../styles/ListPage.css";
+import TitleCardGrid from "../components/TitleCardGrid";
 
 const ListPage = () => {
   const { list_id } = useParams();
@@ -280,32 +281,15 @@ const ListPage = () => {
           </div>
         )}
         <div className={`list ${viewMode === "list" ? "list-view" : ""}`}>
-          {gameDataArray.map((gameData, index) => (
-            <div
-              key={gameData.id}
-              className="game-item text-black dark:text-white"
-            >
-              {listType === "ranked" && (
-                <span className="rank-number">{index + 1}</span>
-              )}
-              <GameCardList
-                gameData={gameData.game}
-                viewMode={viewMode}
-                list_id={list_id}
-                setGameDataArray={setGameDataArray}
-                setGameIds={setGameIds}
-                listOwner={listData.owner}
-              />
-              {/* <div className="removeButtonContainer">
-                <button
-                  className="removeFromListButton"
-                  onClick={() => handleRemoveFromList(gameData.game.id)}
-                >
-                  Remove from List
-                </button>
-              </div> */}
-            </div>
-          ))}
+          <TitleCardGrid
+            gameDataArray={gameDataArray}
+            viewMode={viewMode}
+            list_id={list_id}
+            setGameDataArray={setGameDataArray}
+            setGameIds={setGameIds}
+            listData={listData}
+            listType={listType}
+          />
         </div>
       </div>
     </div>
