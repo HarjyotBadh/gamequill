@@ -1,15 +1,14 @@
 .review-profile {
     background-color: var(--background);
     border-radius: 20px;
-    padding: 16px 24px; /* More precise than percentages for consistent spacing */
-    margin-left: 2%;
-    margin-right: 2%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    padding: 16px 24px;
+    margin: 2% auto 16px; /* centered with auto margin */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
-    align-items: center;
-    margin-bottom: 16px;
-    gap: 16px; /* Spacing between avatar and user details */
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center align children */
+    gap: 8px; /* Spacing between elements */
 }
 
 .review-profile:hover {
@@ -18,27 +17,27 @@
 }
 
 .review-profile .avatar {
-    width: 80px;  /* Slightly smaller */
+    width: 80px;
     height: 80px;
     border-radius: 50%;
-    border: 2px solid var(--secondary-text-color); /* Avatar frame */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Avatar shadow */
+    border: 2px solid var(--secondary-text-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .review-profile .user-details {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center align content vertically */
+    align-items: center; /* Center align horizontally */
 }
 
-.review-profile h1 {
-    font-weight: 600; /* Slightly lighter */
+.review-profile .username {
+    font-weight: 600;
     color: var(--text-color);
-    margin-bottom: 4px;
-    font-size: 1.2rem; /* Slightly larger */
+    margin-bottom: 4px; /* Spacing between name and timestamp */
+    font-size: 1.2rem;
 }
 
 .review-profile .timestamp {
     color: var(--secondary-text-color);
-    font-size: 0.85rem; /* Slightly smaller */
+    font-size: 0.85rem;
 }

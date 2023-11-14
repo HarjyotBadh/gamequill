@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { fetchReviewById } from "../functions/ReviewFunctions";
 import NavBar from "../components/NavBar";
 import TitleCard from "../components/TitleCard";
+import CommentDisplay from "../components/CommentDisplay";
+import CommentCreator from "../components/CommentCreator";
 import StarSelection from "../components/StarSelection";
 import ReviewProfile from "../components/ReviewProfile";
 import { useNavigate } from "react-router-dom";
@@ -143,8 +145,11 @@ export default function ReviewPage() {
             data-theme={darkMode ? "dark" : "light"}
         >
             <NavBar />
-            <div className="flex review-page-stuff">
+            <div className="review-page-layout">
+
+
                 {/* Left side */}
+                <div className="left-column">
                 <div className="left-container flex flex-col items-center">
                     <Link to={`/Profile?user_id=${reviewData.uid}`}>
                         <ReviewProfile
@@ -155,69 +160,85 @@ export default function ReviewPage() {
                     </Link>
                     <TitleCard gameData={gameData.game} />
                 </div>
+                </div>
 
                 {/* Right side */}
-                <div className="review-content-container">
-                    <h1>Review Rating</h1>
-                    <StarSelection
-                        starRating={reviewData.starRating}
-                        setStarRating={() => {}}
-                        readOnly
-                    />
-                    <div className="toggle-spoilers">
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked={showSpoilers}
-                                onChange={toggleSpoilers}
-                            />
-                            Show Spoilers
-                        </label>
+                <div className="right-column">
+                    <div className="review-content-container">
+                        <h1>Review Rating</h1>
+                        <StarSelection
+                            starRating={reviewData.starRating}
+                            setStarRating={() => {}}
+                            readOnly
+                        />
+                        <div className="toggle-spoilers">
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={showSpoilers}
+                                    onChange={toggleSpoilers}
+                                />
+                                Show Spoilers
+                            </label>
+                        </div>
+
+                        {currentUserUid === reviewData.uid && (
+                            <button
+                                className="delete-review-btn"
+                                onClick={handleDeleteReview}
+                            >
+                                Delete Review
+                            </button>
+                        )}
+
+                        {showDeleteModal && (
+                            <div className="delete-account-modal">
+                                <div className="delete-account-modal-content">
+                                    <span
+                                        className="close"
+                                        onClick={closeDeleteModal}
+                                    >
+                                        &times;
+                                    </span>
+                                    <p>
+                                        Are you sure you want to delete this
+                                        review? This action is irreversible.
+                                    </p>
+                                    <button onClick={handleConfirmDelete}>
+                                        Confirm Deletion
+                                    </button>
+                                    <button onClick={closeDeleteModal}>
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        <div
+                            className="review-text-snapshott text-justify"
+                            dangerouslySetInnerHTML={{
+                                __html: toggleSpoilersInText(
+                                    reviewData.reviewText,
+                                    showSpoilers
+                                ),
+                            }}
+                        />
                     </div>
 
-                    {currentUserUid === reviewData.uid && (
-                        <button
-                            className="delete-review-btn"
-                            onClick={handleDeleteReview}
-                        >
-                            Delete Review
-                        </button>
-                    )}
-
-                    {showDeleteModal && (
-                        <div className="delete-account-modal">
-                            <div className="delete-account-modal-content">
-                                <span
-                                    className="close"
-                                    onClick={closeDeleteModal}
-                                >
-                                    &times;
-                                </span>
-                                <p>
-                                    Are you sure you want to delete this review?
-                                    This action is irreversible.
-                                </p>
-                                <button onClick={handleConfirmDelete}>
-                                    Confirm Deletion
-                                </button>
-                                <button onClick={closeDeleteModal}>
-                                    Cancel
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    <div
-                        className="review-text-snapshott text-justify"
-                        dangerouslySetInnerHTML={{
-                            __html: toggleSpoilersInText(
-                                reviewData.reviewText,
-                                showSpoilers
-                            ),
-                        }}
+                    {/* Comment section */}
+                <div className="review-comment-section">
+                    <CommentCreator
+                        review_id={review_id}
+                        currentUserUID={currentUserUid}
                     />
                 </div>
+
+                </div> {/* End of right-container */}
+
+                
             </div>
+
+            {/* <CommentCreator review_id={review_id} currentUserUID={currentUserUid} /> */}
 
             <Footer />
         </div>

@@ -2,6 +2,26 @@
     /* Add any global styles for the wrapper */
 }
 
+.review-page-layout {
+    display: flex;
+    flex-direction: row;
+    padding-top: 2rem;
+    padding-right: 2rem;
+    padding-left: 2rem;
+}
+
+.left-column {
+    flex: 0 0 20%;
+    padding: 1rem;
+    /* Additional styling */
+}
+
+.right-column {
+    flex: 0 0 80%;
+    padding: 1rem;
+    /* Additional styling */
+}
+
 /* Left side container styles */
 .left-container {
     flex: 1;
@@ -20,6 +40,7 @@
 .review-content-container {
     flex: 3;
     padding: 20px;
+    width: 100%;
 }
 
 .review-text {
@@ -28,15 +49,14 @@
 }
 
 .spoiler {
-    background-color: #000;
-    color: #000;
+    background-color: var(--rating-color);
+    color: var(--rating-color);
     cursor: pointer;
 }
 .spoiler:hover {
-    color: #FFF;
+    color: var(--text-color);
 }
 
-/* ReviewPage.css */
 
 .toggle-spoilers {
     margin: 10px 0;
@@ -54,20 +74,17 @@
 }
 
 .spoiler-effect {
-    background-color: black;
-    color: black;
+    background-color: var(--rating-color);
+    color: var(--rating-color);
     cursor: pointer;
 }
 .spoiler-effect:hover {
-    color: white;
+    color: var(--text-color);
 }
 
-
-
-/* ReviewPage.css */
 .spoiler {
-    background-color: black; 
-    color: black;
+    background-color: var(--rating-color); 
+    color: var(--rating-color);
     cursor: pointer;
 }
 
@@ -87,4 +104,16 @@
 
 .delete-review-btn:hover {
     background-color: #ff1a1a; /* Darker red on hover */
+}
+
+.right-container {
+    /* Ensure that right-container fills the flex space appropriately */
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+}
+
+.review-comment-section {
+    margin-top: 2rem;
+    padding: 0 1rem;
 }
