@@ -4,9 +4,9 @@ import 'react-quill/dist/quill.snow.css'; // Import Quill styles
 import '../styles/CommentCreator.css'; // Import the new CSS file
 import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
+import Button from '@mui/material/Button';
 
-export default function CommentCreator({ review_id, currentUserUID }) {
-    const [commentText, setCommentText] = useState("");
+export default function CommentCreator({ review_id, currentUserUID, setHasCommented }) {
     const [commentHtml, setCommentHtml] = useState('');
     const maxLength = 1000; // Set a max length for a comment
 
@@ -32,11 +32,12 @@ export default function CommentCreator({ review_id, currentUserUID }) {
                 "comments"
             );
             await addDoc(commentsRef, {
-                text: commentText,
-                createdAt: new Date(),
+                text: commentHtml,
+                timestamp: new Date(),
                 uid: currentUserUID,
             });
-            setCommentText("");
+            setCommentHtml("");
+            setHasCommented(true);
         } catch (error) {
             console.error("Error adding comment: ", error);
         }
@@ -54,7 +55,7 @@ export default function CommentCreator({ review_id, currentUserUID }) {
             <div className={`comment-character-count ${textLength > maxLength ? 'error-text' : ''}`}>
                 {textLength} / {maxLength}
             </div>
-            {/* Add your submit button here */}
+            <Button variant="contained" onClick={handleCommentSubmit} disabled={textLength > maxLength || textLength <= 0}> Post </Button>
         </div>
     );
 }

@@ -13,7 +13,14 @@ import { useNavigate } from "react-router-dom";
 import "../styles/ReviewPage.css";
 import Footer from "../components/Footer";
 import { db, auth } from "../firebase";
-import { doc, deleteDoc } from "firebase/firestore";
+import {
+    doc,
+    deleteDoc,
+    query,
+    collection,
+    where,
+    getDocs,
+} from "firebase/firestore";
 
 export default function ReviewPage() {
     const { review_id } = useParams();
@@ -27,6 +34,7 @@ export default function ReviewPage() {
     const [showSpoilers, setShowSpoilers] = React.useState(false);
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
     const [gameID, setGameID] = React.useState(null);
+    const [hasCommented, setHasCommented] = React.useState(false);
     const currentUserUid = auth.currentUser?.uid;
     const navigate = useNavigate();
 
@@ -69,6 +77,17 @@ export default function ReviewPage() {
                         `gameData_${fetchedReview.gameID}`,
                         JSON.stringify(gameDataResult.game)
                     );
+                }
+
+                // Check if the current user has already commented
+                const commentQuery = query(
+                    collection(db, "reviews", review_id, "comments"),
+                    where("uid", "==", currentUserUid)
+                );
+                const querySnapshot = await getDocs(commentQuery);
+                if (!querySnapshot.empty) {
+                    // User has already commented
+                    setHasCommented(true);
                 }
             } catch (error) {
                 console.error("Error fetching review or game data: ", error);
@@ -146,22 +165,19 @@ export default function ReviewPage() {
         >
             <NavBar />
             <div className="review-page-layout">
-
-
                 {/* Left side */}
                 <div className="left-column">
-                <div className="left-container flex flex-col items-center">
-                    <Link to={`/Profile?user_id=${reviewData.uid}`}>
-                        <ReviewProfile
-                            username={reviewData.username}
-                            timestamp={reviewData.timestamp}
-                            profilePicture={reviewData.profilePicture}
-                        />
-                    </Link>
-                    <TitleCard gameData={gameData.game} />
+                    <div className="left-container flex flex-col items-center">
+                        <Link to={`/Profile?user_id=${reviewData.uid}`}>
+                            <ReviewProfile
+                                username={reviewData.username}
+                                timestamp={reviewData.timestamp}
+                                profilePicture={reviewData.profilePicture}
+                            />
+                        </Link>
+                        <TitleCard gameData={gameData.game} />
+                    </div>
                 </div>
-                </div>
-
                 {/* Right side */}
                 <div className="right-column">
                     <div className="review-content-container">
@@ -226,16 +242,25 @@ export default function ReviewPage() {
                     </div>
 
                     {/* Comment section */}
-                <div className="review-comment-section">
-                    <CommentCreator
-                        review_id={review_id}
-                        currentUserUID={currentUserUid}
-                    />
+                    {!hasCommented && (
+                        <div className="review-comment-section">
+                            <CommentCreator
+                                review_id={review_id}
+                                currentUserUID={currentUserUid}
+                                setHasCommented={setHasCommented}
+                            />
+                        </div>
+                    )}
+
+                    {/* Comment Display section */}
+                    <div className="comment-display-section">
+                        <CommentDisplay
+                            review_id={review_id}
+                            hasCommented={hasCommented}
+                        />
+                    </div>
                 </div>
-
-                </div> {/* End of right-container */}
-
-                
+                {/* End of right-container */}
             </div>
 
             {/* <CommentCreator review_id={review_id} currentUserUID={currentUserUid} /> */}

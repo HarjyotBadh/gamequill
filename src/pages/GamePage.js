@@ -35,10 +35,12 @@ export default function GamePage({ game_id }) {
                 const reviewsSnapshot = await getDocs(reviewsQuery);
                 setUserHasReview(!reviewsSnapshot.empty);
             } else {
+                // Redirect to login if there is no user
                 window.location.href = "/login";
             }
         });
     }, [game_id]);
+    
 
     // Sets dark mode based on user's system preferences
     const [darkMode, setDarkMode] = React.useState(

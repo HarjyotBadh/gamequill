@@ -19,7 +19,6 @@
 .right-column {
     flex: 0 0 80%;
     padding: 1rem;
-    /* Additional styling */
 }
 
 /* Left side container styles */
@@ -114,6 +113,13 @@
 }
 
 .review-comment-section {
+    /* margin-top: 2rem; */
+    /* padding: 0 1rem; */
+    width: 100%;
+}
+
+.comment-display-section {
     margin-top: 2rem;
-    padding: 0 1rem;
+    /* padding: 0 1rem; */
+    width: 100%;
 }
