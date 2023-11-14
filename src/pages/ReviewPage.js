@@ -257,6 +257,7 @@ export default function ReviewPage() {
                         <CommentDisplay
                             review_id={review_id}
                             hasCommented={hasCommented}
+                            currentUserUid={currentUserUid}
                         />
                     </div>
                 </div>

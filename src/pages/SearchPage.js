@@ -36,7 +36,6 @@ const SearchPage = ({ searchQuery }) => {
             aggregated_rating: game.aggregated_rating || 0, // Set to 0 if aggregated_rating is undefined
           },
         }));
-        //TODO: Sort by our rating system once fully implemented
         gamesData.sort(
           (a, b) => b.gameData.aggregated_rating - a.gameData.aggregated_rating
         );
