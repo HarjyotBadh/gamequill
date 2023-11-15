@@ -28,7 +28,6 @@
     padding: 10px 15px;
     border-bottom: 3px solid rgba(0, 0, 0, 0.1);
     display: flex;
-    justify-content: space-between;
     align-items: center;
     transition: background-color 0.3s ease;
     margin-bottom: 20px;
@@ -36,9 +35,10 @@
 
 .user-info-container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* Change to row direction */
     align-items: center;
     text-decoration: none;
+    flex-grow: 1; /* Allow it to take up available space */
 }
 
 .custom-avatarr {
@@ -47,6 +47,7 @@
     width: 50px;
     height: 50px;
     margin-bottom: 0.5rem;
+    margin-left: 2rem;
 }
 
 .user-info {
@@ -147,5 +148,14 @@
     margin-left: 12px; /* Space from the like counter */
     cursor: pointer;
 }
+
+.toggle-replies-icon {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    color: var(--secondary-text-color); /* Adjust the color as needed */
+    margin-right: 10px;
+}
+
 
 

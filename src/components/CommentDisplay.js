@@ -9,7 +9,11 @@ import {
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import DOMPurify from "dompurify";
-import { HandThumbUpIcon } from "@heroicons/react/24/solid";
+import {
+    HandThumbUpIcon,
+    ChevronUpIcon,
+    ChevronDownIcon,
+} from "@heroicons/react/24/solid";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import ReplyCreator from "./ReplyCreator";
 import ReplyDisplay from "./ReplyDisplay";
@@ -20,12 +24,12 @@ import {
     where,
     deleteDoc,
 } from "firebase/firestore";
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 export default function CommentDisplay({
     review_id,
@@ -39,6 +43,7 @@ export default function CommentDisplay({
     const [openDeleteCommentDialog, setOpenDeleteCommentDialog] =
         useState(false);
     const [commentToDelete, setCommentToDelete] = useState(null);
+    const [shownReplies, setShownReplies] = useState({});
 
     useEffect(() => {
         const fetchData = async () => {
@@ -139,6 +144,13 @@ export default function CommentDisplay({
         }
     };
 
+    const toggleReplies = (commentId) => {
+        setShownReplies((prevShownReplies) => ({
+            ...prevShownReplies,
+            [commentId]: !prevShownReplies[commentId],
+        }));
+    };
+
     return (
         <div className="comment-display">
             <Dialog
@@ -166,6 +178,18 @@ export default function CommentDisplay({
                 <div key={comment.id} className="comment-and-reply-container">
                     <div className="comment-box">
                         <div className="comment-header">
+                            {/* Toggle icon */}
+                            {shownReplies[comment.id] ? (
+                                <ChevronUpIcon
+                                    className="toggle-replies-icon"
+                                    onClick={() => toggleReplies(comment.id)}
+                                />
+                            ) : (
+                                <ChevronDownIcon
+                                    className="toggle-replies-icon"
+                                    onClick={() => toggleReplies(comment.id)}
+                                />
+                            )}
                             <Link
                                 to={`/Profile?user_id=${comment.uid}`}
                                 className="user-info-container"
@@ -231,24 +255,26 @@ export default function CommentDisplay({
                             {/* Content will be inserted by dangerouslySetInnerHTML */}
                         </p>
                     </div>
-                    <div className="reply-box">
-                        {!userReplies[comment.id] && (
-                            <ReplyCreator
+                    {shownReplies[comment.id] && (
+                        <div className="reply-box">
+                            {!userReplies[comment.id] && (
+                                <ReplyCreator
+                                    review_id={review_id}
+                                    comment_id={comment.id}
+                                    setHasReplied={setHasReplied}
+                                    currentUserUID={currentUserUid}
+                                />
+                            )}
+
+                            <ReplyDisplay
                                 review_id={review_id}
                                 comment_id={comment.id}
+                                hasReplied={hasReplied}
                                 setHasReplied={setHasReplied}
                                 currentUserUID={currentUserUid}
                             />
-                        )}
-
-                        <ReplyDisplay
-                            review_id={review_id}
-                            comment_id={comment.id}
-                            hasReplied={hasReplied}
-                            setHasReplied={setHasReplied}
-                            currentUserUID={currentUserUid}
-                        />
-                    </div>
+                        </div>
+                    )}
                 </div>
             ))}
         </div>
