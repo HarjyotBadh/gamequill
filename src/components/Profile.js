@@ -12,6 +12,7 @@ import FollowUser from "./FollowUser";
 import EditCurrentlyPlayingGame from "./EditCurrentlyPlayingGame";
 import FiveRecentReviews from "./FiveRecentReviews";
 import Footer from "./Footer";
+import GenreIcon from "./GenreIcon";
 
 function Profile({ profileData, setProfileData, userId }) {
   const [gameCovers, setGameCovers] = useState([]);
@@ -138,6 +139,7 @@ function Profile({ profileData, setProfileData, userId }) {
                 className="w-24 h-32 text-center border dark:border-white border-black"
               >
                 {genre}
+                <GenreIcon g={genre} />
               </div>
             ))}
           </div>
