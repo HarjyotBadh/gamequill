@@ -213,6 +213,7 @@ const ListPage = () => {
               activeButton === "grid" ? "active" : ""
             }`}
             onClick={switchToGridView}
+            title="Grid View"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -234,6 +235,7 @@ const ListPage = () => {
               activeButton === "list" ? "active" : ""
             }`}
             onClick={switchToListView}
+            title="List View"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

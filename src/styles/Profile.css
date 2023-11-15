@@ -106,3 +106,6 @@
 .mh {
   max-height: 375px;
 }
+.currentlyPlayingAndFeaturedList {
+  gap:20px;
+}
