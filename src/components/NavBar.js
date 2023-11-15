@@ -12,6 +12,38 @@ function App() {
     const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
     const [profilePic, setProfilePic] = useState(null);
     const navigate = useNavigate();
+    const [selectedPlatform, setSelectedPlatform] = useState("All Platform"); // Initial selected genre
+
+    const gamePlatforms = [
+        { value: "select-platform", label: "Select Platform" },
+    ]
+    const gameGenres = [
+        { value: "select-genre", label: "Select Genre" },
+        { value: "point-and-click", label: "Point-and-Click" },
+        { value: "fighting", label: "Fighting" },
+        { value: "shooter", label: "Shooter" },
+        { value: "music", label: "Music" },
+        { value: "platform", label: "Platform" },
+        { value: "puzzle", label: "Puzzle" },
+        { value: "racing", label: "Racing" },
+        { value: "real-time-strategy", label: "Real Time Strategy (RTS)" },
+        { value: "role-playing", label: "Role-playing (RPG)" },
+        { value: "simulator", label: "Simulator" },
+        { value: "sport", label: "Sport" },
+        { value: "strategy", label: "Strategy" },
+        { value: "turn-based-strategy", label: "Turn-based Strategy (TBS)" },
+        { value: "tactical", label: "Tactical" },
+        { value: "quiz-trivia", label: "Quiz/Trivia" },
+        { value: "hack-and-slash-beat-em-up", label: "Hack and Slash/Beat 'em Up" },
+        { value: "pinball", label: "Pinball" },
+        { value: "adventure", label: "Adventure" },
+        { value: "arcade", label: "Arcade" },
+        { value: "visual-novel", label: "Visual Novel" },
+        { value: "indie", label: "Indie" },
+        { value: "card-board-game", label: "Card & Board Game" },
+        { value: "moba", label: "MOBA" },
+    ];
+    const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (authUser) => {
@@ -48,14 +80,15 @@ function App() {
             console.error("Error logging out:", error);
         }
     };
-
+    const [selectedGenre, setSelectedGenre] = useState(""); // Initial selected genre
     const [searchQuery, setSearchQuery] = useState("");
     const handleSearchInputChange = (e) => {
         setSearchQuery(e.target.value);
+        setSelectedGenre(e.target.value);
     };
     const handleSearch = () => {
         // Redirect to the search page with the search query as a parameter
-        navigate(`/Search?query=${searchQuery}`);
+        navigate(`/Search?query=${searchQuery}genre=${selectedGenre}`);
     };
 
     const handleEnterKey = (e) => {
@@ -82,7 +115,34 @@ function App() {
                         onKeyDown={handleEnterKey}
                         placeholder="Search for games or users"
                         className="bg-gray-200 p-2 rounded mr-2 w-96"
+                        onFocus={() => setIsSearchBarFocused(true)}
                     />
+                    {isSearchBarFocused && (
+                    <select
+                        value={selectedGenre}
+                        onChange={(e) => setSelectedGenre(e.target.value)}
+                        className="bg-gray-200 p-2 rounded mr-2"
+                    >
+                    {gameGenres.map((genre) => (
+                    <option key={genre.value} value={genre.value}>
+                    {genre.label}
+                    </option>
+                    ))}
+                    </select>
+                    )}
+                    {isSearchBarFocused && (
+                    <select
+                        value={selectedPlatform}
+                        onChange={(e) => setSelectedPlatform(e.target.value)}
+                        className="bg-gray-200 p-2 rounded mr-2"
+                    >
+                    {gamePlatforms.map((platform) => (
+                        <option key={platform.value} value={platform.value}>
+                        {platform.label}
+                        </option>
+                    ))}
+                    </select>
+)}
                     <button
                         onClick={handleSearch}
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -94,7 +154,10 @@ function App() {
                     className="hidden w-full md:block md:w-auto"
                     id="navbar-default"
                 >
-                    <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-gray-600 md:bg-gray-600 border-gray-700">
+                <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-gray-600 md:bg-gray-600 border-gray-700">
+                <Link to="/top-games" className="block py-2 pl-3 pr-4 text-white rounded hover-bg-gray-100 md:hover-bg-transparent md-border-0 md:hover-text-blue-700 md-p-0 dark-text-white md-dark-hover-text-blue-500 dark-hover-bg-gray-500 dark-hover-text-white md-dark-hover-bg-transparent">
+                    Top Games
+                </Link>
                         <li>
                             {user ? (
                                 <div className="relative">

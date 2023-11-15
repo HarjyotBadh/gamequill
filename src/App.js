@@ -15,7 +15,7 @@ import ReviewPage from "./pages/ReviewPage";
 import Wishlist from "./components/Wishlist";
 import Likes from "./pages/LikesPage";
 import PlayedPage from "./pages/PlayedPage";
-
+import TopGames from "./pages/TopGames";
 function App() {
   return (
     <Routes>
@@ -35,6 +35,7 @@ function App() {
       <Route path="/wishlist" element={<Wishlist/>} />
       <Route path="/likes" element={<Likes/>} />
       <Route path="/played" element={<PlayedPage/>} />
+      <Route path="/top-games" element={<TopGames/>} />
     </Routes>
   );
 }

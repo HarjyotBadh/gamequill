@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, setDoc } from "firebase/firestore";
 import { Avatar } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { HandThumbUpIcon } from "@heroicons/react/24/solid";
+import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { generateStars } from "../functions/RatingFunctions";
 import {
     fetchReviewsByGameId,
@@ -15,6 +16,7 @@ import DOMPurify from "dompurify";
 
 export default function ReviewSnapshot({ game_id, showFriendReviews, showSpoilers }) {
     const [reviews, setReviews] = useState([]);
+    const [profileData, setProfileData] = useState([]);
     const currentUserId = auth.currentUser.uid;
 
     async function handleLike(review) {
@@ -54,6 +56,44 @@ export default function ReviewSnapshot({ game_id, showFriendReviews, showSpoiler
         });
     }
 
+    async function handleRepost(review) {
+        // Check if the review has been reposted by the current user
+        const isReposted =
+            review.userReposts && review.userReposts.includes(currentUserId);
+
+        // Clone the userReposts array
+        let updatedUserReposts = [...(review.userReposts || [])];
+        // Add or remove the user's ID based on the current repost status
+        if (isReposted) {
+            updatedUserReposts = updatedUserReposts.filter(
+                (uid) => uid !== currentUserId
+            );
+        } else {
+            updatedUserReposts.push(currentUserId);
+        }
+
+        // Update the review in the database
+        const reviewRef = doc(db, "reviews", review.id);
+        await updateDoc(reviewRef, {
+            userReposts: updatedUserReposts,
+        });
+
+        
+
+        // Update the state to re-render the component
+        setReviews((prevReviews) => {
+            return prevReviews.map((r) => {
+                if (r.id === review.id) {
+                    return {
+                        ...r,
+                        userReposts: updatedUserReposts,
+                    };
+                }
+                return r;
+            });
+        });
+    }
+    
     useEffect(() => {
         async function getData() {
             let reviewsData = await fetchReviewsByGameId(game_id);
@@ -122,7 +162,24 @@ export default function ReviewSnapshot({ game_id, showFriendReviews, showSpoiler
                                     </div>
                                 </div>
                             </div>
-
+                            <div className="likes-button-container">
+                                <ArrowPathIcon
+                                    className={
+                                        review.userReposts &&
+                                        review.userReposts.includes(
+                                            currentUserId
+                                        )
+                                            ? "reposted"
+                                            : "not-reposted"
+                                    }
+                                    onClick={() => handleRepost(review)}
+                                />
+                                <span className="repost-count">
+                                    {(review.userReposts
+                                        ? review.userReposts.length
+                                        : 0) + " reposts"}
+                                </span>
+                            </div>
                             <Link
                                 to={`/Profile?user_id=${review.uid}`}
                                 className="user-info-container"
