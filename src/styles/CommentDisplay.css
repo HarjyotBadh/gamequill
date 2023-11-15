@@ -37,7 +37,7 @@
 .user-info-container {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center align items vertically */
+    align-items: center;
     text-decoration: none;
 }
 
@@ -46,25 +46,25 @@
     object-fit: cover;
     width: 50px;
     height: 50px;
-    margin-bottom: 0.5rem; /* Add space between avatar and username */
+    margin-bottom: 0.5rem;
 }
 
 .user-info {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center align the username and timestamp */
+    align-items: center;
 }
 
 .user-info .comment-username {
     font-weight: 600;
     color: var(--text-color);
-    text-align: center; /* Center the text */
+    text-align: center;
 }
 
 .user-info .comment-time {
     font-size: 12px;
     color: var(--secondary-text-color);
-    text-align: center; /* Center the text */
+    text-align: center;
 }
 
 .comment-text {
@@ -77,16 +77,75 @@
 .like-button-container {
     display: flex;
     align-items: center;
-    margin-left: 10px; /* Added space between rating and like button */
+    margin-left: 10px;
 }
 
 .comment-and-reply-container {
     display: flex;
     flex-direction: column;
-    gap: 10px; /* Adjust the gap as needed */
+    gap: 10px;
 }
 
 .reply-box {
     width: 80%;
     margin-left: 20%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
+
+.reply-display {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+.delete-reply-icon {
+    color: red; /* Makes the icon red */
+    width: 20px; /* Adjust the size as needed */
+    height: 20px; /* Adjust the size as needed */
+    cursor: pointer; /* Changes cursor to pointer when hovering over the icon */
+    margin-left: auto; /* Aligns the icon to the right within its container */
+}
+
+.dialog-title {
+    font-size: 1.25rem; /* Tailwind text-lg */
+    font-weight: 700; /* Tailwind font-bold */
+    text-align: center; /* Center the title */
+    padding: 1rem; /* Tailwind p-4 */
+}
+
+.dialog-content {
+    padding: 1rem; /* Tailwind p-4 */
+}
+
+.dialog-actions {
+    justify-content: center; /* Center the buttons */
+    padding: 1rem; /* Tailwind p-4 */
+}
+
+.dialog-button {
+    background-color: #4f46e5; /* Tailwind bg-indigo-600 */
+    color: white; /* Tailwind text-white */
+    padding: 0.5rem 1rem; /* Tailwind p-2 px-4 */
+    margin: 0 0.5rem; /* Tailwind mx-2 */
+    border-radius: 0.25rem; /* Tailwind rounded-md */
+    font-weight: 500; /* Tailwind font-medium */
+    cursor: pointer; /* Tailwind cursor-pointer */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.dialog-button:hover {
+    background-color: #4338ca; /* Tailwind bg-indigo-700 for hover effect */
+}
+
+.delete-comment-icon {
+    color: red; /* Adjust as needed */
+    width: 20px; /* Adjust size as needed */
+    height: 20px; /* Adjust size as needed */
+    margin-left: 12px; /* Space from the like counter */
+    cursor: pointer;
+}
+
+

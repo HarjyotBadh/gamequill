@@ -98,7 +98,7 @@ export default function ReviewPage() {
         };
 
         fetchReviewAndGameData();
-    }, [review_id]);
+    }, [review_id, hasCommented]);
 
     const openDeleteModal = () => {
         setShowDeleteModal(true);
@@ -258,6 +258,7 @@ export default function ReviewPage() {
                         <CommentDisplay
                             review_id={review_id}
                             hasCommented={hasCommented}
+                            setHasCommented={setHasCommented}
                             currentUserUid={currentUserUid}
                         />
                         
