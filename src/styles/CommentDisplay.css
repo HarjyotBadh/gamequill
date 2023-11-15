@@ -1,0 +1,92 @@
+/* CommentDisplay.css */
+
+.comment-display {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* width: 100%; */
+}
+
+.comment-box {
+    background-color: var(--background);
+    padding: 2% 4%;
+    /* margin: 1% 2%; */
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.comment-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.comment-header {
+    background-color: rgba(var(--rating-color), 0.1);
+    padding: 10px 15px;
+    border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.user-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center align items vertically */
+    text-decoration: none;
+}
+
+.custom-avatarr {
+    border-radius: 50%;
+    object-fit: cover;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 0.5rem; /* Add space between avatar and username */
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center align the username and timestamp */
+}
+
+.user-info .comment-username {
+    font-weight: 600;
+    color: var(--text-color);
+    text-align: center; /* Center the text */
+}
+
+.user-info .comment-time {
+    font-size: 12px;
+    color: var(--secondary-text-color);
+    text-align: center; /* Center the text */
+}
+
+.comment-text {
+    color: var(--secondary-text-color);
+    line-height: 1.5;
+    margin-bottom: 16px;
+    margin-top: 20px;
+}
+
+.like-button-container {
+    display: flex;
+    align-items: center;
+    margin-left: 10px; /* Added space between rating and like button */
+}
+
+.comment-and-reply-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Adjust the gap as needed */
+}
+
+.reply-box {
+    width: 80%;
+    margin-left: 20%;
+}

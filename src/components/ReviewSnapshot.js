@@ -27,10 +27,10 @@ export default function ReviewSnapshot({
     game_id,
     showFriendReviews,
     showSpoilers,
+    currentUserId
 }) {
     const [reviews, setReviews] = useState([]);
-    const [profileData, setProfileData] = useState([]);
-    const currentUserId = auth.currentUser.uid;
+    // const currentUserId = auth.currentUser.uid;
 
     async function handleLike(review) {
         // Check if the review has been liked by the current user

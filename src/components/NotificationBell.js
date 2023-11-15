@@ -7,6 +7,7 @@ import {
     TrashIcon,
 } from "@heroicons/react/24/outline";
 import Badge from "@mui/material/Badge";
+import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from "react-router-dom";
 import "../styles/NotificationBell.css";
 
@@ -166,7 +167,7 @@ export default function NotificationBell({ userUid }) {
     };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div><CircularProgress /></div>;
     }
 
     const togglePanel = () => {

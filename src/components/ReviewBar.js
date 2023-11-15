@@ -14,12 +14,13 @@ export default function ReviewBar({
     setShowFriendReviews,
     showSpoilers,
     setShowSpoilers,
+    currentUserId
 }) {
     const [numberOfReviews, setNumberOfReviews] = useState(0);
     const [averageRating, setAverageRating] = useState(0);
     const [numberOfFriendReviews, setNumberOfFriendReviews] = useState(0);
     const [friendAverageRating, setFriendAverageRating] = useState(0);
-    const currentUserId = auth.currentUser.uid;
+    // const currentUserId = auth.currentUser.uid;
 
     useEffect(() => {
         fetchReviewsByGameId(gameID).then((reviews) => {

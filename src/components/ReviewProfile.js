@@ -7,7 +7,7 @@ export default function ReviewProfile({ username, timestamp, profilePicture }) {
         <div className="review-profile">
             <Avatar src={profilePicture} className="avatar" />
             <div className="user-details">
-                <h1>{username}</h1>
+                <h1 className="username">{username}</h1>
                 <p className="timestamp">
                     {new Date(timestamp.seconds * 1000).toLocaleString(undefined, {
                         year: "numeric",
