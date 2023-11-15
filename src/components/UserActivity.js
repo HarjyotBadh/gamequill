@@ -57,7 +57,6 @@ export default function UserActivity({ cover, username, rating, note, id, review
                     >
                         {/* Content will be inserted by dangerouslySetInnerHTML */}
                     </p>
-                    <span className="user-note-more"> More ⇒</span>
                 </Link>
             </div>
         </div>

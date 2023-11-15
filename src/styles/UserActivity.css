@@ -16,6 +16,7 @@
 
 .user-name-rating {
     font-size: 20px;
+    color: var(--text-color);
 }
 
 .user-note {
@@ -24,9 +25,8 @@
 
 .user-note-more {
     color: gray;
-    margin-left: 5px;
 }
 
 .review-text-snapshot {
-    color: black;
+    color: var(--secondary-text-color);
 }
