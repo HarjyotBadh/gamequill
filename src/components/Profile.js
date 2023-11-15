@@ -10,7 +10,9 @@ import EditGenre from "./EditGenre";
 import { Link } from "react-router-dom";
 import FollowUser from "./FollowUser";
 import EditCurrentlyPlayingGame from "./EditCurrentlyPlayingGame";
+import EditFeaturedList from "./EditFeaturedList";
 import FiveRecentReviews from "./FiveRecentReviews";
+import ListPreview from "./ListPreview";
 import Footer from "./Footer";
 
 function Profile({ profileData, setProfileData, userId }) {
@@ -18,6 +20,7 @@ function Profile({ profileData, setProfileData, userId }) {
   const [genres, setGenres] = useState([]);
   const [gameIds, setGameIds] = useState([]);
   const [currentlyPlayingGame, setCurrentlyPlayingGame] = useState(null);
+  const [featuredList, setFeaturedList] = useState(null);
 
   const auth = getAuth();
   var isUser = false;
@@ -38,6 +41,7 @@ function Profile({ profileData, setProfileData, userId }) {
       const docSnapshot = await getDoc(docRef);
       const favoriteGames = docSnapshot.data().favoriteGames || [];
       setCurrentlyPlayingGame(docSnapshot.data().currentlyPlayingGame);
+      setFeaturedList(docSnapshot.data().featuredList || null);
       const coverPromises = favoriteGames.map(async (id) => {
         const response = await fetch(corsAnywhereUrl + apiUrl, {
           method: "POST",
@@ -67,7 +71,7 @@ function Profile({ profileData, setProfileData, userId }) {
   }, [userId]);
 
   return (
-    <div className="bg-white dark:bg-gray-500 h-screen">
+    <div className="bg-white dark:bg-gray-500">
       <div className="formattingBox h-16 dark:bg-gray-500 bg-white"></div>
       <div className="profileScreen bg-white dark:bg-gray-500 flex flex-row">
         <div className="profileAndFavorites dark:bg-gray-500 bg-white flex flex-col">
@@ -145,36 +149,61 @@ function Profile({ profileData, setProfileData, userId }) {
             <FiveRecentReviews user_id={userId} />
           </div>
         </div>
-        <div className="currentlyPlaying dark:text-white text-black flex flex-col">
-          Currently Playing:
-          {isUser && (
-            <EditCurrentlyPlayingGame
-              currentlyPlayingGame={currentlyPlayingGame}
-              setCurrentlyPlayingGame={setCurrentlyPlayingGame}
-            />
-          )}
-          {currentlyPlayingGame ? (
-            <div className="currentlyPlayingFormat dark:text-white text-black flex flex-col w-50">
-              <div
-                style={{
-                  width: "150px",
-                  height: "200px",
-                  border: "2px solid white",
-                  borderRadius: "20px",
-                }}
-              >
-                <Link to={`/game?game_id=${currentlyPlayingGame.id}`}>
-                  <ProfileTitleCard
-                    className="currentlyPlayingGame"
-                    gameData={currentlyPlayingGame.cover.url}
-                  />
-                </Link>
-              </div>
+        <div className="currentlyPlayingAndFeaturedList dark:text-white text-black flex flex-col">
+          <div className="currentlyPlaying dark:text-white text-black flex flex-col">
+            <div className="dark:text-white text-black flex gap-4">
+              Currently Playing:
+              {isUser && (
+                <EditCurrentlyPlayingGame
+                  currentlyPlayingGame={currentlyPlayingGame}
+                  setCurrentlyPlayingGame={setCurrentlyPlayingGame}
+                />
+              )}
             </div>
-          ) : (
-            "None"
-          )}
+            {currentlyPlayingGame ? (
+              <div className="currentlyPlayingFormat dark:text-white text-black flex flex-col w-50">
+                <div
+                  style={{
+                    width: "150px",
+                    height: "200px",
+                    border: "2px solid white",
+                    borderRadius: "20px",
+                  }}
+                >
+                  <Link to={`/game?game_id=${currentlyPlayingGame.id}`}>
+                    <ProfileTitleCard
+                      className="currentlyPlayingGame"
+                      gameData={currentlyPlayingGame.cover.url}
+                    />
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              "None"
+            )}
+          </div>
+          <div className="featuredList dark:text-white text-black flex flex-col">
+            <div className="dark:text-white text-black flex gap-4">
+              Featured List:
+              {isUser && <EditFeaturedList setFeaturedList={setFeaturedList} />}
+            </div>
+            {featuredList ? (
+              <div className="featuredListFormat dark:text-white text-black flex flex-col w-50">
+                <div
+                  style={{
+                    width: "300px",
+                    height: "200px",
+                  }}
+                >
+                  <ListPreview list={featuredList} />
+                </div>
+              </div>
+            ) : (
+              "None"
+            )}
+          </div>
         </div>
+
         {isUser && (
           <div className="menuButtons border-2 dark:border-white border-black w-72 h-100 ml-10 p-2 dark:text-white text-black flex flex-col mh">
             <EditProfile
@@ -209,7 +238,7 @@ function Profile({ profileData, setProfileData, userId }) {
           </div>
         )}
       </div>
-     
+      <Footer />
     </div>
   );
 }
