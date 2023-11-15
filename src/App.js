@@ -14,8 +14,10 @@ import ReviewPage from "./pages/ReviewPage";
 import Wishlist from "./components/Wishlist";
 import Likes from "./pages/LikesPage";
 import PlayedPage from "./pages/PlayedPage";
+import TopGames from "./pages/TopGames";
 import ListPage from "./pages/ListPage";
 import MyLists from "./pages/MyLists";
+
 
 function App() {
   return (
@@ -33,6 +35,10 @@ function App() {
       <Route path="/registrationsuccess" element={<RegistrationSuccessPage />} />
       <Route path="/search" element={<SearchPageWrapper />} />
       <Route path="/review/:review_id" element={<ReviewPage />} />
+      <Route path="/wishlist" element={<Wishlist/>} />
+      <Route path="/likes" element={<Likes/>} />
+      <Route path="/played" element={<PlayedPage/>} />
+      <Route path="/top-games" element={<TopGames/>} />
       <Route path="/list/:list_id" element={<ListPage />} />
       <Route path="/lists" element={<MyLists />} />
       <Route path="/wishlist" element={<Wishlist />} />

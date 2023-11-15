@@ -14,7 +14,7 @@ export default function ProfilePage({ userId }) {
     const fetchData = async (uid) => {
       const docRef = doc(db, "profileData", uid);
       const snapshot = await getDoc(docRef);
-  
+
       if (snapshot.exists()) {
         const docData = snapshot.data();
         const data = {
@@ -40,7 +40,7 @@ export default function ProfilePage({ userId }) {
         window.location.href = "/home";
       }
     };
-    
+
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -76,8 +76,6 @@ export default function ProfilePage({ userId }) {
   };
 
   const [profileData, setProfileData] = useState(defaultProfileData);
-
-  
 
   if (loading) {
     return <div>Loading...</div>;

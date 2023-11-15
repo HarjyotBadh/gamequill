@@ -8,9 +8,9 @@ const ReviewCard = ({ review, gameName }) => {
   const { reviewText, timestamp, gameCover } = review;
 
   const getColorByRating = (rating) => {
-    if (rating >= 4) return "green";
-    if (rating >= 3) return "gold";
-    return "red";
+    if (rating < 3) return "red";
+    if (rating > 3) return "green";
+    if (rating = 3) return "gold";
   };
 
   const ratingColor = getColorByRating(review.starRating);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import gameLoggedImage from "../images/buttons/gq-played-shadow.png";
-import gameNotLoggedImage from "../images/buttons/gq-notplayed-shadow.png";
+import gameLoggedImage from "../images/buttons/gq-logged.png";
+import gameNotLoggedImage from "../images/buttons/gq-notlogged.png";
 import { db, auth } from "../firebase";
 import {
   doc,
