@@ -1,0 +1,74 @@
+.notification-icon-container {
+    position: relative;
+    display: inline-block;
+}
+
+.relative {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.notification-panel {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 50;
+    width: 20rem;
+    max-height: calc(4.5rem * 3);
+    background-color: var(--background);
+    border: 1px solid var(--wrapper);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--wrapper);
+    transition: background-color 0.3s ease;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item:hover {
+    background-color: var(--rating-color);
+}
+
+.notification-item img {
+    width: 4.5rem;
+    height: 4.5rem;
+    object-fit: cover;
+    margin-right: 1rem;
+}
+
+.notification-item .game-cover-wrapper {
+    margin-right: 1.5rem; /* Adjust the right margin as needed */
+}
+
+.notification-item span {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: calc(100% - 4rem);
+    color: var(--text-color);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.loading-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 1rem;
+    color: var(--secondary-text-color);
+}
+
+.notification-time-text {
+    color: var(--secondary-text-color);
+    font-size: 0.75rem;
+}

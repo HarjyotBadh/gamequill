@@ -6,6 +6,7 @@ import { auth, db } from "../firebase";
 import { Avatar } from "@material-tailwind/react";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import NotificationBell from "./NotificationBell";
 
 function App() {
     const [user, setUser] = useState(null);
@@ -160,37 +161,39 @@ function App() {
                 </Link>
                         <li>
                             {user ? (
-                                <div className="relative">
-                                    <Avatar
-                                        src={
-                                            profilePic ||
-                                            "path_to_default_avatar.png"
-                                        }
-                                        className="rounded-full w-12 h-12"
-                                        onClick={() =>
-                                            setShowLogoutConfirmation(
-                                                !showLogoutConfirmation
-                                            )
-                                        }
-                                    />
+                                <div className="flex items-center space-x-4">
+                                    <NotificationBell userUid={user.uid} />
+                                    <div className="relative">
+                                        <Avatar
+                                            src={
+                                                profilePic ||
+                                                "path_to_default_avatar.png"
+                                            }
+                                            className="rounded-full w-12 h-12"
+                                            onClick={() =>
+                                                setShowLogoutConfirmation(
+                                                    !showLogoutConfirmation
+                                                )
+                                            }
+                                        />
 
-                                    {showLogoutConfirmation && (
-                                        <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-10">
-                                            <Link
-                                                to={`/Profile?user_id=${user.uid}`}
-                                                className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                                            >
-                                                View Profile
-                                            </Link>
-                                            <button
-                                                onClick={confirmLogout}
-                                                className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-                                            >
-                                                Logout
-                                            </button>
-                                        </div>
-                                    )}
-                                    
+                                        {showLogoutConfirmation && (
+                                            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-10">
+                                                <Link
+                                                    to={`/Profile?user_id=${user.uid}`}
+                                                    className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                                                >
+                                                    View Profile
+                                                </Link>
+                                                <button
+                                                    onClick={confirmLogout}
+                                                    className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                                                >
+                                                    Logout
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             ) : (
                                 <Link

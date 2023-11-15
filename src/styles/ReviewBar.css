@@ -1,8 +1,3 @@
-:root {
-    --rating-color: #FFD700; /* Gold color for full stars */
-    --star-color: #CCCCCC;   /* Grey color for empty stars */
-}
-
 .review-bar {
     background-color: var(--background);
     padding: 1% 4%;  /* Reduced the vertical padding */

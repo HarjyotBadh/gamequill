@@ -2,7 +2,7 @@ import React from "react";
 import { Spinner } from "@material-tailwind/react";
 import { fetchReviewsByGameId } from "../functions/ReviewFunctions";
 import { Link } from "react-router-dom";
-import "../styles/TitleCard.css";
+import "../styles/GameCardList.css";
 import GameLog from "./GameLog";
 import GameLike from "./GameLike";
 import AddWishlistButton from "./AddWishlistButton";
@@ -11,8 +11,19 @@ import {
   calculateAverageRating,
   generateStars,
 } from "../functions/RatingFunctions";
+import { doc, updateDoc, arrayRemove } from "firebase/firestore";
+import { db, auth } from "../firebase";
 
-export default function TitleCard({ gameData }) {
+export default function TitleCard({
+  gameDataArray,
+  gameData,
+  viewMode,
+  list_id,
+  setGameIds,
+  setGameDataArray,
+  listOwner,
+  index,
+}) {
   const [averageRating, setAverageRating] = React.useState(0);
   const [darkMode, setDarkMode] = React.useState(
     () =>
@@ -47,11 +58,60 @@ export default function TitleCard({ gameData }) {
   // const textSizeClass = gameData.name.length > 25 ? "text-xl" : "text-4xl";
 
   const stars = generateStars(averageRating);
+  const isListOwner = auth.currentUser && auth.currentUser.uid === listOwner;
+
+  const handleRemoveFromList = async (gameId) => {
+    try {
+      const listDocRef = doc(db, "lists", list_id);
+      await updateDoc(listDocRef, {
+        games: arrayRemove(gameId),
+      });
+      setGameIds((prevIds) => prevIds.filter((id) => id !== gameId));
+      setGameDataArray((prevData) =>
+        prevData.filter((data) => data.id !== gameId)
+      );
+      //window.location.reload();
+    } catch (error) {
+      console.error("Error removing game from list:", error);
+    }
+  };
+
+  const handleDragStart = (e) => {
+    e.dataTransfer.setData("text/plain", index.toString());
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    const draggedIndex = parseInt(e.dataTransfer.getData("text/plain"), 10);
+    const hoverIndex = index;
+
+    if (draggedIndex === hoverIndex) return;
+
+    const newDataArray = [...gameDataArray];
+    const [draggedItem] = newDataArray.splice(draggedIndex, 1);
+    newDataArray.splice(hoverIndex, 0, draggedItem);
+
+    setGameDataArray(newDataArray);
+    const newGameIds = newDataArray.map((data) => data.game.id);
+    setGameIds(newGameIds);
+    const listDocRef = doc(db, "lists", list_id);
+    await updateDoc(listDocRef, {
+      games: newGameIds,
+    });
+  };
 
   return (
     <div
-      className={`game-card ${darkMode ? "dark" : "light"}`}
+      className={`game-card-list ${darkMode ? "dark" : "light"} ${viewMode}`}
       data-theme={darkMode ? "dark" : "light"}
+      draggable="true"
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
     >
       {bigCoverUrl && (
         <Link to={`/game?game_id=${gameData.id}`}>
@@ -76,10 +136,16 @@ export default function TitleCard({ gameData }) {
       <div class="play-button">
         <AddWishlistButton gameID={gameData.id} />
       </div>
-      <div class="add-to-list flex flex-row text-black dark:text-white">
-        Add to list
+      {isListOwner ? (
+        <button
+          className="removeFromListButton"
+          onClick={() => handleRemoveFromList(gameData.id)}
+        >
+          Remove from List
+        </button>
+      ) : (
         <AddToList gameID={gameData.id} />
-      </div>
+      )}
     </div>
   );
 }

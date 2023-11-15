@@ -1,0 +1,51 @@
+/* EditFeaturedList.css */
+
+.featured-list-popup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .featured-list-popup input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  .featured-list-popup ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    max-height: 300px; /* Set a maximum height for scrollability */
+  }
+  
+  .featured-list-popup li {
+    margin-bottom: 10px;
+  }
+  
+  .featured-list-popup button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  
+  .featured-list-popup button:hover {
+    background-color: #45a049;
+  }
+  
+  .featured-list-popup button[type="close"] {
+    background-color: #f44336;
+  }
+  
+  .featured-list-popup button[type="close"]:hover {
+    background-color: #d32f2f;
+  }
+  

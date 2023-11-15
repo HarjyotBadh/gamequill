@@ -1,0 +1,198 @@
+/* ListPage.css */
+
+.listPage {
+    background-color: #f0f0f0; /* Set the background color of the page */
+    min-height: 100vh;
+  }
+  
+  .list-container {
+    margin: 0 auto; /* Center the content */
+    padding: 20px;
+  }
+  
+  .list-title {
+    font-size: 2em; /* Set the font size of the title */
+    margin-bottom: 20px; /* Add some space below the title */
+    text-align: center; /* Center the title */
+  }
+  
+  .list {
+    display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  }
+  .list.list-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+  .game-card-list.grid {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s;
+    width: 200px;
+    height: 650px;
+  }
+  .game-card-list.list{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s;
+    width: 400px;
+  }
+  .search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .search-container input {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    width: 40%;
+  }
+  
+  .search-container button {
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .search-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  .userHasSearched {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  .addToListButton {
+    display: none;
+    margin: 20px auto;
+  }
+  .clearSearchButton {
+    display: none;
+    margin: 20px auto;
+  }
+  .userHasSearched .addToListButton {
+    display: block; /* Show the button when a game is selected */
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: #fff;
+  }
+  .userHasSearched .clearSearchButton {
+    display: block; /* Show the button when a game is selected */
+    padding: 8px 16px;
+    font-size: 14px;
+    background-color: #dc3545;
+    color: #fff;
+  }
+  .removeFromListButton  {
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 20px;
+  }
+  .game-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .removeButtonContainer {
+    margin-top: 10px;
+  }
+  .rank-number {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-right: 10px;
+  }
+  .toggle-button-container {
+    text-align: center;
+  }
+  .update-featured-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .close-popup-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: red;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .featured-list-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: var(--background);
+    color: var(--text-color);
+    border: 1px solid;
+    border-color: var(--text-color);
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .featured-list-button.active {
+    background-color: orange;
+    color: #fff;
+  }
+  .toggle-button , .toggle-viewmode-button{
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: var(--background);
+    color: var(--text-color);
+    border: 1px solid;
+    border-color: var(--text-color);
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .toggle-viewmode-button.active {
+    background-color: #1f2937;
+    color: #fff;
+  }
+  
+  .toggle-viewmode-button:hover, .toggle-button:hover {
+    background-color: #374151;
+    color: white;
+  }
+  .list-buttons-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    gap:20px;
+  }
+  
+  .deleteListButton {
+    background-color: #dc3545; /* Set the background color to red */
+    color: #fff; /* Set the text color to white */
+    border: 1px solid;
+    border-color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .deleteListButton:hover {
+    background-color: #c82333;
+  }
+  
+  

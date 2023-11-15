@@ -11,45 +11,42 @@ import { db } from "../firebase";
  * @returns {Object|null} The game data, or null if not found.
  */
 export const fetchGameData = async (game_id) => {
-    // First, try to get the game data from Firestore
-    const gameRef = doc(db, "games", game_id.toString());
-    const docSnap = await getDoc(gameRef);
+  // First, try to get the game data from Firestore
+  const gameRef = doc(db, "games", game_id.toString());
+  const docSnap = await getDoc(gameRef);
 
-    if (docSnap.exists()) {
-        // Game data found in Firestore
-        const gameData = docSnap.data();
+  if (docSnap.exists()) {
+    // Game data found in Firestore
+    const gameData = docSnap.data();
 
-        const screenshotUrls = gameData.screenshotUrls || [];
-        const videoIds = gameData.videoIds || [];
+    const screenshotUrls = gameData.screenshotUrls || [];
+    const videoIds = gameData.videoIds || [];
 
-        return {
-            game: gameData,
-            screenshotUrls: screenshotUrls,
-            videoIds: videoIds,
-        };
-    } else {
-        // Game data not found in Firestore, fetch from IGDB
-        const gameDataFromIGDBB = await fetchGameDataFromIGDB(game_id);
-        const gameDataFromIGDB = gameDataFromIGDBB[0];
+    return {
+      game: gameData,
+      screenshotUrls: screenshotUrls,
+      videoIds: videoIds,
+    };
+  } else {
+    // Game data not found in Firestore, fetch from IGDB
+    const gameDataFromIGDBB = await fetchGameDataFromIGDB(game_id);
+    const gameDataFromIGDB = gameDataFromIGDBB[0];
 
-        if (gameDataFromIGDB) {
-            // Store the fetched game data in Firestore
-            const gameDataForFirestore = {
-                ...gameDataFromIGDB.game,
-                screenshotUrls: gameDataFromIGDB.screenshotUrls,
-                videoIds: gameDataFromIGDB.videoIds,
-            };
-            await setDoc(
-                doc(db, "games", game_id.toString()),
-                gameDataForFirestore
-            );
+    if (gameDataFromIGDB) {
+      // Store the fetched game data in Firestore
+      const gameDataForFirestore = {
+        ...gameDataFromIGDB.game,
+        screenshotUrls: gameDataFromIGDB.screenshotUrls,
+        videoIds: gameDataFromIGDB.videoIds,
+      };
+      await setDoc(doc(db, "games", game_id.toString()), gameDataForFirestore);
 
-            // Return the game data
-            return gameDataFromIGDB;
-        }
+      // Return the game data
+      return gameDataFromIGDB;
     }
+  }
 
-    return null;
+  return null;
 };
 
 /**
@@ -62,50 +59,48 @@ export const fetchGameData = async (game_id) => {
  * @returns {Object[]} Array of game data.
  */
 export const fetchMultipleGameData = async (game_ids) => {
-    let gamesData = [];
-    let idsToFetchFromIGDB = [];
+  let gamesData = [];
+  let idsToFetchFromIGDB = [];
 
-    // First, try to get the game data from Firestore
-    for (let game_id of game_ids) {
-        const gameRef = doc(db, "games", game_id.toString());
-        const docSnap = await getDoc(gameRef);
+  // First, try to get the game data from Firestore
+  for (let game_id of game_ids) {
+    const gameRef = doc(db, "games", game_id.toString());
+    const docSnap = await getDoc(gameRef);
 
-        // If game data found in Firestore, add it to the array of game data
-        if (docSnap.exists()) {
-            const gameData = docSnap.data();
-            gamesData.push({
-                game: gameData,
-                screenshotUrls: gameData.screenshotUrls,
-                videoIds: gameData.videoIds,
-            });
-        } else {
-            // Game data not found in Firestore, add the game ID to the array of IDs to fetch from IGDB
-            idsToFetchFromIGDB.push(game_id);
-        }
+    // If game data found in Firestore, add it to the array of game data
+    if (docSnap.exists()) {
+      const gameData = docSnap.data();
+      gamesData.push({
+        game: gameData,
+        screenshotUrls: gameData.screenshotUrls,
+        videoIds: gameData.videoIds,
+      });
+    } else {
+      // Game data not found in Firestore, add the game ID to the array of IDs to fetch from IGDB
+      idsToFetchFromIGDB.push(game_id);
     }
+  }
 
-    // Fetch the game data for all missing IDs from IGDB
-    if (idsToFetchFromIGDB.length) {
-        const fetchedGamesData = await fetchGameDataFromIGDB(
-            idsToFetchFromIGDB
-        );
-        gamesData = [...gamesData, ...fetchedGamesData];
+  // Fetch the game data for all missing IDs from IGDB
+  if (idsToFetchFromIGDB.length) {
+    const fetchedGamesData = await fetchGameDataFromIGDB(idsToFetchFromIGDB);
+    gamesData = [...gamesData, ...fetchedGamesData];
 
-        // Store the fetched game data in Firestore
-        for (let gameData of fetchedGamesData) {
-            const gameDataForFirestore = {
-                ...gameData.game,
-                screenshotUrls: gameData.screenshotUrls,
-                videoIds: gameData.videoIds,
-            };
-            await setDoc(
-                doc(db, "games", gameData.game.id.toString()),
-                gameDataForFirestore
-            );
-        }
+    // Store the fetched game data in Firestore
+    for (let gameData of fetchedGamesData) {
+      const gameDataForFirestore = {
+        ...gameData.game,
+        screenshotUrls: gameData.screenshotUrls,
+        videoIds: gameData.videoIds,
+      };
+      await setDoc(
+        doc(db, "games", gameData.game.id.toString()),
+        gameDataForFirestore
+      );
     }
+  }
 
-    return gamesData;
+  return gamesData;
 };
 
 /**
@@ -116,116 +111,108 @@ export const fetchMultipleGameData = async (game_ids) => {
  * @returns {Object[]} Array of game data from IGDB.
  */
 export const fetchGameDataFromIGDB = async (game_ids) => {
-    console.log(
-        "==================FETCHING DATA FROM IGDB===================="
-    );
-    const corsAnywhereUrl = "http://localhost:8080/";
-    const apiUrl = "https://api.igdb.com/v4/games";
+  console.log("==================FETCHING DATA FROM IGDB====================");
+  const corsAnywhereUrl = "http://localhost:8080/";
+  const apiUrl = "https://api.igdb.com/v4/games";
 
-    // Ensure game_ids is always an array
-    if (!Array.isArray(game_ids)) {
-        game_ids = [game_ids];
-    }
+  // Ensure game_ids is always an array
+  if (!Array.isArray(game_ids)) {
+    game_ids = [game_ids];
+  }
 
-    // Fetch game data from IGDB
-    try {
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
-            },
-            body: `
-                fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,themes.*,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*;
+  // Fetch game data from IGDB
+  try {
+    const response = await fetch(corsAnywhereUrl + apiUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
+      },
+      body: `
+                fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*;
                 where id = (${game_ids.join(",")});
             `,
-        });
+    });
 
-        const data = await response.json();
+    const data = await response.json();
 
-        // Return the game data
-        return data.map((game) => ({
-            game: game,
-            screenshotUrls: game.screenshots
-                ? game.screenshots.map((s) =>
-                      s.url.replace("t_thumb", "t_1080p")
-                  )
-                : [],
-            videoIds: game.videos ? game.videos.map((v) => v.video_id) : [],
-        }));
-    } catch (err) {
-        console.error(err);
-        return [];
-    }
+    // Return the game data
+    return data.map((game) => ({
+      game: game,
+      screenshotUrls: game.screenshots
+        ? game.screenshots.map((s) => s.url.replace("t_thumb", "t_1080p"))
+        : [],
+      videoIds: game.videos ? game.videos.map((v) => v.video_id) : [],
+    }));
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
 };
 
+/**
+ * Fetches similar games based on the provided genres and themes. It constructs a request to the IGDB API
+ * with the given conditions and returns a list of games sorted by rating in descending order.
+ *
+ * @param {Object[]} genres - An array of genre objects.
+ * @param {Object[]} themes - An array of theme objects.
+ * @returns {Object[]} An array of game objects with formatted screenshot URLs.
+ */
 export async function fetchSimilarGames(genres, themes) {
-    const corsAnywhereUrl = "http://localhost:8080/";
-    const apiUrl = "https://api.igdb.com/v4/games";
+  const corsAnywhereUrl = "http://localhost:8080/";
+  const apiUrl = "https://api.igdb.com/v4/games";
 
-    // Remove duplicates and extract the top 5 genre and theme IDs
-    const uniqueGenreIds = [...new Set(genres.map(genre => genre.id))].slice(0, 3);
-    const uniqueThemeIds = [...new Set(themes.map(theme => theme.id))].slice(0, 3);
+  // Extracting ids from genres and themes
+  const genreIds = genres.map((genre) => genre.id);
+  const themeIds = themes.map((theme) => theme.id);
 
-    console.log("uniqueGenreIds:", uniqueGenreIds);
-    console.log("uniqueThemeIds:", uniqueThemeIds);
+  console.log("genreIds:", genreIds);
+  console.log("themeIds:", themeIds);
 
-    // Constructing genres and themes conditions for the API request
-    let conditions = "rating > 70 & total_rating_count > 5";
+  // Constructing genres and themes conditions for the API request
+  let conditions = "rating > 70 & total_rating_count > 5";
 
-    if (uniqueGenreIds && uniqueGenreIds.length > 0) {
-        conditions += " & genres = (" + uniqueGenreIds.join(",") + ")";
-    }
+  if (genreIds && genreIds.length > 0) {
+    conditions += " & genres = (" + genreIds.join(",") + ")";
+  }
 
-    if (uniqueThemeIds && uniqueThemeIds.length > 0) {
-        conditions += " & themes = (" + uniqueThemeIds.join(",") + ")";
-    }
+  if (themeIds && themeIds.length > 0) {
+    conditions += " & themes = (" + themeIds.join(",") + ")";
+  }
 
-    const requestBody = "fields name, id, rating, involved_companies.company.name, total_rating_count, screenshots.url; where " + conditions + ";limit 100;";
+  const requestBody =
+    "fields name, id, rating, involved_companies.company.name, total_rating_count, screenshots.url; where " +
+    conditions +
+    "; sort rating desc; limit 100;";
 
-    try {
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
-            },
-            body: requestBody
-        });
+  try {
+    const response = await fetch(corsAnywhereUrl + apiUrl, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
+      },
+      body: requestBody,
+    });
 
-        // Parse the response to JSON
-        let data = await response.json();
+    // Parse the response to JSON
+    const data = await response.json();
 
-        // Shuffle the array
-        data.sort(() => Math.random() - 0.5);
+    // Format the screenshot URLs
+    const formattedData = data.map((game) => {
+      return {
+        ...game,
+        screenshotUrls: game.screenshots
+          ? game.screenshots.map((s) => s.url.replace("t_thumb", "t_1080p"))
+          : [],
+      };
+    });
 
-        // Get the first 8 games
-        data = data.slice(0, 8);
-
-        // Format the screenshot URLs
-        const formattedData = data.map(game => {
-            return {
-                ...game,
-                screenshotUrls: game.screenshots
-                    ? game.screenshots.map(s => s.url.replace("t_thumb", "t_1080p"))
-                    : []
-            };
-        });
-
-        // Log the data for debugging purposes
-        console.log("Fetched similar games:", formattedData);
-
-        return formattedData;
-    } catch (error) {
-        console.error("Error fetching similar games:", error);
-        return [];
-    }
+    return formattedData;
+  } catch (error) {
+    console.error("Error fetching similar games:", error);
+    return [];
+  }
 }
-
-
-
-
-
-

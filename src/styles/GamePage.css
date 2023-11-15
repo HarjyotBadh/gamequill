@@ -1,18 +1,3 @@
-:root {
-    /* Light theme */
-    --wrapper-light: #f3f4f6;
-
-    /* Dark theme */
-    --wrapper-dark: rgb(107, 114, 128);
-}
-
-[data-theme="dark"] {
-    --wrapper: var(--wrapper-dark);
-}
-
-[data-theme="light"] {
-    --wrapper: var(--wrapper-light);
-}
 
 .game-page-wrapper {
     background-color: var(--wrapper);

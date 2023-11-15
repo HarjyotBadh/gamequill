@@ -21,7 +21,7 @@ function App() {
   }, []);
 
   return (
-    <div>
+    <div class="shitty-background-fix">
       <NavBar />
       <div class="grid-container">
         {/* <div class="grid-pad"></div> */}
