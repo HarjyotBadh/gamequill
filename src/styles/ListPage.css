@@ -126,7 +126,34 @@
   .toggle-button-container {
     text-align: center;
   }
-  
+  .update-featured-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .close-popup-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: red;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .featured-list-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: var(--background);
+    color: var(--text-color);
+    border: 1px solid;
+    border-color: var(--text-color);
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .featured-list-button.active {
+    background-color: orange;
+    color: #fff;
+  }
   .toggle-button , .toggle-viewmode-button{
     padding: 10px 20px;
     font-size: 16px;

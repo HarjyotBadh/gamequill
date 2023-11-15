@@ -12,6 +12,8 @@ import {
 } from "firebase/firestore";
 import Popup from "reactjs-popup";
 import { getListData } from "../functions/ListFunctions";
+import ListPreview from "./ListPreview";
+import "../styles/EditFeaturedList.css";
 export default function EditFeaturedList({ setFeaturedList }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredLists, setFilteredLists] = useState([]);
@@ -40,6 +42,7 @@ export default function EditFeaturedList({ setFeaturedList }) {
           listResults.push({
             id: doc.id,
             name: listData.name,
+            data: listData,
           });
         });
         setFilteredLists(listResults);
@@ -105,8 +108,12 @@ export default function EditFeaturedList({ setFeaturedList }) {
           <ul>
             {filteredLists.map((list) => (
               <li key={list.id}>
-                <button onClick={() => handleSelectList(list.id)}>
+                {/* <button onClick={() => handleSelectList(list.id)}>
                   {list.name}
+                </button> */}
+                <ListPreview list={list.data} />
+                <button onClick={() => handleSelectList(list.id)}>
+                  Select List
                 </button>
               </li>
             ))}
