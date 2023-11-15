@@ -174,7 +174,7 @@ export async function fetchSimilarGames(genres, themes) {
   let conditions = "rating > 70 & total_rating_count > 5";
 
   if (genreIds && genreIds.length > 0) {
-    conditions += " & genres = (" + genreIds.join(",") + ")";
+    conditions += " & genres = (" + genreIds.join(",") + ")"; // hello
   }
 
   if (themeIds && themeIds.length > 0) {
