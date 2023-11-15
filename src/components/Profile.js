@@ -14,6 +14,7 @@ import EditFeaturedList from "./EditFeaturedList";
 import FiveRecentReviews from "./FiveRecentReviews";
 import ListPreview from "./ListPreview";
 import Footer from "./Footer";
+import GenreIcon from "./GenreIcon";
 
 function Profile({ profileData, setProfileData, userId }) {
   const [gameCovers, setGameCovers] = useState([]);
@@ -142,6 +143,7 @@ function Profile({ profileData, setProfileData, userId }) {
                 className="w-24 h-32 text-center border dark:border-white border-black"
               >
                 {genre}
+                <GenreIcon g={genre} />
               </div>
             ))}
           </div>
