@@ -6,9 +6,9 @@ import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import Button from '@mui/material/Button';
 
-export default function CommentCreator({ review_id, currentUserUID, setHasCommented }) {
+export default function ReplyCreator( { review_id, comment_id, currentUserUID, setHasCommented } ) {
     const [commentHtml, setCommentHtml] = useState('');
-    const maxLength = 1000;
+    const maxLength = 500;
 
     const handleChange = (content) => {
         setCommentHtml(content);
@@ -25,13 +25,15 @@ export default function CommentCreator({ review_id, currentUserUID, setHasCommen
     const handleCommentSubmit = async (e) => {
         e.preventDefault();
         try {
-            const commentsRef = collection(
+            const repliesRef = collection(
                 db,
                 "reviews",
                 review_id,
-                "comments"
+                "comments",
+                comment_id,
+                "replies"
             );
-            await addDoc(commentsRef, {
+            await addDoc(repliesRef, {
                 text: commentHtml,
                 timestamp: new Date(),
                 uid: currentUserUID,
@@ -39,7 +41,7 @@ export default function CommentCreator({ review_id, currentUserUID, setHasCommen
             setCommentHtml("");
             setHasCommented(true);
         } catch (error) {
-            console.error("Error adding comment: ", error);
+            console.error("Error adding reply: ", error);
         }
     };
 
@@ -48,8 +50,8 @@ export default function CommentCreator({ review_id, currentUserUID, setHasCommen
             <ReactQuill
                 value={commentHtml}
                 onChange={handleChange}
-                placeholder="Write your comment..."
-                modules={{ toolbar: [['bold', 'italic', 'underline', 'clean']] }} // Customize the toolbar options
+                placeholder="Write your reply..."
+                modules={{ toolbar: [['bold', 'italic', 'underline', 'clean']] }}
                 className="comment-text-field"
             />
             <div className={`comment-character-count ${textLength > maxLength ? 'error-text' : ''}`}>

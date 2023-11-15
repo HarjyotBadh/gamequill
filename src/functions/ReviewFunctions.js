@@ -82,6 +82,13 @@ export async function fetchReviewById(review_id) {
  * @returns {Array} A list of review objects from friends.
  */
 export async function fetchFriendsRecentReviews(numReviews, currentUserId) {
+    if (!currentUserId) {
+        console.error("No current user ID provided");
+        return [];
+    } else {
+        console.log("UID provided.");
+    }
+    
     // Retrieve the current user's friends list
     const userRef = doc(db, "profileData", currentUserId);
     const userDoc = await getDoc(userRef);

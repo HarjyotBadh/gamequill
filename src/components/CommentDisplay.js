@@ -10,6 +10,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import DOMPurify from "dompurify";
 import { HandThumbUpIcon } from "@heroicons/react/24/solid";
+import ReplyCreator from "./ReplyCreator";
 
 export default function CommentDisplay({
     review_id,
@@ -70,7 +71,8 @@ export default function CommentDisplay({
     return (
         <div className="comment-display">
             {comments.map((comment) => (
-                <div key={comment.id} className="comment-box">
+                <div key={comment.id} className="comment-and-reply-container">
+                <div className="comment-box">
                     
                     <div className="comment-header">
                         <Link
@@ -125,8 +127,23 @@ export default function CommentDisplay({
                     >
                         {/* Content will be inserted by dangerouslySetInnerHTML */}
                     </p>
+
+                    
+
                 </div>
+                <div className="reply-box">
+                <ReplyCreator
+                        review_id={review_id}
+                        comment_id={comment.id}
+                        currentUserUID={currentUserUid}
+                    />
+
+                    </div>
+
+                </div>
+                
             ))}
+            
         </div>
     );
 }

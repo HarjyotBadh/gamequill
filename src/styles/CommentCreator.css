@@ -1,11 +1,12 @@
 .comment-text-field-container {
+    max-width: 100%;
     padding: 1rem;
     background-color: var(--background);
     border-radius: 20px;
 }
 
 .comment-text-field {
-    width: 100%;
+    /* width: 100%; */
     height: 15rem;
     padding: 0.5rem;
     border-radius: 20px;
@@ -33,3 +34,4 @@
 .error-text {
     color: red;
 }
+

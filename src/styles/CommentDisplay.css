@@ -79,3 +79,14 @@
     align-items: center;
     margin-left: 10px; /* Added space between rating and like button */
 }
+
+.comment-and-reply-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Adjust the gap as needed */
+}
+
+.reply-box {
+    width: 80%;
+    margin-left: 20%;
+}

@@ -9,6 +9,7 @@ import CommentDisplay from "../components/CommentDisplay";
 import CommentCreator from "../components/CommentCreator";
 import StarSelection from "../components/StarSelection";
 import ReviewProfile from "../components/ReviewProfile";
+import ReplyDisplay from "../components/ReplyDisplay";
 import { useNavigate } from "react-router-dom";
 import "../styles/ReviewPage.css";
 import Footer from "../components/Footer";
@@ -259,6 +260,7 @@ export default function ReviewPage() {
                             hasCommented={hasCommented}
                             currentUserUid={currentUserUid}
                         />
+                        
                     </div>
                 </div>
                 {/* End of right-container */}

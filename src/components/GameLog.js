@@ -16,13 +16,21 @@ const GameLog = ({ gameID }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const user = auth.currentUser.uid;
-        const docRef = doc(db, "profileData", user);
-        const docSnap = await getDoc(docRef);
-        const docPlays = docSnap.data().plays;
+        if (auth.currentUser) {
+            const user = auth.currentUser.uid;
+            const docRef = doc(db, "profileData", user);
+            const docSnap = await getDoc(docRef);
 
-        if (docPlays.includes(gameID)) {
-          setIsClicked(true); // Set the button to 'on' state
+            if (docSnap.exists()) {
+                const docPlays = docSnap.data().plays;
+                if (docPlays && docPlays.includes(gameID)) {
+                    setIsClicked(true); // Set the button to 'on' state
+                }
+            } else {
+                console.log("No such document!");
+            }
+        } else {
+            console.log("User not logged in");
         }
       } catch (error) {
         console.error("Error fetching data from Firestore:", error);
@@ -30,7 +38,7 @@ const GameLog = ({ gameID }) => {
     };
 
     fetchData();
-  }, [gameID]); // Add gameID as a dependency
+}, [gameID, auth.currentUser]);
 
   // The code that runs every time the button is clicked
   const handleButtonClick = async () => {
