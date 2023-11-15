@@ -1,0 +1,57 @@
+/* TopGames.css */
+
+.top-games {
+  background-color: #e3f2fd; /* Slightly different shade for differentiation */
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 2fr));
+  gap: 20px;
+  justify-content: center;
+}
+
+.title-card {
+  background-color: #ffe5b4; /* Slightly different shade for differentiation */
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.title-card:hover {
+  transform: translateY(-5px);
+}
+
+.game-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.game-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 10px;
+  color: #333;
+}
+
+.game-rating {
+  font-size: 18px;
+  text-align: right;
+  color: #007bff;
+}
+
+.game-cover {
+  max-width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
