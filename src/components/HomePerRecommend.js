@@ -62,7 +62,7 @@ function HomePerRecommend() {
 
     return (
         <div className="home-recommend-container mx-auto px-4 py-6">
-            <h1 className="home-trending-head text-3xl font-semibold mb-6">RECOMMENDED FOR YOU</h1>
+            <h1 className="home-trending-head text-3xl font-semibold mb-6 dark-mode">RECOMMENDED FOR YOU</h1>
             <div className="home-recommend-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {gamesData.map((gameData, index) => (
                     <Link key={index} to={`/game?game_id=${gameData.id}`} className="rounded overflow-hidden">

@@ -1,4 +1,9 @@
-   .home-recommend-grid a:hover {
+.home-recommend-grid a:hover {
     transform: scale(1.03);
     transition: transform 0.3s ease-in-out;
+}
+
+
+.dark-mode {
+    color: var(--secondary-text-color);
 }
