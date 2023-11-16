@@ -157,5 +157,51 @@
     margin-right: 10px;
 }
 
+/* Custom styles for Material-UI Select component */
+.comment-filter-select {
+    background-color: var(--background) !important; /* Your background color */
+    color: var(--text-color) !important; /* Your text color */
+    border-color: var(--border-color) !important; /* If you have a border color */
+    border-radius: 8px !important; /* Adjust border radius as needed */
+}
+
+
+.comment-filter-select .MuiOutlinedInput-notchedOutline {
+    /* border-color: var(--rating-color) !important; */
+}
+
+
+.comment-filter-select .MuiSelect-select {
+    padding: 10px;
+}
+
+.comment-filter-menu {
+    background-color: var(--background) !important; /* Your background color */
+    outline-color: black !important; /* Your outline color */
+}
+
+
+.comment-filter-menuitem:not(:last-child) {
+    border-bottom: 1px solid var(--star-color); /* Replace with your border color */
+}
+
+
+/* Custom styles for Material-UI MenuItem component */
+.comment-filter-menuitem {
+    color: var(--text-color) !important;
+    background-color: var(--background) !important;
+}
+
+/* Custom styles for Material-UI InputLabel component */
+.comment-filter-label {
+    color: var(--text-color) !important; /* Your text color */
+}
+
+/* Styles for the hover effect */
+.comment-filter-menuitem:hover {
+    background-color: var(--rating-color) !important;
+}
+
+
 
 

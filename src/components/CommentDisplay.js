@@ -30,6 +30,10 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 
 export default function CommentDisplay({
     review_id,
@@ -44,20 +48,53 @@ export default function CommentDisplay({
         useState(false);
     const [commentToDelete, setCommentToDelete] = useState(null);
     const [shownReplies, setShownReplies] = useState({});
+    const [filter, setFilter] = useState("mostRecent");
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const commentsData = await fetchCommentsByReviewId(review_id);
+                let commentsData = await fetchCommentsByReviewId(review_id);
+
+                // Sort comments based on filter
+                switch (filter) {
+                    case "mostRecent":
+                        commentsData.sort(
+                            (a, b) =>
+                                b.timestamp?.seconds - a.timestamp?.seconds
+                        );
+                        break;
+                    case "oldest":
+                        commentsData.sort(
+                            (a, b) =>
+                                a.timestamp?.seconds - b.timestamp?.seconds
+                        );
+                        break;
+                    case "mostLiked":
+                        commentsData.sort(
+                            (a, b) =>
+                                (b.userLikes?.length || 0) -
+                                (a.userLikes?.length || 0)
+                        );
+                        break;
+                    case "leastLiked":
+                        commentsData.sort(
+                            (a, b) =>
+                                (a.userLikes?.length || 0) -
+                                (b.userLikes?.length || 0)
+                        );
+                        break;
+                    default:
+                        break;
+                }
+
                 setComments(commentsData);
             } catch (error) {
                 console.error("Error fetching comments: ", error);
-                // Handle the error appropriately
             }
         };
 
         fetchData();
-    }, [review_id, hasCommented, hasReplied]);
+    }, [review_id, hasCommented, hasReplied, filter]);
 
     useEffect(() => {
         const checkUserReplies = async () => {
@@ -174,6 +211,52 @@ export default function CommentDisplay({
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            <FormControl variant="outlined" className="mb-4 w-full max-w-xs">
+                <InputLabel
+                    id="demo-simple-select-outlined-label"
+                    className="comment-filter-label"
+                >
+                    Filter
+                </InputLabel>
+                <Select
+                    labelId="demo-simple-select-outlined-label"
+                    id="demo-simple-select-outlined"
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
+                    label="Filter"
+                    className="comment-filter-select"
+                    MenuProps={{
+                        classes: { paper: "comment-filter-menu" }
+                    }}
+                >
+                    <MenuItem
+                        value="mostRecent"
+                        className="comment-filter-menuitem"
+                    >
+                        Most Recent
+                    </MenuItem>
+                    <MenuItem
+                        value="oldest"
+                        className="comment-filter-menuitem"
+                    >
+                        Oldest
+                    </MenuItem>
+                    <MenuItem
+                        value="mostLiked"
+                        className="comment-filter-menuitem"
+                    >
+                        Most Liked
+                    </MenuItem>
+                    <MenuItem
+                        value="leastLiked"
+                        className="comment-filter-menuitem"
+                    >
+                        Least Liked
+                    </MenuItem>
+                </Select>
+            </FormControl>
+
             {comments.map((comment) => (
                 <div key={comment.id} className="comment-and-reply-container">
                     <div className="comment-box">

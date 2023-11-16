@@ -93,7 +93,7 @@ export default function ReviewPage() {
             } catch (error) {
                 console.error("Error fetching review or game data: ", error);
                 // In case of an error or no document found, redirect user to home page.
-                navigate("/");
+                // navigate("/");
             }
         };
 
