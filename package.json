@@ -9,6 +9,7 @@
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
     "@material-tailwind/react": "^2.1.4",
+    "@mui/icons-material": "^5.14.18",
     "@mui/material": "^5.14.14",
     "@n8body/tiptap-spoiler": "^1.0.4",
     "@syncfusion/ej2-react-dropdowns": "^23.1.39",

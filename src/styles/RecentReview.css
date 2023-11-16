@@ -40,5 +40,5 @@ p {
 
 .rr-timestamp {
     text-align: right;
-    color: #888;
+    color: var(--secondary-text-color);
 }

@@ -8,13 +8,12 @@ import "../styles/CommentDisplay.css";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 export default function ReplyDisplay({
     review_id,
@@ -26,7 +25,6 @@ export default function ReplyDisplay({
     const [replies, setReplies] = useState([]);
     const [openDialog, setOpenDialog] = useState(false);
     const [replyToDelete, setReplyToDelete] = useState(null);
-    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -46,37 +44,51 @@ export default function ReplyDisplay({
     }, [review_id, comment_id, hasReplied]);
 
     const openDeleteDialog = (replyId) => {
-      setReplyToDelete(replyId);
-      setOpenDialog(true);
-  };
+        setReplyToDelete(replyId);
+        setOpenDialog(true);
+    };
 
-  const handleDialogClose = () => {
-      setOpenDialog(false);
-  };
+    const handleDialogClose = () => {
+        setOpenDialog(false);
+    };
 
-  const confirmDeleteReply = async () => {
-    if (replyToDelete) {
-        try {
-            await deleteDoc(doc(db, "reviews", review_id, "comments", comment_id, "replies", replyToDelete));
-            setReplies(replies.filter(reply => reply.id !== replyToDelete));
-            setHasReplied(false);
-            setOpenDialog(false);
-        } catch (error) {
-            console.error("Error deleting reply: ", error);
-            // Handle the error appropriately
+    const confirmDeleteReply = async () => {
+        if (replyToDelete) {
+            try {
+                await deleteDoc(
+                    doc(
+                        db,
+                        "reviews",
+                        review_id,
+                        "comments",
+                        comment_id,
+                        "replies",
+                        replyToDelete
+                    )
+                );
+                setReplies(
+                    replies.filter((reply) => reply.id !== replyToDelete)
+                );
+                setHasReplied(false);
+                setOpenDialog(false);
+            } catch (error) {
+                console.error("Error deleting reply: ", error);
+                // Handle the error appropriately
+            }
         }
-    }
-};
+    };
 
     return (
         <div className="reply-display">
-          <Dialog
+            <Dialog
                 open={openDialog}
                 onClose={handleDialogClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id="alert-dialog-title">{"Delete Reply"}</DialogTitle>
+                <DialogTitle id="alert-dialog-title">
+                    {"Delete Reply"}
+                </DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
                         Are you sure you want to delete this reply?
