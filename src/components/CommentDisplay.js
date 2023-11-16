@@ -34,6 +34,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import Tooltip from "@mui/material/Tooltip";
 
 export default function CommentDisplay({
     review_id,
@@ -212,50 +213,55 @@ export default function CommentDisplay({
                 </DialogActions>
             </Dialog>
 
-            <FormControl variant="outlined" className="mb-4 w-full max-w-xs">
-                <InputLabel
-                    id="demo-simple-select-outlined-label"
-                    className="comment-filter-label"
+            {comments.length > 0 && (
+                <FormControl
+                    variant="outlined"
+                    className="mb-4 w-full max-w-xs"
                 >
-                    Filter
-                </InputLabel>
-                <Select
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                    label="Filter"
-                    className="comment-filter-select"
-                    MenuProps={{
-                        classes: { paper: "comment-filter-menu" }
-                    }}
-                >
-                    <MenuItem
-                        value="mostRecent"
-                        className="comment-filter-menuitem"
+                    <InputLabel
+                        id="demo-simple-select-outlined-label"
+                        className="comment-filter-label"
                     >
-                        Most Recent
-                    </MenuItem>
-                    <MenuItem
-                        value="oldest"
-                        className="comment-filter-menuitem"
+                        Filter
+                    </InputLabel>
+                    <Select
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                        label="Filter"
+                        className="comment-filter-select"
+                        MenuProps={{
+                            classes: { paper: "comment-filter-menu" },
+                        }}
                     >
-                        Oldest
-                    </MenuItem>
-                    <MenuItem
-                        value="mostLiked"
-                        className="comment-filter-menuitem"
-                    >
-                        Most Liked
-                    </MenuItem>
-                    <MenuItem
-                        value="leastLiked"
-                        className="comment-filter-menuitem"
-                    >
-                        Least Liked
-                    </MenuItem>
-                </Select>
-            </FormControl>
+                        <MenuItem
+                            value="mostRecent"
+                            className="comment-filter-menuitem"
+                        >
+                            Most Recent
+                        </MenuItem>
+                        <MenuItem
+                            value="oldest"
+                            className="comment-filter-menuitem"
+                        >
+                            Oldest
+                        </MenuItem>
+                        <MenuItem
+                            value="mostLiked"
+                            className="comment-filter-menuitem"
+                        >
+                            Most Liked
+                        </MenuItem>
+                        <MenuItem
+                            value="leastLiked"
+                            className="comment-filter-menuitem"
+                        >
+                            Least Liked
+                        </MenuItem>
+                    </Select>
+                </FormControl>
+            )}
 
             {comments.map((comment) => (
                 <div key={comment.id} className="comment-and-reply-container">
@@ -263,15 +269,19 @@ export default function CommentDisplay({
                         <div className="comment-header">
                             {/* Toggle icon */}
                             {shownReplies[comment.id] ? (
+                                <Tooltip title="Hide Replies">
                                 <ChevronUpIcon
                                     className="toggle-replies-icon"
                                     onClick={() => toggleReplies(comment.id)}
                                 />
+                                </Tooltip>
                             ) : (
+                                <Tooltip title="Show Replies">
                                 <ChevronDownIcon
                                     className="toggle-replies-icon"
                                     onClick={() => toggleReplies(comment.id)}
                                 />
+                                </Tooltip>
                             )}
                             <Link
                                 to={`/Profile?user_id=${comment.uid}`}

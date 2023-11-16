@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../firebase";
 import { doc, updateDoc, setDoc } from "firebase/firestore";
-// import { Avatar } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
-import { HandThumbUpIcon } from "@heroicons/react/24/solid";
-import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { Avatar, IconButton, Tooltip } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ReplayIcon from "@mui/icons-material/Replay";
@@ -223,7 +220,7 @@ export default function ReviewSnapshot({
                                     src={review.profilePicture}
                                     className="custom-avatar medium-avatar"
                                 />
-                                <div className="user-info">
+                                <div className="review-user-info">
                                     <span className="review-username">
                                         {review.username}
                                     </span>
