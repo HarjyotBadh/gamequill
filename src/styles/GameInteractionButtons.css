@@ -1,9 +1,9 @@
 /* Container for the buttons */
 .game-interaction-buttons {
     display: flex;
-    gap: 1rem; /* Space between buttons */
-    justify-content: center; /* Center the buttons horizontally */
-    align-items: center; /* Align buttons vertically */
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
   }
   
   /* Styles for the liked (favorite) button */

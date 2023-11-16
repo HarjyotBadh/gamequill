@@ -1,19 +1,23 @@
-import React from "react";
-import { Spinner } from "@material-tailwind/react";
-import { fetchReviewsByGameId } from "../functions/ReviewFunctions";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "../styles/TitleCard.css";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Rating from "@mui/material/Rating";
+import { Spinner } from "@material-tailwind/react";
 import GameInteractionButtons from "./GameInterationButtons";
 import AddToList from "./AddToList";
 import {
     calculateAverageRating,
-    generateStars,
 } from "../functions/RatingFunctions";
+import { fetchReviewsByGameId } from "../functions/ReviewFunctions";
+import "../styles/TitleCard.css";
 
 export default function TitleCard({ gameData }) {
-    const [averageRating, setAverageRating] = React.useState(0);
+    const [averageRating, setAverageRating] = useState(0);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (gameData.id) {
             fetchReviewsByGameId(gameData.id).then((reviews) => {
                 setAverageRating(calculateAverageRating(reviews));
@@ -23,27 +27,76 @@ export default function TitleCard({ gameData }) {
 
     if (!gameData) return <Spinner color="blue" />;
 
-    const bigCoverUrl = gameData.cover ? gameData.cover.url.replace("/t_thumb/", "/t_cover_big/") : null;
+    const bigCoverUrl = gameData.cover
+        ? gameData.cover.url.replace("/t_thumb/", "/t_cover_big/")
+        : null;
 
     return (
-        <div className={`game-card`}>
+        <Card
+            className="game-cardd"
+            sx={{
+                maxWidth: 250,
+                bgcolor: "var(--background)",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                borderRadius: "20px",
+            }}
+        >
             {bigCoverUrl && (
                 <Link to={`/game?game_id=${gameData.id}`}>
-                    <img src={bigCoverUrl} alt={gameData.name} />
+                    <CardMedia
+                        component="img"
+                        height="140"
+                        image={bigCoverUrl}
+                        alt={gameData.name}
+                    />
                 </Link>
             )}
-            <h2 className="title-card-text">{gameData.name}</h2>
-            <p>{gameData.involved_companies?.[0]?.company?.name || "N/A"}</p>
-            <p className="numericRating">{averageRating}</p>
-            <div className="rating">{generateStars(averageRating)}</div>
-
-            <div class="play-buttons-container flex flex-row">
-            <GameInteractionButtons gameID={gameData.id} />
-        </div>
-            <div class="add-to-list flex flex-row text-black dark:text-white">
-                Add to list
-                <AddToList gameID={gameData.id} />
-            </div>
-        </div>
+            <CardContent sx={{ textAlign: "center", width: "100%" }}>
+                <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    sx={{ color: "var(--text-color)" }}
+                >
+                    {gameData.name}
+                </Typography>
+                <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ color: "var(--secondary-text-color)" }}
+                >
+                    {gameData.involved_companies?.[0]?.company?.name || "N/A"}
+                </Typography>
+                <Typography
+                    variant="h6"
+                    sx={{
+                        color: "var(--rating-color)",
+                        fontSize: 25,
+                        fontWeight: "bold",
+                    }}
+                >
+                    {averageRating}
+                </Typography>
+                <Rating
+                    name="read-only"
+                    value={averageRating}
+                    readOnly
+                    sx={{
+                        "& .MuiRating-iconFilled": {
+                            color: "var(--rating-color)",
+                        },
+                        "& .MuiRating-iconEmpty": {
+                            color: "var(--star-color)",
+                        },
+                    }}
+                />
+                <div className="title-play-buttons-container">
+                    <GameInteractionButtons gameID={gameData.id} />
+                </div>
+                <AddToList gameID={gameData.id} />{" "}
+            </CardContent>
+        </Card>
     );
 }

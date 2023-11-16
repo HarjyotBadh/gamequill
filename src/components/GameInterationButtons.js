@@ -133,7 +133,10 @@ const GameInteractionButtons = ({ gameID }) => {
             <Tooltip title={liked ? "Unlike" : "Like"}>
                 <IconButton
                     onClick={handleLike}
-                    style={{ color: liked ? "red" : undefined }}
+                    sx={{
+                        color: liked ? "red" : 'var(--secondary-text-color)',
+                        '& svg': { outlineColor: 'var(--secondary-text-color)' }
+                    }}
                 >
                     {liked ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                 </IconButton>
@@ -142,7 +145,10 @@ const GameInteractionButtons = ({ gameID }) => {
             <Tooltip title={played ? "Mark as Not Played" : "Mark as Played"}>
                 <IconButton
                     onClick={handlePlay}
-                    style={{ color: played ? "#007bff" : undefined }}
+                    sx={{
+                        color: played ? "#007bff" : 'var(--secondary-text-color)',
+                        '& svg': { outlineColor: 'var(--secondary-text-color)' }
+                    }}
                 >
                     {played ? <PlayCircleFilledIcon /> : <PlayCircleOutlineIcon />}
                 </IconButton>
@@ -151,7 +157,10 @@ const GameInteractionButtons = ({ gameID }) => {
             <Tooltip title={wishlisted ? "Remove from Wishlist" : "Add to Wishlist"}>
                 <IconButton
                     onClick={handleWishlist}
-                    style={{ color: wishlisted ? "#ffc107" : undefined }}
+                    sx={{
+                        color: wishlisted ? "#ffc107" : 'var(--secondary-text-color)',
+                        '& svg': { outlineColor: 'var(--secondary-text-color)' }
+                    }}
                 >
                     {wishlisted ? <StarIcon /> : <StarBorderIcon />}
                 </IconButton>
