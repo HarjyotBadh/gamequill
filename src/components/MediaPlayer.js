@@ -1,11 +1,11 @@
 import React from "react";
 import { useState, useRef, useEffect } from "react";
-import YouTube from "react-youtube";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../styles/MediaPlayer.css";
 import Popup from "reactjs-popup";
+import ReactPlayer from "react-player/youtube";
 
 const MediaPlayer = ({ screenshots, youtubeLinks }) => {
     const [open, setOpen] = useState(false);
@@ -13,16 +13,6 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
     const closeModal = () => {
         setOpen(false);
         setSelectedImageIndex(null);
-    };
-    const playerRef = useRef(null);
-
-    // Options for the YouTube player
-    const opts = {
-        height: "100%",
-        width: "100%",
-        playerVars: {
-            autoplay: 0,
-        },
     };
 
     // Options for the image slider
@@ -34,14 +24,6 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
         slidesToScroll: 1,
         adapativeHeight: false,
     };
-
-    const isMounted = useRef(true); // Step 1
-
-    useEffect(() => {
-        return () => {
-            isMounted.current = false; // Step 2
-        };
-    }, []);
 
     return (
         <>
@@ -62,21 +44,27 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
                     </div>
                 ))}
 
-                {youtubeLinks.map((videoId) => (
-                    <div key={videoId} className="youtube-video-wrapper">
-                        <YouTubeErrorBoundary>
-                            <YouTube
-                                videoId={videoId}
-                                opts={opts}
-                                onReady={(e) => {
-                                    if (isMounted.current) {
-                                        playerRef.current = e.target;
-                                    }
-                                }}
-                            />
-                        </YouTubeErrorBoundary>
-                    </div>
-                ))}
+                {youtubeLinks.map(
+                    (videoId) =>
+                        videoId && ( // Check if videoId is not null or undefined
+                            <div
+                                key={videoId}
+                                className="youtube-video-wrapper"
+                            >
+                                <YouTubeErrorBoundary>
+                                    <ReactPlayer
+                                        className="video-container"
+                                        url={`https://www.youtube.com/watch?v=${videoId}`}
+                                        config={{
+                                            youtube: {
+                                                playerVars: { autoplay: 0 },
+                                            },
+                                        }}
+                                    />
+                                </YouTubeErrorBoundary>
+                            </div>
+                        )
+                )}
             </Slider>
 
             <Popup open={open} closeOnDocumentClick onClose={closeModal}>
