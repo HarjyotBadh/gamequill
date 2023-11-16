@@ -4,7 +4,7 @@
     border-radius: 25px;
     display: grid;
     grid-template-columns: repeat(24, 1fr);
-    background: var(--background-dark);
+    background: var(--background);
     margin-top: 10px;
     margin-left: 50px;
 }

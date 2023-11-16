@@ -51,17 +51,15 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
                                 key={videoId}
                                 className="youtube-video-wrapper"
                             >
-                                <YouTubeErrorBoundary>
-                                    <ReactPlayer
-                                        className="video-container"
-                                        url={`https://www.youtube.com/watch?v=${videoId}`}
-                                        config={{
-                                            youtube: {
-                                                playerVars: { autoplay: 0 },
-                                            },
-                                        }}
-                                    />
-                                </YouTubeErrorBoundary>
+                                <ReactPlayer
+                                    className="video-container"
+                                    url={`https://www.youtube.com/watch?v=${videoId}`}
+                                    config={{
+                                        youtube: {
+                                            playerVars: { autoplay: 0 },
+                                        },
+                                    }}
+                                />
                             </div>
                         )
                 )}
@@ -86,29 +84,3 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
 };
 
 export default MediaPlayer;
-
-class YouTubeErrorBoundary extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { hasError: false };
-    }
-
-    static getDerivedStateFromError(error) {
-        // Update state so the next render will show the fallback UI.
-        return { hasError: true };
-    }
-
-    componentDidCatch(error, errorInfo) {
-        // You can log the error to an error reporting service here
-        console.error("YouTubeErrorBoundary caught an error", error, errorInfo);
-    }
-
-    render() {
-        if (this.state.hasError) {
-            // You can render any custom fallback UI
-            return <div>Error loading YouTube video</div>;
-        }
-
-        return this.props.children;
-    }
-}
