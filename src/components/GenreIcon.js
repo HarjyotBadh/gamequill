@@ -53,12 +53,13 @@ export default function GenreIcon({ g }) {
     if (g == "strategy") { isstrategy = true; }
     if (g == "turn-based-strategy") { istbs = true; }
     if (g == "tactical") { istactical = true; }
-    if (g == "trivia") { isquiz = true; }
+    if (g == "quiz-trivia") { isquiz = true; }
     if (g == "hack-and-slash-beat-em-up") { ishas = true; }
     if (g == "adventure") { isadventure = true; }
     if (g == "arcade") { isarcade = true; }
     if (g == "card-board-game") { iscards = true; }
     if (g == "puzzle") { ispuzzle = true; }
+    if (g == "real-time-strategy") { isrts = true; }
 
 
     
@@ -82,6 +83,8 @@ export default function GenreIcon({ g }) {
             {isadventure ? <img src={genadventure} alt="Genre" /> : <img />}
             {isarcade ? <img src={genarcade} alt="Genre" /> : <img />}
             {iscards ? <img src={gencards} alt="Genre" /> : <img />}
+            {ispuzzle ? <img src={genpuzzle} alt="Genre" /> : <img />}
+            {isrts ? <img src={genrts} alt="Genre" /> : <img />}
         </div>
     );
 }

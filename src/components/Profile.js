@@ -142,8 +142,8 @@ function Profile({ profileData, setProfileData, userId }) {
                 key={index}
                 className="w-24 h-32 text-center border dark:border-white border-black"
               >
-                {genre}
                 <GenreIcon g={genre} />
+                {genre.charAt(0).toUpperCase() + genre.slice(1)}
               </div>
             ))}
           </div>
