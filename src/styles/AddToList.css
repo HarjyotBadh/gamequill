@@ -45,3 +45,8 @@
   font-size: 14px;
   color: black;
 }
+
+.add-to-list-button {
+  /* Add your custom styles here */
+  margin-top: 10px; /* Example margin */
+}
