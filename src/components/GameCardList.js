@@ -97,14 +97,6 @@ export default function TitleCard({
     newDataArray.splice(hoverIndex, 0, draggedItem);
 
     setGameDataArray(newDataArray);
-    // Trigger a re-render by updating the key
-    //setKey((prevKey) => prevKey + 1);
-    // setGameDataArray((prevData) => {
-    //   const updatedData = [...prevData];
-    //   updatedData[draggedIndex] = newDataArray[hoverIndex];
-    //   updatedData[hoverIndex] = newDataArray[draggedIndex];
-    //   return updatedData;
-    // });
     const newGameIds = newDataArray.map((data) => data.game.id);
     setGameIds(newGameIds);
     const listDocRef = doc(db, "lists", list_id);
