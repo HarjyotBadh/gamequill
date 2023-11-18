@@ -23,6 +23,7 @@ export default function TitleCard({
   setGameDataArray,
   listOwner,
   index,
+  onDrop,
 }) {
   const [averageRating, setAverageRating] = React.useState(0);
   const [darkMode, setDarkMode] = React.useState(
@@ -83,9 +84,9 @@ export default function TitleCard({
   const handleDragOver = (e) => {
     e.preventDefault();
   };
-
   const handleDrop = async (e) => {
     e.preventDefault();
+    if (!isListOwner) return;
     const draggedIndex = parseInt(e.dataTransfer.getData("text/plain"), 10);
     const hoverIndex = index;
 
@@ -96,22 +97,31 @@ export default function TitleCard({
     newDataArray.splice(hoverIndex, 0, draggedItem);
 
     setGameDataArray(newDataArray);
+    // Trigger a re-render by updating the key
+    //setKey((prevKey) => prevKey + 1);
+    // setGameDataArray((prevData) => {
+    //   const updatedData = [...prevData];
+    //   updatedData[draggedIndex] = newDataArray[hoverIndex];
+    //   updatedData[hoverIndex] = newDataArray[draggedIndex];
+    //   return updatedData;
+    // });
     const newGameIds = newDataArray.map((data) => data.game.id);
     setGameIds(newGameIds);
     const listDocRef = doc(db, "lists", list_id);
     await updateDoc(listDocRef, {
       games: newGameIds,
     });
+    onDrop(draggedIndex, hoverIndex);
   };
 
   return (
     <div
       className={`game-card-list ${darkMode ? "dark" : "light"} ${viewMode}`}
       data-theme={darkMode ? "dark" : "light"}
-      draggable="true"
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
+      draggable={isListOwner ? "true" : "false"} // Only draggable if the user is the list owner
+      onDragStart={isListOwner ? handleDragStart : null} // Set the event handler only if the user is the list owner
+      onDragOver={isListOwner ? handleDragOver : null} // Set the event handler only if the user is the list owner
+      onDrop={isListOwner ? handleDrop : null}
     >
       {bigCoverUrl && (
         <Link to={`/game?game_id=${gameData.id}`}>
