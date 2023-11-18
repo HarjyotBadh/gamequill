@@ -1,7 +1,7 @@
 /* ListPage.css */
 
 .listPage {
-    background-color: #f0f0f0; /* Set the background color of the page */
+    background-color: var(--wrapper); /* Set the background color of the page */
     min-height: 100vh;
   }
   

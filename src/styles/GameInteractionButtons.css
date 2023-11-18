@@ -1,0 +1,23 @@
+/* Container for the buttons */
+.game-interaction-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Styles for the liked (favorite) button */
+  .liked-button {
+    color: red; /* A shade of red-pink for liked state */
+  }
+  
+  /* Styles for the played button */
+  .played-button {
+    color: #007bff; /* A shade of blue for played state */
+  }
+  
+  /* Styles for the wishlisted button */
+  .wishlisted-button {
+    color: #ffc107; /* A shade of yellow for wishlisted state */
+  }
+  

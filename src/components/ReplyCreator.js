@@ -6,7 +6,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import Button from '@mui/material/Button';
 
-export default function ReplyCreator( { review_id, comment_id, currentUserUID, setHasCommented } ) {
+export default function ReplyCreator( { review_id, comment_id, currentUserUID, setHasReplied } ) {
     const [commentHtml, setCommentHtml] = useState('');
     const maxLength = 500;
 
@@ -39,7 +39,7 @@ export default function ReplyCreator( { review_id, comment_id, currentUserUID, s
                 uid: currentUserUID,
             });
             setCommentHtml("");
-            setHasCommented(true);
+            setHasReplied(true);
         } catch (error) {
             console.error("Error adding reply: ", error);
         }

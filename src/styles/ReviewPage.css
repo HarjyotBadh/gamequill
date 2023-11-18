@@ -62,6 +62,7 @@
     display: flex;
     align-items: center;
     font-weight: bold;
+    color: var(--text-color);
 }
 
 .toggle-spoilers label {

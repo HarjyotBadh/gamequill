@@ -1,138 +1,28 @@
-.game-card {
+.game-cardd {
     background-color: var(--background);
-    border: 1px solid var(--background);
-    padding: 2% 4%;
-    /* margin: 1% 2%; */
-    margin-left: 2%;
-    margin-right: 2%;
     border-radius: 20px;
-    width: 90%;
-    max-width: 250px;
-    text-align: center;
-    box-sizing: border-box;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    /* max-height: 565px; */ 
-    /* border: 1px solid var(--text-color); */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
-.game-card:hover {
+.game-cardd:hover {
     transform: translateY(-5px); 
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); 
 }
 
-/* Adjusted media queries */
-@media (min-width: 768px) {
-    .game-card {
-        width: 70%; 
-    }
-}
-
-@media (min-width: 992px) {
-    .game-card {
-        width: 50%; 
-    }
-}
-
-.game-card img {
+.title-play-buttons-container {
+    display: flex;
+    justify-content: center;
     width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    border-radius: 20px 20px 20px 20px;
-    margin-bottom: 20px;
-}
-
-.title-card-text {
-    display: -webkit-box;
-    -webkit-line-clamp: 2; /* Limit to 2 lines */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.game-card h2 {
-    font-weight: 700;
-    color: var(--text-color); 
-    margin-bottom: 16px;
-    
-}
-
-.game-card p {
-    color: var(--secondary-text-color); 
-    line-height: 1.5; 
+    margin-top: 16px;
     margin-bottom: 16px;
 }
 
-.game-card .numericRating {
-    font-size: 25px;
-    font-weight: bold;
-    text-align: center;
-    color: var(--rating-color);
-    margin-bottom: 8px; /* Add some spacing before the stars */
-}
-
-.rating {
-    white-space: nowrap;  /* Ensure stars don't wrap */
-    overflow: hidden;  /* Hide any overflowing content */
-    text-align: center;
-    margin-bottom: 16px; /* Added some space below the stars */
-}
-
-.fullStar, .emptyStar, .halfStar {
-    font-size: 20px;
-    margin: 0 1px;  /* Slight margin on each side */
-    position: relative;
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    line-height: 20px;
-    vertical-align: middle;
-}
-
-.fullStar {
-    color: var(--rating-color);
-}
-
-.halfStar {
-    color: var(--star-color); 
-}
-
-.halfStar::before {
-    content: "★";
-    position: absolute;
-    top: 0;
-    left: 0;
-    color: var(--rating-color);
-    clip-path: polygon(0 0, 50% 0, 50% 100%, 0% 100%);
-    width: 20px;
-    height: 20px;
-    line-height: 20px;
-    text-align: center;
-}
-
-.emptyStar {
-    color: var(--star-color); 
-}
-
-
-.play-buttons-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Create a 12-column grid */
-    gap: 6.5px;
-    padding: 6px;
-    margin-bottom: 16px;
-    
-}
-
-.play-buttons-container img {
-    margin-bottom: 0px ! important
-}
-
-.play-button {
-    /* box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);  */
-}
-.searchedTitleCard {
+.add-to-list {
+    text-transform: none;
     width: 100%;
-    height: 100%;
-    cursor: pointer;
-  }
+}

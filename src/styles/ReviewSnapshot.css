@@ -29,38 +29,39 @@
 }
 
 .review-header {
-    background-color: rgba(var(--rating-color), 0.1); /* Subdued version of the rating color */
+    background-color: rgba(var(--rating-color), 0.1);
     padding: 10px 15px;
-    /* border-radius: 15px 15px 0 0; */
-    /* box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.05); */
     border-bottom: 3px solid rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background-color 0.3s ease; /* Smooth transition for the background color */
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
 }
 
-.user-info {
+.review-user-info {
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* This ensures the username and timestamp are right-aligned */
+    align-items: center;
     gap: 4px;
 }
 
+
 /* Stylizing the user-info */
-.user-info .review-username {
+.review-user-info-container .review-username {
     font-weight: 600; 
-    color: var(--text-color); /* Use primary text color for better visibility */
+    color: var(--text-color);
 }
 
-.user-info-container {
+.review-user-info-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* Right-align the entire container including the avatar */
-    gap: 8px; /* Space between profile picture, username, and timestamp */
+    align-items: center;
+    gap: 8px;
 }
 
-.user-info .review-time {
+
+.review-user-info .review-time {
     font-size: 12px; 
     color: var(--secondary-text-color); /* Use secondary text color for the timestamp */
 }
@@ -76,7 +77,7 @@
     /* margin-left: auto; */
 }
 
-.ratings-likes {
+.ratings-likes, .like-repost-container {
     display: flex;
     align-items: center;
     gap: 5px;
@@ -84,7 +85,9 @@
 
 .custom-avatarr {
     border-radius: 50%;
-    object-fit: cover; /* Ensure the image covers the entire space without distortion */
+    object-fit: cover;
+    width: 50px;
+    height: 50px;
 }
 
 .medium-avatarr {
@@ -94,8 +97,8 @@
 
 .review-rating-container {
     display: flex;
-    flex-direction: column; /* Added to stack spoiler, rating and likes vertically */
-    align-items: flex-start; /* Aligns items to the start of the container */
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 /* Adjusting the rating and likes for better emphasis */
@@ -118,7 +121,6 @@
     margin-left: 10px; /* Added space between rating and like button */
 }
 
-
 .liked {
     color: var(--rating-color); /* Theme primary text color when liked */
     fill: var(--rating-color); /* Filling the thumb icon when liked */
@@ -137,7 +139,12 @@
 
 .like-count {
     color: var(--secondary-text-color); /* Use secondary text color for the likes count */
-    margin-left: 5px; /* Added space between the thumb icon and the count */
+    /* margin-left: 5px */
+}
+
+.repost-count {
+    color: var(--secondary-text-color); /* Use secondary text color for the reposts count */
+    /* margin-left: 5px; */
 }
 
 
@@ -168,4 +175,12 @@
 /* Hover effects to make interactions smoother */
 .review-box:hover .review-header {
     background-color: rgba(var(--rating-color), 0.15); /* Slightly darker shade on hover */
+}
+
+.reposted-icon {
+    color: var(--rating-color);
+}
+
+.not-reposted-icon {
+    color: var(--star-color);
 }

@@ -219,6 +219,7 @@ export function parseReviewWithSpoilersToHTML(reviewText) {
  */
 export async function fetchCommentsByReviewId(review_id) {
     try {
+        console.log("Reading from Firebase: fetchCommentsByReviewId");
         const q = query(collection(db, "reviews", review_id, "comments"));
         const querySnapshot = await getDocs(q);
         const comments = [];
@@ -240,10 +241,59 @@ export async function fetchCommentsByReviewId(review_id) {
             }
         }
 
+        // Sort comments by timestamp (most recent first)
+        comments.sort((a, b) => {
+            return b.timestamp.seconds - a.timestamp.seconds;
+        });
+
         return comments;
     } catch (error) {
         console.error("Error fetching comments: ", error);
         throw new Error("Error fetching comments");
     }
 }
+
+/**
+ * Fetches replies for a specific comment from the Firestore database.
+ * @param {string} review_id - The ID of the review.
+ * @param {string} comment_id - The ID of the comment for which to fetch replies.
+ * @returns {Array} An array of reply objects, each including the reply data and the associated user data.
+ * @throws {Error} If an error occurs while fetching data.
+ */
+export async function fetchRepliesByCommentId(review_id, comment_id) {
+    try {
+        console.log("Reading from Firebase: fetchRepliesByCommentId");
+        const q = query(collection(db, "reviews", review_id, "comments", comment_id, "replies"));
+        const querySnapshot = await getDocs(q);
+        const replies = [];
+
+        for (const docu of querySnapshot.docs) {
+            const replyData = docu.data();
+
+            // Retrieve related user data using the uid from the reply document
+            const userRef = doc(db, "profileData", replyData.uid.toString());
+            const userDoc = await getDoc(userRef);
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                replies.push({
+                    id: docu.id,
+                    username: userData.username,
+                    profilePicture: userData.profilePicture,
+                    ...replyData,
+                });
+            }
+        }
+
+        // Sort replies by timestamp (most recent first)
+        replies.sort((a, b) => {
+            return b.timestamp.seconds - a.timestamp.seconds;
+        });
+
+        return replies;
+    } catch (error) {
+        console.error("Error fetching replies: ", error);
+        throw new Error("Error fetching replies");
+    }
+}
+
 
