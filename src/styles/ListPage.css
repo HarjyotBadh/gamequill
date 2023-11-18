@@ -241,5 +241,11 @@
   .list-title svg {
     margin-left: 10px; /* Add some space between the list name and the edit button */
   }
+  .drag-and-drop-reminder {
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    color:var(--text-color);
+  }
   
   
