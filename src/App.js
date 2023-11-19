@@ -17,6 +17,7 @@ import PlayedPage from "./pages/PlayedPage";
 import TopGames from "./pages/TopGames";
 import ListPage from "./pages/ListPage";
 import MyLists from "./pages/MyLists";
+import FeedbackPage from "./pages/FeedbackPage";
 
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
       <Route path="/wishlist" element={<Wishlist />} />
       <Route path="/likes" element={<Likes />} />
       <Route path="/played" element={<PlayedPage />} />
+      <Route path="/feedback" element={<FeedbackPage />} />
     </Routes>
   );
 }

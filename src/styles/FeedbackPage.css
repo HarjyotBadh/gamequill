@@ -1,0 +1,37 @@
+.feedback-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 75px;
+    background-color: var(--wrapper);
+    margin-bottom: 150px;
+  }
+
+.feedback-text-area {
+    background-color: #ccc;
+    width: 500px;
+    padding: 5px;
+    margin-bottom: 20px;
+    border: 2px solid black;
+}
+
+.feedback-button {
+    color: var(--text-color);
+    border: 1.7px solid #888;
+    padding: 3px;
+}
+
+.feedback-background {
+    background-color: var(--wrapper);
+}
+
+.feedback-info {
+    width: 500px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    color: var(--text-color);
+    margin-bottom: 25px;
+    font-size: 20px;
+}
