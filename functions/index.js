@@ -1,47 +1,60 @@
-const { onRequest, onCall } = require("firebase-functions/v2/https");
+const functions = require('firebase-functions');
 const admin = require("firebase-admin");
-const cors = require("cors")({ origin: true });
-const logger = require("firebase-functions/logger");
+const axios = require('axios');
+const cheerio = require('cheerio');
 
-// Initialize Firebase Admin
 admin.initializeApp();
 
 // Initialize Firestore
 const db = admin.firestore();
 
-// Import your custom functions
-// const { updatePricesForGame } = require('./path/to/your/custom/script');
-
-// Example of an HTTP triggered function
-exports.helloWorld = onRequest((request, response) => {
-    cors(request, response, async () => {
-        try {
-            const text = request.body.text; // assuming text is sent in the request body
-            if (!text) {
-                throw new Error('No text provided');
-            }
-
-            // Create a new document in 'a' collection with 'text' field
-            const docRef = db.collection('a').doc();
-            await docRef.set({ text });
-
-            logger.info("Document created with ID: ", docRef.id);
-            response.send({ message: `Document created with ID: ${docRef.id}` });
-        } catch (error) {
-            logger.error("Error: ", error);
-            response.status(500).send({ error: error.message });
+exports.updateGamePrice = functions.https.onCall(async (data, context) => {
+    try {
+        if (!data.game_id) {
+            throw new functions.https.HttpsError(
+                "invalid-argument",
+                'The function must be called with one argument "game_id".'
+            );
         }
-    });
-});
 
-// Define a callable function for updating game prices
-// exports.updateGamePrices = onCall(async (data, context) => {
-//   try {
-//     const gameId = data.gameId; // Ensure you are sending 'gameId' from the frontend
-//     await updatePricesForGame(gameId);
-//     return { message: `Prices updated for game ID: ${gameId}` };
-//   } catch (error) {
-//     logger.error("Error updating prices: ", error);
-//     throw new onCall.HttpsError('internal', error.message);
-//   }
-// });
+        // Print out the game ID, using logger
+        console.log("Finding for game_id: " + data.game_id);
+
+        
+        // IGDB API headers
+        const igdbHeaders = {
+            Accept: "application/json",
+            "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6", // Replace with your IGDB Client ID
+            Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp", // Replace with your IGDB access token
+        };
+
+        // Make an API call to IGDB
+        const igdbResponse = await axios({
+            method: "post",
+            url: "https://api.igdb.com/v4/external_games",
+            headers: igdbHeaders,
+            data: `fields id,game,name,url; where game=${data.game_id} & category=(1,11,36);`,
+        });
+
+        const gameUrls = igdbResponse.data;
+
+        for (const gameUrl of gameUrls) {
+            const response = await axios.get(gameUrl.url);
+            const $ = cheerio.load(response.data);
+            const price = $("#price").text();
+
+            await db.collection("games").doc(data.game_id).update({
+                game_price: price,
+            });
+        }
+
+        return { result: `Prices updated for game ${data.game_id}` };
+    } catch (error) {
+        console.error("Error updating game price:", error);
+        throw new functions.https.HttpsError(
+            "unknown",
+            "Failed to update game price",
+            error
+        );
+    }
+});

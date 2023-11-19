@@ -118,7 +118,7 @@ export default function GamePage({ game_id }) {
                     </div>
 
                     <div className="right-content">
-                        <div className="game-title"><HelloWorld/></div>
+                        <div className="game-title"><HelloWorld game_id={game_id}/></div>
                         <DescriptionBox gameData={gameData} />
                         <ReviewBar
                             gameID={parseInt(game_id, 10)}

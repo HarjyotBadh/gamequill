@@ -1,34 +1,31 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-function HelloWorld() {
-  const [message, setMessage] = useState('');
-  const [inputText, setInputText] = useState('');
+export default function HelloWorld({ game_id }) {
+    const callUpdatePriceFunction = () => {
+        const ob = { game_id: game_id };
 
-  const sendText = () => {
-    fetch('https://us-central1-gamequill-3bab8.cloudfunctions.net/helloWorld', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ text: inputText }),
-    })
-    .then(response => response.json())
-    .then(data => setMessage(data.message))
-    .catch(error => console.error('Error:', error));
-  };
+        // const corsAnywhereUrl = "http://localhost:8080/";
+        const functionUrl = 'http://localhost:5001/gamequill-3bab8/us-central1/updateGamePrice';
 
-  return (
-    <div>
-      <input 
-        type="text" 
-        value={inputText} 
-        onChange={e => setInputText(e.target.value)}
-        placeholder="Enter text"
-      />
-      <button onClick={sendText}>Send Text</button>
-      <p>{message}</p>
-    </div>
-  );
+        fetch(functionUrl, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ data: ob }) // Wrap your payload in a `data` object
+      })
+        .then(response => {
+            console.log('Request successful', response);
+        })
+        .catch(error => {
+            console.error('Request failed', error);
+        });
+    };
+
+    return (
+        <div>
+            <div>Test</div>
+            <button onClick={callUpdatePriceFunction}>Update Game Price</button>
+        </div>
+    );
 }
-
-export default HelloWorld;
