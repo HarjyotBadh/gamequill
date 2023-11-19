@@ -12,6 +12,7 @@ import ReviewSnapshot from "../components/ReviewSnapshot";
 import { fetchGameData } from "../functions/GameFunctions";
 import Footer from "../components/Footer";
 import "../styles/GamePage.css";
+import HelloWorld from "../components/HelloWorld";
 
 export default function GamePage({ game_id }) {
     const [gameData, setGameData] = useState(null);
@@ -117,6 +118,7 @@ export default function GamePage({ game_id }) {
                     </div>
 
                     <div className="right-content">
+                        <div className="game-title"><HelloWorld/></div>
                         <DescriptionBox gameData={gameData} />
                         <ReviewBar
                             gameID={parseInt(game_id, 10)}
