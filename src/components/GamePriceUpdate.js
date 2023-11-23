@@ -1,18 +1,18 @@
 import React from 'react';
 
-export default function HelloWorld({ game_id }) {
+export default function GamePriceUpdate({ game_id, price_update }) {
     const callUpdatePriceFunction = () => {
         const ob = { game_id: game_id };
 
         // const corsAnywhereUrl = "http://localhost:8080/";
-        const functionUrl = 'http://localhost:5001/gamequill-3bab8/us-central1/updateGamePrice';
+        const functionUrl = 'https://us-central1-gamequill-3bab8.cloudfunctions.net/updateGamePrice';
 
         fetch(functionUrl, {
           method: "POST",
           headers: {
               "Content-Type": "application/json"
           },
-          body: JSON.stringify({ data: ob }) // Wrap your payload in a `data` object
+          body: JSON.stringify({ data: ob })
       })
         .then(response => {
             console.log('Request successful', response);

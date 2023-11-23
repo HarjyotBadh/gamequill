@@ -37,6 +37,10 @@ exports.updateGamePrice = functions.https.onCall(async (data, context) => {
 
         const gameUrls = igdbResponse.data;
 
+        var preventDoubleMicrosoft = false;
+        var preventDoublePlaystation = false;
+        var preventDoubleSteam = false;
+
         for (const gameUrl of gameUrls) {
             if (!gameUrl.url) {
                 continue;
@@ -45,33 +49,39 @@ exports.updateGamePrice = functions.https.onCall(async (data, context) => {
             console.log("Scraping URL: " + gameUrl.url);
 
 
-            if (gameUrl.url.includes("microsoft.com")) {
-                const price = await xboxScrapePrice(gameUrl.url);
-                if (price) {
-                    await db.collection("games").doc(data.game_id).update({
-                        xbox_game_price: price,
-                    });
+            let priceInfo = {
+                price: null,
+                timestamp: new Date(),
+                url: gameUrl.url,
+                platform: ''
+            };
 
-                    console.log(`Price updated for game ${data.game_id} with price ${price}`);
-                }
-            } else if (gameUrl.url.includes("playstation.com")) {
-                const price = await playstationScrapePrice(gameUrl.url);
-                if (price) {
-                    await db.collection("games").doc(data.game_id).update({
-                        playstation_game_price: price,
-                    });
+            if (gameUrl.url.includes("microsoft.com") && !preventDoubleMicrosoft) {
+                preventDoubleMicrosoft = true;
+                priceInfo.price = await xboxScrapePrice(gameUrl.url);
+                priceInfo.platform = 'xbox';
+            } else if (gameUrl.url.includes("playstation.com") && !preventDoublePlaystation) {
+                preventDoublePlaystation = true;
+                priceInfo.price = await playstationScrapePrice(gameUrl.url);
+                priceInfo.platform = 'playstation';
+            } else if (gameUrl.url.includes("store.steampowered.com") && !preventDoubleSteam) {
+                preventDoubleSteam = true;
+                priceInfo.price = await steamScrapePrice(gameUrl.url);
+                priceInfo.platform = 'steam';
+            }
 
-                    console.log(`Price updated for game ${data.game_id} with price ${price}`);
-                }
-            } else if (gameUrl.url.includes("store.steampowered.com")) {
-                const price = await steamScrapePrice(gameUrl.url);
-                if (price) {
-                    await db.collection("games").doc(data.game_id).update({
-                        steam_game_price: price,
-                    });
 
-                    console.log(`Price updated for game ${data.game_id} with price ${price}`);
-                }
+            if (priceInfo.price) {
+                const fieldName = `${priceInfo.platform}_game_price`;
+                await db.collection("games").doc(data.game_id).update({
+                    [fieldName]: priceInfo
+                });
+
+                await db.collection("games").doc(data.game_id).update({
+                    last_price_update: new Date()
+                });
+
+                console.log(`Price updated for game ${data.game_id} with price ${priceInfo.price}`);
             }
         }
 

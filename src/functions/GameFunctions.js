@@ -176,8 +176,8 @@ export async function fetchSimilarGames(genres, themes) {
     const genreIds = genres.map((genre) => genre.id);
     const themeIds = themes.map((theme) => theme.id);
 
-    console.log("genreIds:", genreIds);
-    console.log("themeIds:", themeIds);
+    // console.log("genreIds:", genreIds);
+    // console.log("themeIds:", themeIds);
 
     // Constructing genres and themes conditions for the API request
     let conditions = "rating > 70 & total_rating_count > 5";
@@ -227,3 +227,26 @@ export async function fetchSimilarGames(genres, themes) {
         return [];
     }
 }
+
+// updateGamePrice.js
+
+export const updateGamePrice = (game_id) => {
+
+    const ob = { game_id: game_id };
+    const functionUrl = 'https://us-central1-gamequill-3bab8.cloudfunctions.net/updateGamePrice';
+
+    fetch(functionUrl, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ data: ob })
+    })
+    .then(response => {
+        console.log('Request successful', response);
+    })
+    .catch(error => {
+        console.error('Request failed', error);
+    });
+};
+
