@@ -19,19 +19,24 @@ export default function FeedbackPage() {
   };
 
   const handleSubmit = async () => {
-    const user = auth.currentUser.uid; // Get current user ID
-    const docRef = doc(db, "profileData", user); // Specify the collection and document
-  
-    try {
-      await updateDoc(docRef, {
-        feedback: arrayUnion(feedback), // Use the feedback state variable
-      });
-      console.log("Feedback submitted!");
-      setFeedback(''); // Optionally clear the textarea after submission
-    } catch (error) {
-      console.error("Error adding feedback to Firestore:", error);
-    }
+    const feedbackData = { feedback };
+    fetch('http://localhost:8080/http://localhost:3001/send-feedback', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(feedbackData),
+    })
+    .then(response => response.text())
+    .then(data => {
+      console.log('Success:', data);
+      setFeedback(''); // Clear textarea
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
   };
+  
 
   return (
     <div class="feedback-background">
