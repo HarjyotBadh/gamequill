@@ -36,8 +36,10 @@ const genreOptions = [
   { value: "select", label: "Select Genre" },
   ...Object.entries(genreMapping).map(([value, label]) => ({ value, label })),
 ];
+const initialGenre = genreOptions[0]; // Set the initial genre
+
 function TopGames() {
-  const [selectedGenre, setSelectedGenre] = useState(null);
+  const [selectedGenre, setSelectedGenre] = useState(initialGenre);
   const [topGamesData, setTopGamesData] = useState([]);
   useEffect(() => {
     const fetchData = async () => {

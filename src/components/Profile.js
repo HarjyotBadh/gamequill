@@ -212,7 +212,7 @@ function Profile({ profileData, setProfileData, userId }) {
             />
             <p>
               <Link to="/recent-reviews" className="button">
-                Recent Reviews
+                Recent Activity
               </Link>
             </p>
             <p>

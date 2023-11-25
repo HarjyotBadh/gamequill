@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../firebase";
-import { doc, updateDoc, setDoc } from "firebase/firestore";
+import { doc, updateDoc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { Avatar } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { HandThumbUpIcon } from "@heroicons/react/24/solid";
@@ -81,36 +81,37 @@ export default function ReviewSnapshot({
     }
 
     async function handleRepost(review) {
+        const repostDocRef = doc(db, "reposts", `${currentUserId}_${review.id}`);
+    
         // Check if the review has been reposted by the current user
-        const isReposted =
-            review.userReposts && review.userReposts.includes(currentUserId);
-
-        // Clone the userReposts array
-        let updatedUserReposts = [...(review.userReposts || [])];
-        // Add or remove the user's ID based on the current repost status
+        const repostDoc = await getDoc(repostDocRef);
+        const isReposted = repostDoc.exists();
+    
         if (isReposted) {
-            updatedUserReposts = updatedUserReposts.filter(
-                (uid) => uid !== currentUserId
-            );
+            // If already reposted, delete the repost document
+            await deleteDoc(repostDocRef);
         } else {
-            updatedUserReposts.push(currentUserId);
+            // If not reposted, create a new repost document
+            await setDoc(repostDocRef, {
+                userId: currentUserId,
+                reviewId: review.id,
+                timestamp: new Date(),
+            });
         }
-
-        // Update the review in the database
-        const reviewRef = doc(db, "reviews", review.id);
-        await updateDoc(reviewRef, {
-            userReposts: updatedUserReposts,
-        });
-
-        
-
+    
         // Update the state to re-render the component
         setReviews((prevReviews) => {
             return prevReviews.map((r) => {
                 if (r.id === review.id) {
+                    // Ensure that userReposts is an array
+                    const userReposts = Array.isArray(r.userReposts) ? r.userReposts : [];
+                    
                     return {
                         ...r,
-                        userReposts: updatedUserReposts,
+                        // Update userReposts based on the existence of the repost document
+                        userReposts: isReposted
+                            ? userReposts.filter((entry) => entry.userId !== currentUserId)
+                            : [...userReposts, { userId: currentUserId }],
                     };
                 }
                 return r;
