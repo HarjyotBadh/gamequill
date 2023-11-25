@@ -4,12 +4,12 @@
 
 /* Define only the values for the light theme */
 :root {
-    --background-light: #fafafa;
+    --background-light: #e5e7eb;
     --text-color-light: #333;
     --secondary-text-color-light: #555;
     --rating-color-light: #618edb;
     --star-color-light: #bbbac0;
-    --wrapper-light: #f3f4f6;
+    --wrapper-light: #f0f2f5;
 }
 
 :root {

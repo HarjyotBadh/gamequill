@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/ReviewBar.css";
 import { generateStars } from "../functions/RatingFunctions";
-import { fetchReviewsByGameId, fetchFriendsRecentReviews } from "../functions/ReviewFunctions";
+import {
+    fetchReviewsByGameId,
+    fetchFriendsRecentReviews,
+} from "../functions/ReviewFunctions";
 import { calculateAverageRating } from "../functions/RatingFunctions";
-import { auth } from "../firebase";
+import Switch from "@mui/material/Switch";
 
 export default function ReviewBar({
     gameID,
@@ -14,12 +17,13 @@ export default function ReviewBar({
     setShowFriendReviews,
     showSpoilers,
     setShowSpoilers,
+    currentUserId,
 }) {
     const [numberOfReviews, setNumberOfReviews] = useState(0);
     const [averageRating, setAverageRating] = useState(0);
     const [numberOfFriendReviews, setNumberOfFriendReviews] = useState(0);
     const [friendAverageRating, setFriendAverageRating] = useState(0);
-    const currentUserId = auth.currentUser.uid;
+    // const currentUserId = auth.currentUser.uid;
 
     useEffect(() => {
         fetchReviewsByGameId(gameID).then((reviews) => {
@@ -27,19 +31,25 @@ export default function ReviewBar({
             const reviewRating = calculateAverageRating(reviews);
             setAverageRating(reviewRating === "NaN" ? "0.0" : reviewRating);
         });
-    
+
         // Fetch friend reviews and update the state values
-        fetchFriendsRecentReviews(-1, currentUserId).then((allFriendReviews) => {
-            // Filter out reviews to match the current gameID
-            const relevantFriendReviews = allFriendReviews.filter(review => review.gameID === gameID);
-            
-            setNumberOfFriendReviews(relevantFriendReviews.length);
-            const friendReviewRating = calculateAverageRating(relevantFriendReviews);
-            setFriendAverageRating(friendReviewRating === "NaN" ? "0.0" : friendReviewRating);
-        });
-    
+        fetchFriendsRecentReviews(-1, currentUserId).then(
+            (allFriendReviews) => {
+                // Filter out reviews to match the current gameID
+                const relevantFriendReviews = allFriendReviews.filter(
+                    (review) => review.gameID === gameID
+                );
+
+                setNumberOfFriendReviews(relevantFriendReviews.length);
+                const friendReviewRating = calculateAverageRating(
+                    relevantFriendReviews
+                );
+                setFriendAverageRating(
+                    friendReviewRating === "NaN" ? "0.0" : friendReviewRating
+                );
+            }
+        );
     }, [gameID, currentUserId]);
-    
 
     return (
         <div className="review-bar">
@@ -48,25 +58,23 @@ export default function ReviewBar({
                 <div className="toggle-container">
                     <label className="toggle-label">
                         Show Spoilers
-                        <input
-                            type="checkbox"
-                            className="toggle-input"
+                        <Switch
                             checked={showSpoilers}
                             onChange={() => setShowSpoilers((prev) => !prev)}
+                            name="showSpoilers"
+                            color="primary"
                         />
-                        <span className="slider"></span>
                     </label>
                     <label className="toggle-label">
                         Friend Reviews Only
-                        <input
-                            type="checkbox"
-                            className="toggle-input"
+                        <Switch
                             checked={showFriendReviews}
                             onChange={() =>
                                 setShowFriendReviews((prev) => !prev)
                             }
+                            name="showFriendReviews"
+                            color="primary"
                         />
-                        <span className="slider"></span>
                     </label>
                 </div>
 
@@ -95,8 +103,10 @@ export default function ReviewBar({
                 <div className="review-stat">
                     <span className="stat-title">Friends' Reviews:</span>
                     <div className="stat-value">
-                    {generateStars(friendAverageRating)}
-                        <span className="numericRating">{friendAverageRating}</span>
+                        {generateStars(friendAverageRating)}
+                        <span className="numericRating">
+                            {friendAverageRating}
+                        </span>
                         <span>({numberOfFriendReviews} Reviews)</span>
                     </div>
                 </div>

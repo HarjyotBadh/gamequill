@@ -1,7 +1,7 @@
 /* ListPage.css */
 
 .listPage {
-    background-color: #f0f0f0; /* Set the background color of the page */
+    background-color: var(--wrapper); /* Set the background color of the page */
     min-height: 100vh;
   }
   
@@ -193,6 +193,59 @@
   }
   .deleteListButton:hover {
     background-color: #c82333;
+  }
+  .edit-name-modal {
+    text-align: center; /* Center the content horizontally */
+  }
+  
+  .edit-name-modal h2 {
+    font-size: 1.5em; /* Set the font size for the heading */
+    margin-bottom: 20px; /* Add space below the heading */
+    color: white;
+  }
+  
+  .edit-name-modal input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 1em;
+  }
+  
+  .edit-name-modal button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  .edit-name-modal button.save-button {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  .edit-name-modal button.close-button {
+    background-color: #dc3545;
+    color: #fff;
+    border: red;
+  }
+  .list-title {
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-align: center; /* Center the title horizontally */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .list-title svg {
+    margin-left: 10px; /* Add some space between the list name and the edit button */
+  }
+  .drag-and-drop-reminder {
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    color:var(--text-color);
   }
   
   

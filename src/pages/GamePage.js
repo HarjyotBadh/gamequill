@@ -21,24 +21,30 @@ export default function GamePage({ game_id }) {
     const [userHasReview, setUserHasReview] = useState(false);
     const [showFriendReviews, setShowFriendReviews] = useState(false);
     const [showSpoilers, setShowSpoilers] = useState(true);
+    const [currentUserId, setCurrentUserId] = useState(null);
     game_id = searchParams.get("game_id");
 
     useEffect(() => {
         const auth = getAuth();
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                // User is signed in, now safe to access user.uid
                 const reviewsQuery = query(
                     collection(db, "reviews"),
                     where("gameID", "==", parseInt(game_id, 10)),
                     where("uid", "==", user.uid)
                 );
                 const reviewsSnapshot = await getDocs(reviewsQuery);
+                setCurrentUserId(user.uid);
                 setUserHasReview(!reviewsSnapshot.empty);
             } else {
+                // Redirect to login if there is no user
                 window.location.href = "/login";
             }
         });
     }, [game_id]);
+    
+    
 
     // Sets dark mode based on user's system preferences
     const [darkMode, setDarkMode] = React.useState(
@@ -120,12 +126,14 @@ export default function GamePage({ game_id }) {
                             setShowFriendReviews={setShowFriendReviews}
                             showSpoilers={showSpoilers}
                             setShowSpoilers={setShowSpoilers}
+                            currentUserId={currentUserId}
                         />
 
                         <ReviewSnapshot
                             game_id={parseInt(game_id, 10)}
                             showFriendReviews={showFriendReviews}
                             showSpoilers={showSpoilers}
+                            currentUserId={currentUserId}
                         />
                     </div>
                 </div>

@@ -164,8 +164,8 @@ export default function DescriptionBox({ gameData }) {
     }
   };
 
-  // Get the platforms.
-  const platforms = gameData.platforms?.map(getPlatformLink);
+    // Get the platforms.
+    var platforms = gameData.platforms ? gameData.platforms.map(getPlatformLink) : null;
 
   return (
     <div>

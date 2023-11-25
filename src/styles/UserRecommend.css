@@ -3,6 +3,7 @@
     grid-template-columns: repeat(4, 1fr); /* Create a 12-column grid */
     gap: 6.5px; /* Adjust the gap between grid items as needed */
     background-color: var(--background);
+    color: var(--text-color);
     border-radius: 25px;
     padding: 12px;
 }
