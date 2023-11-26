@@ -98,25 +98,62 @@ exports.updateGamePrice = functions.https.onCall(async (data, context) => {
 
 async function xboxScrapePrice(url) {
     console.log("Scraping Xbox Store");
-    const response = await axios.get(url);
-    const $ = cheerio.load(response.data);
+    try {
+        const response = await axios.get(url);
+        const $ = cheerio.load(response.data);
 
-    let price = "";
+        console.log("Loaded HTML content for Xbox Store");
 
-    // Check if there's a discounted price
-    if ($(".Price-module__listedDiscountPrice___67yG1").length) {
-        price = $(".Price-module__listedDiscountPrice___67yG1").first().text();
+        let finalPrice = "";
+        let discountedPrice = "";
+        // let originalPrice = "";
+
+        const discountedPriceElement = $(".Price-module__listedDiscountPrice___67yG1");
+        let originalPriceElement = $("div.ProductDetailsHeader-module__showOnMobileView___uZ1Dz span");
+        let originalPrice = $('div.ProductDetailsHeader-module__showOnMobileView___uZ1Dz span').first().text();
+
+        if (!discountedPriceElement.length) {
+            console.log("Discounted price element found");
+            finalPrice = discountedPriceElement.first().text().trim();
+            discountedPrice = finalPrice;
+        } else {
+            discountedPrice = "None";
+            finalPrice = originalPrice;
+        }
+
+        if (originalPriceElement.length) {
+            console.log("Original price element found");
+            originalPrice = originalPriceElement.first().text().trim();
+        } else {
+            console.log("Original price element not found");
+        }
+
+        if (!finalPrice) {
+            finalPrice = originalPrice;
+        }
+
+        if (!discountedPrice) {
+            discountedPrice = "None";
+        }
+
+        // Remove the '+' sign from the price at the end
+        finalPrice = finalPrice.replace('+', '');
+        discountedPrice = discountedPrice.replace('+', '');
+        originalPrice = originalPrice.replace('+', '');
+
+        return {
+            finalPrice: finalPrice,
+            discountedPrice: discountedPrice,
+            originalPrice: originalPrice
+        };
+    } catch (error) {
+        console.error("Error in xboxScrapePrice:", error);
+        throw error; // Rethrow the error for higher-level handling
     }
-    // If no discounted price, check for the original price
-    else if ($(".Price-module__originalPrice___+jfaT").length) {
-        price = $(".Price-module__originalPrice___+jfaT").first().text();
-    }
-
-    // Remove any plus signs at the end of the price string
-    price = price.replace(/\+$/, '').trim();
-
-    return price;
 }
+
+
+
 
 
 async function playstationScrapePrice(url) {
@@ -124,10 +161,27 @@ async function playstationScrapePrice(url) {
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
 
-    // The price is in a span with a specific data-qa attribute
-    let price = $("span[data-qa='mfeCtaMain#offer0#finalPrice']").first().text().trim();
+    // Final price is the price with any discounts applied
+    let finalPrice = $("span[data-qa='mfeCtaMain#offer0#finalPrice']").first().text().trim();
+    let discountedPrice = "";
+    let originalPriceElement = $("span[data-qa='mfeCtaMain#offer0#originalPrice']");
 
-    return price;
+    // Price is the original price without any discounts
+    let originalPrice;
+    if (originalPriceElement.length === 0) {
+        // No original price found, set to 'None'
+        originalPrice = finalPrice;
+        discountedPrice = "None";
+    } else {
+        originalPrice = originalPriceElement.text().trim();
+        discountedPrice = finalPrice;
+    }
+
+    return {
+        finalPrice: finalPrice,
+        discountedPrice: discountedPrice,
+        originalPrice: originalPrice
+    };
 }
 
 
@@ -152,7 +206,20 @@ async function steamScrapePrice(url) {
 
         if (appDetails && appDetails.price_overview && appDetails.price_overview.currency === 'USD') {
             console.log("Final Price in USD: " + appDetails.price_overview.final_formatted);
-            return appDetails.price_overview.final_formatted;
+            let finalPrice = appDetails.price_overview.final_formatted;
+            let originalPrice = appDetails.price_overview.initial_formatted;
+            let discountPrice = finalPrice;
+
+            if (appDetails.price_overview.discount_percent == 0) {
+                // No discount, set original price to 'None'
+                originalPrice = finalPrice;
+                discountPrice = "None";
+            }
+            return {
+                finalPrice: finalPrice,
+                discountedPrice: discountPrice,
+                originalPrice: originalPrice
+            };
         } else {
             console.error("Price information in USD not available for app_id:", appId);
             return "";

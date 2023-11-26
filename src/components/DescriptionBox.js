@@ -85,11 +85,11 @@ export default function DescriptionBox({ gameData }) {
   const getPlatformPrice = (platform) => {
     switch (platform.toLowerCase()) {
       case "xbox":
-        return gameData.xbox_game_price?.price;
+        return gameData.xbox_game_price?.price.finalPrice;
       case "playstation":
-        return gameData.playstation_game_price?.price;
+        return gameData.playstation_game_price?.price.finalPrice;
       case "steam":
-        return gameData.steam_game_price?.price;
+        return gameData.steam_game_price?.price.finalPrice;
       default:
         return null;
     }

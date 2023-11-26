@@ -231,22 +231,30 @@ export async function fetchSimilarGames(genres, themes) {
 // updateGamePrice.js
 
 export const updateGamePrice = (game_id) => {
+    return new Promise((resolve, reject) => {
+        const ob = { game_id: game_id };
+        const functionUrl = 'https://us-central1-gamequill-3bab8.cloudfunctions.net/updateGamePrice';
 
-    const ob = { game_id: game_id };
-    const functionUrl = 'https://us-central1-gamequill-3bab8.cloudfunctions.net/updateGamePrice';
-
-    fetch(functionUrl, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ data: ob })
-    })
-    .then(response => {
-        console.log('Request successful', response);
-    })
-    .catch(error => {
-        console.error('Request failed', error);
+        fetch(functionUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ data: ob })
+        })
+        .then(response => {
+            console.log('Request successful', response);
+            if (response.ok) {
+                resolve(response);
+            } else {
+                reject('Response not OK');
+            }
+        })
+        .catch(error => {
+            console.error('Request failed', error);
+            reject(error);
+        });
     });
 };
+
 
