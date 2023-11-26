@@ -184,9 +184,7 @@ export default function GameCardList({
           >
             Remove from List
           </button>
-        ) : (
-          <AddToList gameID={gameData.id} />
-        )}
+        ) : null}
       </CardContent>
     </Card>
   );
