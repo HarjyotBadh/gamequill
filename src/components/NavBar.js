@@ -71,113 +71,144 @@ function App() {
                 // User is logged in
                 setUser(authUser);
 
-                // Fetch the profile picture from Firestore
-                const userDoc = await getDoc(
-                    doc(db, "profileData", authUser.uid)
-                );
-                if (userDoc.exists()) {
-                    setProfilePic(userDoc.data().profilePicture);
-                }
-            } else {
-                // User is not logged in
-                setUser(null);
-                setProfilePic(null);
-            }
-        });
-
-        return () => {
-            unsubscribe();
-        };
-    }, []);
-
-    const confirmLogout = async () => {
-        try {
-            await signOut(auth);
-            setShowLogoutConfirmation(false);
-            // Redirect to the home page or another desired page after logging out.
-            navigate("/");
-        } catch (error) {
-            console.error("Error logging out:", error);
+        // Fetch the profile picture from Firestore
+        const userDoc = await getDoc(doc(db, "profileData", authUser.uid));
+        if (userDoc.exists()) {
+          setProfilePic(userDoc.data().profilePicture);
         }
-    };
-    const [selectedGenre, setSelectedGenre] = useState(""); // Initial selected genre
-    const [searchQuery, setSearchQuery] = useState("");
-    const handleSearchInputChange = (e) => {
-        setSearchQuery(e.target.value);
-        setSelectedGenre(e.target.value);
-    };
-    const handleSearch = () => {
-        // Redirect to the search page with the search query as a parameter
-        navigate(`/Search?query=${searchQuery}genre=${selectedGenre}`);
-    };
+      } else {
+        // User is not logged in
+        setUser(null);
+        setProfilePic(null);
+      }
+    });
 
-    const handleEnterKey = (e) => {
-        if (e.key === "Enter") {
-            handleSearch();
-        }
+    return () => {
+      unsubscribe();
     };
+  }, []);
 
-    return (
-        <nav className="border-gray-200 bg-gray-600">
-            <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                <Link to="/Home" className="flex items-center">
-                    <img
-                        src={logo}
-                        className="h-20 mr-10"
-                        alt="GameQuill Logo"
+  const confirmLogout = async () => {
+    try {
+      await signOut(auth);
+      setShowLogoutConfirmation(false);
+      // Redirect to the home page or another desired page after logging out.
+      navigate("/");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+  const [selectedGenre, setSelectedGenre] = useState(""); // Initial selected genre
+  const [searchQuery, setSearchQuery] = useState("");
+  const handleSearchInputChange = (e) => {
+    setSearchQuery(e.target.value);
+    setSelectedGenre(e.target.value);
+  };
+  const handleSearch = () => {
+    // Redirect to the search page with the search query as a parameter
+    //navigate(`/Search?query=${searchQuery}genre=${selectedGenre}`);
+    navigate(`/Search?query=${searchQuery}`);
+  };
+
+  const handleEnterKey = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  return (
+    <nav className="border-gray-200 bg-gray-600">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+        <Link to="/Home" className="flex items-center">
+          <img src={logo} className="h-20 mr-10" alt="GameQuill Logo" />
+        </Link>
+        <div className="flex items-center">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchInputChange}
+            onKeyDown={handleEnterKey}
+            placeholder="Search for games or users"
+            className="bg-gray-200 p-2 rounded mr-2 w-96"
+            onFocus={() => setIsSearchBarFocused(true)}
+          />
+          {/* {isSearchBarFocused && (
+            <select
+              value={selectedGenre}
+              onChange={(e) => setSelectedGenre(e.target.value)}
+              className="bg-gray-200 p-2 rounded mr-2"
+            >
+              {gameGenres.map((genre) => (
+                <option key={genre.value} value={genre.value}>
+                  {genre.label}
+                </option>
+              ))}
+            </select>
+          )}
+          {isSearchBarFocused && (
+            <select
+              value={selectedPlatform}
+              onChange={(e) => setSelectedPlatform(e.target.value)}
+              className="bg-gray-200 p-2 rounded mr-2"
+            >
+              {gamePlatforms.map((platform) => (
+                <option key={platform.value} value={platform.value}>
+                  {platform.label}
+                </option>
+              ))}
+            </select>
+          )} */}
+          <button
+            onClick={handleSearch}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Search
+          </button>
+        </div>
+        <div className="hidden w-full md:block md:w-auto" id="navbar-default">
+          <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-gray-600 md:bg-gray-600 border-gray-700">
+            <Link
+              to="/top-games"
+              className="block py-2 pl-3 pr-4 text-white rounded hover-bg-gray-100 md:hover-bg-transparent md-border-0 md:hover-text-blue-700 md-p-0 dark-text-white md-dark-hover-text-blue-500 dark-hover-bg-gray-500 dark-hover-text-white md-dark-hover-bg-transparent"
+            >
+              Top Games
+            </Link>
+            <li>
+              {user ? (
+                <div className="flex items-center space-x-4">
+                  <NotificationBell userUid={user.uid} />
+                  <div className="relative">
+                    <Avatar
+                      src={profilePic || "path_to_default_avatar.png"}
+                      className="rounded-full w-12 h-12"
+                      onClick={() =>
+                        setShowLogoutConfirmation(!showLogoutConfirmation)
+                      }
                     />
-                </Link>
-                <div className="flex items-center">
-                    <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={handleSearchInputChange}
-                        onKeyDown={handleEnterKey}
-                        placeholder="Search for games or users"
-                        className="bg-gray-200 p-2 rounded mr-2 w-96"
-                        onFocus={() => setIsSearchBarFocused(true)}
-                    />
-                    {isSearchBarFocused && (
-                        <select
-                            value={selectedGenre}
-                            onChange={(e) => setSelectedGenre(e.target.value)}
-                            className="bg-gray-200 p-2 rounded mr-2"
+
+
+                    {showLogoutConfirmation && (
+                      <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded shadow-lg z-10">
+                        <Link
+                          to={`/Profile?user_id=${user.uid}`}
+                          className="block px-4 py-2 text-gray-800 hover:bg-gray-100"
                         >
-                            {gameGenres.map((genre) => (
-                                <option key={genre.value} value={genre.value}>
-                                    {genre.label}
-                                </option>
-                            ))}
-                        </select>
-                    )}
-                    {isSearchBarFocused && (
-                        <select
-                            value={selectedPlatform}
-                            onChange={(e) =>
-                                setSelectedPlatform(e.target.value)
-                            }
-                            className="bg-gray-200 p-2 rounded mr-2"
+                          View Profile
+                        </Link>
+                        <button
+                          onClick={confirmLogout}
+                          className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
                         >
-                            {gamePlatforms.map((platform) => (
-                                <option
-                                    key={platform.value}
-                                    value={platform.value}
-                                >
-                                    {platform.label}
-                                </option>
-                            ))}
-                        </select>
+                          Logout
+                        </button>
+                      </div>
                     )}
-                    <button
-                        onClick={handleSearch}
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    >
-                        Search
-                    </button>
+                  </div>
                 </div>
-                <div
-                    className="hidden w-full md:block md:w-auto"
-                    id="navbar-default"
+              ) : (
+                <Link
+                  to="/login"
+                  className="block py-2 pl-3 pr-4 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-500 dark:hover:text-white md:dark:hover:bg-transparent"
                 >
                     <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-gray-600 md:bg-gray-600 border-gray-700">
                         <Link

@@ -32,3 +32,19 @@
     text-align: center; /* Center the text */
     margin-top: 10px; /* Add some top margin for spacing */
   }
+  .filterContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+  }
+  
+  .filterSelect {
+    margin-right: 16px;
+  }
+  .genreContainer, .platformContainer {
+    justify-content: center;
+    text-align: center;
+  }
+  .genreLabel, .platformLabel {
+    color: var(--text-color);
+  }
