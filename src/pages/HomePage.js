@@ -7,6 +7,7 @@ import "../styles/HomePage.css";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Footer from "../components/Footer";
 import HomePerRecommend from "../components/HomePerRecommend";
+import HomeUpcoming from "../components/HomeUpcoming";
 
 function App() {
   useEffect(() => {
@@ -36,6 +37,9 @@ function App() {
         <div class="grid-recommend">
           <HomePerRecommend />
           <HomeRecommend />
+        </div>
+        <div class="grid-upcoming">
+          <HomeUpcoming />
         </div>
       </div>
       <Footer />

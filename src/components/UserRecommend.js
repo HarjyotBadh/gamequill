@@ -1,6 +1,7 @@
 import React from 'react';
 import "../styles/UserRecommend.css";
 import tempcover from "../images/temp_images/tempcover.png";
+import GenreIcon from './GenreIcon';
 import { Link } from 'react-router-dom';
 
 
@@ -20,7 +21,10 @@ export default function UserRecommend({ genre, c1, c2, c3, i1, i2, i3 }) {
     return (
         
         <div class="user-recommend-container">
-            <h4 class="recommend-genre">{genre}</h4>
+            <h4 class="recommend-genre">
+                <GenreIcon g={genre} />
+                <span>{genre.charAt(0).toUpperCase() + genre.slice(1)}</span>
+            </h4>
             <div class="recommend-cover">
                 <Link to={`/game?game_id=${i1}`}>
                     <img class="recommend-cover-rounded" src={c1} alt="Pikmin Test"/>

@@ -22,6 +22,10 @@
     grid-column: 2 / span 10;
 }
 
+.grid-upcoming {
+    grid-column: 2 / span 10;
+}
+
 .shitty-background-fix {
     background-color: var(--wrapper);
 }
