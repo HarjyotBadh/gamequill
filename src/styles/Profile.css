@@ -1,5 +1,17 @@
 @media (prefers-color-scheme: dark) {
-  .FavoriteGames,
+  .FavoriteGames {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-left: 100px;
+    border: 1px solid white;
+    width: 450px;
+    height: 150px;
+    padding: 10px;
+    gap: 10px;
+    color: white;
+    border-radius: 20px;
+  }
   .FavoriteGenres {
     display: flex;
     flex-direction: row;
@@ -7,7 +19,7 @@
     margin-left: 100px;
     border: 1px solid white;
     width: 450px;
-    /* height: 150px; */
+    height: 200px;
     padding: 10px;
     gap: 10px;
     color: white;
