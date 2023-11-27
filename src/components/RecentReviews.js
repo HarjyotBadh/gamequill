@@ -18,6 +18,7 @@ const RecentReviews = () => {
 
   // Load sorting preferences from browser cookies on component mount
   useEffect(() => {
+
     const unsub = auth.onAuthStateChanged((authObj) => {
       unsub();
       if (authObj) {
@@ -29,6 +30,7 @@ const RecentReviews = () => {
         // not logged in
       }
     });
+
 
     const fetchReviews = async () => {
       try {

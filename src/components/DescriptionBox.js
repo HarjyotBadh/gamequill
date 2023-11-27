@@ -1,4 +1,6 @@
 import React from "react";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import { Spinner } from "@material-tailwind/react";
 import "../styles/DescriptionBox.css";
 import xboxLogo from "../images/platform_logos/Xbox_logo.png";
@@ -16,22 +18,6 @@ import M_Image from "../images/esrb_logos/esrb_m.png";
 import AO_Image from "../images/esrb_logos/esrb_ao.png";
 
 export default function DescriptionBox({ gameData }) {
-  const [darkMode, setDarkMode] = React.useState(
-    () =>
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-  );
-
-  React.useEffect(() => {
-    const matcher = window.matchMedia("(prefers-color-scheme: dark)");
-    const onChange = (e) => setDarkMode(e.matches);
-
-    matcher.addListener(onChange);
-
-    return () => {
-      matcher.removeListener(onChange);
-    };
-  }, []);
 
   if (!gameData) return <Spinner color="blue" />;
 
@@ -80,98 +66,158 @@ export default function DescriptionBox({ gameData }) {
   var inApple = false;
   var inAndroid = false;
 
+  const getPlatformPrice = (platform) => {
+    switch (platform.toLowerCase()) {
+      case "xbox":
+        return gameData.xbox_game_price?.price.finalPrice;
+      case "playstation":
+        return gameData.playstation_game_price?.price.finalPrice;
+      case "steam":
+        return gameData.steam_game_price?.price.finalPrice;
+      default:
+        return null;
+    }
+  };
+
   // Get the correct platform n' link.
   const getPlatformLink = (platform) => {
     const nameLower = platform.name.toLowerCase();
+    var price = null;
+    var url = null;
 
-    // Check which platform it is and return the correct one.
     if (nameLower.includes("nintendo") && !inNintendo) {
       inNintendo = true;
+      price = getPlatformPrice("nintendo");
       return (
-        <a
-          href="https://www.nintendo.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            src={nintendoLogo}
-            alt="Nintendo Logo"
-            className="platform-logo"
-          />
-        </a>
+        <Box textAlign="center">
+          <a
+            href="https://www.nintendo.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src={nintendoLogo}
+              alt="Nintendo Logo"
+              className="platform-logo"
+            />
+          </a>
+          {/* No price for Nintendo as per the current data structure */}
+        </Box>
       );
     } else if (nameLower.includes("playstation") && !inPlaystation) {
       inPlaystation = true;
+      price = getPlatformPrice("playstation");
+      // If price is not null, then set url to the playstation url.
+      // Otherwise, set url to null.
+      if (price) {
+        url = gameData.playstation_game_price.url;
+      } else {
+        url = "https://www.playstation.com/";
+      }
       return (
-        <a
-          href="https://www.playstation.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            src={playstationLogo}
-            alt="PlayStation Logo"
-            className="platform-logo"
-          />
-        </a>
+        <Box textAlign="center">
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src={playstationLogo}
+              alt="PlayStation Logo"
+              className="platform-logo"
+            />
+          </a>
+          {price && <Typography variant="body2">{`${price}`}</Typography>}
+        </Box>
       );
     } else if (nameLower.includes("xbox") && !inXbox) {
       inXbox = true;
+      price = getPlatformPrice("xbox");
+      if (price) {
+        url = gameData.xbox_game_price.url;
+      } else {
+        url = "https://www.xbox.com/";
+      }
       return (
-        <a
-          href="https://www.xbox.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src={xboxLogo} alt="Xbox Logo" className="platform-logo" />
-        </a>
+        <Box textAlign="center">
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src={xboxLogo} alt="Xbox Logo" className="platform-logo" />
+          </a>
+          {price && <Typography variant="body2">{`${price}`}</Typography>}
+        </Box>
       );
     } else if (nameLower.includes("pc") && !inSteam) {
       inSteam = true;
+      price = getPlatformPrice("steam");
+
+      if (price) {
+        url = gameData.steam_game_price.url;
+      } else {
+        url = "https://store.steampowered.com/";
+      }
+
       return (
-        <a
-          href="https://store.steampowered.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src={steamLogo} alt="Steam Logo" className="platform-logo" />
-        </a>
+        <Box textAlign="center">
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src={steamLogo} alt="Steam Logo" className="platform-logo" />
+          </a>
+          {price && <Typography variant="body2">{`${price}`}</Typography>}
+        </Box>
       );
     } else if (nameLower.includes("ios") && !inApple) {
       inApple = true;
       return (
-        <a
-          href="https://www.apple.com/app-store/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src={appleLogo} alt="Apple Logo" className="platform-logo" />
-        </a>
+        <Box textAlign="center">
+          <a
+            href="https://www.apple.com/app-store/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src={appleLogo} alt="Apple Logo" className="platform-logo" />
+          </a>
+          {/* No price for Apple as per the current data structure */}
+        </Box>
       );
     } else if (nameLower.includes("android") && !inAndroid) {
       inAndroid = true;
       return (
-        <a
-          href="https://play.google.com/store"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src={androidLogo} alt="Android Logo" className="platform-logo" />
-        </a>
+        <Box textAlign="center">
+          <a
+            href="https://play.google.com/store"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src={androidLogo}
+              alt="Android Logo"
+              className="platform-logo"
+            />
+          </a>
+          {/* No price for Android as per the current data structure */}
+        </Box>
       );
     } else {
       return null;
     }
   };
 
-    // Get the platforms.
-    var platforms = gameData.platforms ? gameData.platforms.map(getPlatformLink) : null;
+  // Get the platforms.
+  var platforms = gameData.platforms
+    ? gameData.platforms.map(getPlatformLink)
+    : null;
 
   return (
     <div>
       <div
-        className={`description-box ${darkMode ? "dark" : "light"}`}
-        data-theme={darkMode ? "dark" : "light"}
+        className={`description-box`}
       >
         <h1> Summary </h1>
         <p>{summary}</p>
