@@ -170,9 +170,15 @@ const SearchPage = ({ searchQuery }) => {
     "Amiga CD32": 114,
     "Apple IIGS": 115,
     "Acorn Archimedes": 116,
+    "PlayStation 5": 167,
+    "Xbox Series X|S": 169,
+    "Nintendo Switch": 130,
   };
 
   const gamePlatforms = [
+    { value: "PlayStation 5", label: "PlayStation 5" },
+    { value: "Xbox Series X|S", label: "Xbox Series X|S" },
+    { value: "Nintendo Switch", label: "Nintendo Switch" },
     { value: "Linux", label: "Linux" },
     { value: "Nintendo 64", label: "Nintendo 64" },
     { value: "Wii", label: "Wii" },
