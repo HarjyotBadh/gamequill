@@ -18,22 +18,6 @@ import M_Image from "../images/esrb_logos/esrb_m.png";
 import AO_Image from "../images/esrb_logos/esrb_ao.png";
 
 export default function DescriptionBox({ gameData }) {
-  const [darkMode, setDarkMode] = React.useState(
-    () =>
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-  );
-
-  React.useEffect(() => {
-    const matcher = window.matchMedia("(prefers-color-scheme: dark)");
-    const onChange = (e) => setDarkMode(e.matches);
-
-    matcher.addListener(onChange);
-
-    return () => {
-      matcher.removeListener(onChange);
-    };
-  }, []);
 
   if (!gameData) return <Spinner color="blue" />;
 
@@ -233,8 +217,7 @@ export default function DescriptionBox({ gameData }) {
   return (
     <div>
       <div
-        className={`description-box ${darkMode ? "dark" : "light"}`}
-        data-theme={darkMode ? "dark" : "light"}
+        className={`description-box`}
       >
         <h1> Summary </h1>
         <p>{summary}</p>

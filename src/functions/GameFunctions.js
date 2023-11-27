@@ -62,6 +62,7 @@ export const fetchGameData = async (game_id) => {
  * @returns {Object[]} Array of game data.
  */
 export const fetchMultipleGameData = async (game_ids) => {
+    console.log("Fetching multiple game data");
     let gamesData = [];
     let idsToFetchFromIGDB = [];
 
@@ -137,7 +138,7 @@ export const fetchGameDataFromIGDB = async (game_ids) => {
                 Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
             },
             body: `
-                fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*;
+                fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*,themes.name;
                 where id = (${game_ids.join(",")});
             `,
         });
@@ -176,14 +177,11 @@ export async function fetchSimilarGames(genres, themes) {
     const genreIds = genres.map((genre) => genre.id);
     const themeIds = themes.map((theme) => theme.id);
 
-    // console.log("genreIds:", genreIds);
-    // console.log("themeIds:", themeIds);
-
     // Constructing genres and themes conditions for the API request
     let conditions = "rating > 70 & total_rating_count > 5";
 
     if (genreIds && genreIds.length > 0) {
-        conditions += " & genres = (" + genreIds.join(",") + ")"; // hello
+        conditions += " & genres = (" + genreIds.join(",") + ")";
     }
 
     if (themeIds && themeIds.length > 0) {
@@ -228,33 +226,129 @@ export async function fetchSimilarGames(genres, themes) {
     }
 }
 
-// updateGamePrice.js
+/**
+ * Fetches one similar game based on the provided genres and themes. It constructs a request to the IGDB API
+ * with the given conditions and returns one game that most closely matches the themes and genres.
+ *
+ * @param {Object[]} genres - An array of genre objects.
+ * @param {Object[]} themes - An array of theme objects.
+ * @returns {Object} A game object with formatted screenshot URLs.
+ */
+export async function fetchSingularSimilarGame(genres, themes) {
+    const corsAnywhereUrl = "http://localhost:8080/";
+    const apiUrl = "https://api.igdb.com/v4/games";
 
+    // Extracting ids from genres and themes
+    const genreIds = genres.map((genre) => genre.id);
+    const themeIds = themes.map((theme) => theme.id);
+
+    // Constructing genres and themes conditions for the API request
+    let conditions = "rating > 70 & total_rating_count > 5";
+
+    if (genreIds && genreIds.length > 0) {
+        conditions += " & genres = (" + genreIds.join(",") + ")";
+    }
+
+    if (themeIds && themeIds.length > 0) {
+        conditions += " & themes = (" + themeIds.join(",") + ")";
+    }
+
+    const requestBody =
+        "fields name, id, rating, involved_companies.company.name, total_rating_count, screenshots.url; where " +
+        conditions +
+        "; sort rating desc; limit 1;"; // Changed limit to 1
+
+    try {
+        const response = await fetch(corsAnywhereUrl + apiUrl, {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+                Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
+            },
+            body: requestBody,
+        });
+
+        // Parse the response to JSON
+        const data = await response.json();
+
+        // Check if any game is returned
+        if (data.length > 0) {
+            const game = data[0];
+
+            // Format the screenshot URLs
+            const formattedGame = {
+                ...game,
+                screenshotUrls: game.screenshots
+                    ? game.screenshots.map((s) =>
+                          s.url.replace("t_thumb", "t_1080p")
+                      )
+                    : [],
+            };
+
+            // Fetch the game data from Firestore
+            const gameData = await fetchGameData(formattedGame.id);
+
+            // Check if the game has the field last_price_update
+            if (gameData.game.last_price_update) {
+                // Check if the game price was updated within the last 24 hours
+                const lastPriceUpdate = new Date(
+                    gameData.game.last_price_update
+                );
+                const now = new Date();
+                const hoursSinceLastPriceUpdate =
+                    (now - lastPriceUpdate) / (1000 * 60 * 60);
+                if (hoursSinceLastPriceUpdate > 24) {
+                    // Update the game price
+                    await updateGamePrice(formattedGame.id);
+                }
+            } else {
+                // Update the game price
+                await updateGamePrice(formattedGame.id);
+            }
+
+            // Return only the game id
+            return formattedGame.id;
+        } else {
+            return null; // Return null if no game is found
+        }
+    } catch (error) {
+        console.error("Error fetching similar games:", error);
+        return null;
+    }
+}
+
+
+/**
+ * Updates the price of a game.
+ *
+ * @param {string} game_id - The ID of the game to update the price for.
+ * @returns {Promise<Response>} A promise that resolves with the response from the server if the request is successful, or rejects with an error message if the request fails.
+ */
 export const updateGamePrice = (game_id) => {
     return new Promise((resolve, reject) => {
         const ob = { game_id: game_id };
-        const functionUrl = 'https://us-central1-gamequill-3bab8.cloudfunctions.net/updateGamePrice';
+        const functionUrl =
+            "https://us-central1-gamequill-3bab8.cloudfunctions.net/updateGamePrice";
 
         fetch(functionUrl, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
-            body: JSON.stringify({ data: ob })
+            body: JSON.stringify({ data: ob }),
         })
-        .then(response => {
-            console.log('Request successful', response);
-            if (response.ok) {
-                resolve(response);
-            } else {
-                reject('Response not OK');
-            }
-        })
-        .catch(error => {
-            console.error('Request failed', error);
-            reject(error);
-        });
+            .then((response) => {
+                console.log("Request successful", response);
+                if (response.ok) {
+                    resolve(response);
+                } else {
+                    reject("Response not OK");
+                }
+            })
+            .catch((error) => {
+                console.error("Request failed", error);
+                reject(error);
+            });
     });
 };
-
-

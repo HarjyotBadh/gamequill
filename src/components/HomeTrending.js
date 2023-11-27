@@ -59,7 +59,6 @@ function App() {
       }
     };
     (async () => {
-      console.log("Calling fetchMultipleGameData in HomeTrending.js");
       const fetchedGamesData = await fetchMultipleGameData(game_ids);
       setGamesData(fetchedGamesData);
 

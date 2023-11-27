@@ -7,14 +7,14 @@ import {
     TrashIcon,
 } from "@heroicons/react/24/outline";
 import Badge from "@mui/material/Badge";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
+import Tooltip from "@mui/material/Tooltip";
 import "../styles/NotificationBell.css";
 
 export default function NotificationBell({ userUid, isOpen, onToggle }) {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [panelOpen, setPanelOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -83,36 +83,40 @@ export default function NotificationBell({ userUid, isOpen, onToggle }) {
         try {
             // Get a reference to the user's profile document
             const userProfileRef = doc(db, "profileData", userUid);
-    
+
             // Get the current user's profile data
             const userProfileSnap = await getDoc(userProfileRef);
-    
+
             if (userProfileSnap.exists()) {
                 // Get current notifications array
-                const currentNotifications = userProfileSnap.data().notifications || [];
-                
+                const currentNotifications =
+                    userProfileSnap.data().notifications || [];
+
                 // Find the index of the notification to delete
                 const notificationIndex = currentNotifications.findIndex(
-                    (n) => 
+                    (n) =>
                         n.senderUID === notificationToDelete.senderUID &&
-                        n.timestamp.seconds === notificationToDelete.timestamp.seconds &&
+                        n.timestamp.seconds ===
+                            notificationToDelete.timestamp.seconds &&
                         n.type === notificationToDelete.type
                 );
-    
+
                 // If the notification is found, remove it from the array
                 if (notificationIndex > -1) {
                     const updatedNotifications = [
                         ...currentNotifications.slice(0, notificationIndex),
-                        ...currentNotifications.slice(notificationIndex + 1)
+                        ...currentNotifications.slice(notificationIndex + 1),
                     ];
-    
+
                     // Update the document with the new notifications array
                     await updateDoc(userProfileRef, {
-                        notifications: updatedNotifications
+                        notifications: updatedNotifications,
                     });
-    
+
                     // Update the local state
-                    setNotifications(notifications.filter(n => n !== notificationToDelete));
+                    setNotifications(
+                        notifications.filter((n) => n !== notificationToDelete)
+                    );
                 }
             }
         } catch (error) {
@@ -124,12 +128,12 @@ export default function NotificationBell({ userUid, isOpen, onToggle }) {
         try {
             // Get a reference to the user's profile document
             const userProfileRef = doc(db, "profileData", userUid);
-    
+
             // Update the document to set the notifications array to an empty array
             await updateDoc(userProfileRef, {
-                notifications: []
+                notifications: [],
             });
-    
+
             // Update the local state to an empty array
             setNotifications([]);
         } catch (error) {
@@ -167,42 +171,50 @@ export default function NotificationBell({ userUid, isOpen, onToggle }) {
     };
 
     if (loading) {
-        return <div><CircularProgress /></div>;
+        return (
+            <div>
+                <CircularProgress />
+            </div>
+        );
     }
-
-    // const togglePanel = () => {
-    //     onToggle(); // This will handle the logic in the App component
-    //     setPanelOpen(!panelOpen); // Toggle the current panel's state
-    // };
-    
 
     return (
         <div className="relative">
             <div onClick={onToggle} className="cursor-pointer z-10">
                 {notifications.length === 0 ? (
-                    <BellSlashIcon
-                        className="h-8 w-8 text-gray-400"
-                        aria-hidden="true"
-                    />
-                ) : (
-                    <Badge badgeContent={notifications.length} color="primary">
-                        <BellIcon
+                    <Tooltip title={`No notifications`}>
+                        <BellSlashIcon
                             className="h-8 w-8 text-gray-400"
                             aria-hidden="true"
                         />
-                    </Badge>
+                    </Tooltip>
+                ) : (
+                    <Tooltip title={`${notifications.length} notifications`}>
+                        <Badge
+                            badgeContent={notifications.length}
+                            color="primary"
+                        >
+                            <BellIcon
+                                className="h-8 w-8 text-gray-400"
+                                aria-hidden="true"
+                            />
+                        </Badge>
+                    </Tooltip>
                 )}
             </div>
-            {isOpen  && (
-               <div className="notification-panel" style={{ display: isOpen ? 'block' : 'none' }}>
+            {isOpen && (
+                <div
+                    className="notification-panel"
+                    style={{ display: isOpen ? "block" : "none" }}
+                >
                     <div className="flex justify-end p-2">
-                    <button
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={clearAllNotifications}
-                    >
-                        Clear All
-                    </button>
-                </div>
+                        <button
+                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={clearAllNotifications}
+                        >
+                            Clear All
+                        </button>
+                    </div>
                     <ul>
                         {notifications.map((notification, index) => (
                             <li

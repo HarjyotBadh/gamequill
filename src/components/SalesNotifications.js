@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs, query, where } from "firebase/firestore";
 import Badge from "@mui/material/Badge";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import { PresentationChartLineIcon } from "@heroicons/react/24/outline";
+import { fetchSingularSimilarGame } from "../functions/GameFunctions";
+import Tooltip from "@mui/material/Tooltip";
 import "../styles/NotificationBell.css";
 
 export default function SalesNotifications({ userUid, isOpen, onToggle }) {
     const [salesNotifications, setSalesNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [panelOpen, setPanelOpen] = useState(false);
     const navigate = useNavigate();
 
     const parsePrice = (priceString) => {
@@ -23,48 +24,93 @@ export default function SalesNotifications({ userUid, isOpen, onToggle }) {
     useEffect(() => {
         const fetchSalesNotifications = async () => {
             if (userUid) {
+                setLoading(true);
+        
                 try {
                     const userProfileRef = doc(db, "profileData", userUid);
                     const userProfileSnap = await getDoc(userProfileRef);
-
+        
                     if (userProfileSnap.exists()) {
                         const wishlist = userProfileSnap.data().wishlist || [];
-                        const sales = await Promise.all(wishlist.map(async (gameId) => {
-                            const gameRef = doc(db, "games", gameId.toString());
-                            const gameSnap = await getDoc(gameRef);
-
-                            if (gameSnap.exists()) {
-                                const gameData = gameSnap.data();
-                                const priceFields = ['steam_game_price', 'xbox_game_price', 'playstation_game_price'];
-                                for (let priceField of priceFields) {
-                                    if (gameData[priceField] && gameData[priceField].price) {
-                                        const price = gameData[priceField].price;
-                                        if (!(price.discountedPrice === "None") && parsePrice(price.discountedPrice) < parsePrice(price.originalPrice)) {
-                                            return {
-                                                gameId: gameId,
-                                                gameName: gameData.name,
-                                                gameCover: gameData.cover,
-                                                discountedPrice: price.discountedPrice,
-                                                finalPrice: price.finalPrice,
-                                                originalPrice: price.originalPrice
-                                            };
+                        const salesFromWishlist = await Promise.all(
+                            wishlist.map(async (gameId) => {
+                                const gameRef = doc(db, "games", gameId.toString());
+                                const gameSnap = await getDoc(gameRef);
+        
+                                if (gameSnap.exists()) {
+                                    const gameData = gameSnap.data();
+                                    const priceFields = ["steam_game_price", "xbox_game_price", "playstation_game_price"];
+                                    for (let priceField of priceFields) {
+                                        if (gameData[priceField] && gameData[priceField].price) {
+                                            const price = gameData[priceField].price;
+                                            if (price.discountedPrice !== "None" &&
+                                                parsePrice(price.discountedPrice) < parsePrice(price.originalPrice)) {
+                                                return {
+                                                    gameId: gameId,
+                                                    gameName: gameData.name,
+                                                    gameCover: gameData.cover,
+                                                    discountedPrice: price.discountedPrice,
+                                                    finalPrice: price.finalPrice,
+                                                    originalPrice: price.originalPrice,
+                                                };
+                                            }
                                         }
                                     }
                                 }
+                                return null;
+                            })
+                        );
+        
+                        // New logic for fetching a random game with recent discount
+                        const gamesRef = collection(db, "games");
+                        const lastDay = new Date();
+                        lastDay.setHours(lastDay.getHours() - 24); // set to 24 hours ago
+        
+                        const querySnapshot = await getDocs(
+                            query(gamesRef, where("last_price_update", ">=", lastDay))
+                        );
+                        let filteredGames = [];
+        
+                        querySnapshot.forEach((doc) => {
+                            const game = doc.data();
+                            const priceFields = ["steam_game_price", "xbox_game_price", "playstation_game_price"];
+                            for (let priceField of priceFields) {
+                                if (game[priceField] && game[priceField].price && game[priceField].price.discountedPrice !== "None") {
+                                    filteredGames.push({
+                                        gameId: doc.id,
+                                        gameName: game.name,
+                                        gameCover: game.cover,
+                                        discountedPrice: game[priceField].price.discountedPrice,
+                                        finalPrice: game[priceField].price.finalPrice,
+                                        originalPrice: game[priceField].price.originalPrice,
+                                    });
+                                    break; // Exit loop if one valid price is found
+                                }
                             }
-                            return null;
-                        }));
-
-                        setSalesNotifications(sales.filter(n => n !== null));
+                        });
+        
+                        let allSalesNotifications = salesFromWishlist.filter((n) => n !== null);
+        
+                        // Add a random game from the recent discounts, if available
+                        if (filteredGames.length > 0) {
+                            const randomGame = filteredGames[Math.floor(Math.random() * filteredGames.length)];
+                            // Change the name of the random game to "Recommendation: {gameName}"
+                            randomGame.gameName = `Recommendation: ${randomGame.gameName}`;
+                            allSalesNotifications.push(randomGame); // Add the random game to the list
+                        }
+        
+                        setSalesNotifications(allSalesNotifications); // Update state with all sales notifications
                     } else {
                         console.log("User profile not found");
                     }
                 } catch (error) {
                     console.error("Error fetching sales notifications:", error);
                 }
+        
+                setLoading(false);
             }
-            setLoading(false);
         };
+        
 
         fetchSalesNotifications();
     }, [userUid]);
@@ -73,42 +119,59 @@ export default function SalesNotifications({ userUid, isOpen, onToggle }) {
         return <CircularProgress />;
     }
 
-    // const togglePanel = () => {
-    //     onToggle(); // This will handle the logic in the App component
-    //     setPanelOpen(!panelOpen); // Toggle the current panel's state
-    // };
-    
-
     const getCoverUrl = (cover) => {
-        return cover ? cover.url.replace('t_thumb', 't_1080p') : 'path-to-default-game-cover';
+        return cover
+            ? cover.url.replace("t_thumb", "t_1080p")
+            : "path-to-default-game-cover";
     };
-
 
     return (
         <div className="relative">
             <div onClick={onToggle} className="cursor-pointer z-10">
                 {salesNotifications.length === 0 ? (
-                    <PresentationChartLineIcon className="h-8 w-8 text-gray-400" aria-hidden="true" />
+                    <Tooltip title="No games on sale">
+                        <PresentationChartLineIcon
+                            className="h-8 w-8 text-gray-400"
+                            aria-hidden="true"
+                        />
+                    </Tooltip>
                 ) : (
-                    <Badge badgeContent={salesNotifications.length} color="primary">
-                        <PresentationChartLineIcon className="h-8 w-8 text-gray-400" aria-hidden="true" />
-                    </Badge>
+                    <Tooltip
+                        title={`${salesNotifications.length} games on sale`}
+                    >
+                        <Badge
+                            badgeContent={salesNotifications.length}
+                            color="primary"
+                        >
+                            <PresentationChartLineIcon
+                                className="h-8 w-8 text-gray-400"
+                                aria-hidden="true"
+                            />
+                        </Badge>
+                    </Tooltip>
                 )}
             </div>
             {/* Notification panel */}
-            <div className="notification-panel" style={{ display: isOpen ? 'block' : 'none' }}>
+            <div
+                className="notification-panel"
+                style={{ display: isOpen ? "block" : "none" }}
+            >
                 <ul>
                     {salesNotifications.map((notification, index) => (
                         <li
                             key={index}
                             className="notification-item"
-                            onClick={() => navigate(`/game?game_id=${notification.gameId}`)}
+                            onClick={() =>
+                                navigate(`/game?game_id=${notification.gameId}`)
+                            }
                         >
                             <div className="flex items-center p-3">
                                 {/* Placeholder for game cover image or similar */}
                                 <div className="game-cover-wrapper">
                                     <img
-                                        src={getCoverUrl(notification.gameCover)}
+                                        src={getCoverUrl(
+                                            notification.gameCover
+                                        )}
                                         alt={`${notification.gameName} cover`}
                                         className="rounded"
                                     />

@@ -48,40 +48,52 @@ exports.updateGamePrice = functions.https.onCall(async (data, context) => {
 
             console.log("Scraping URL: " + gameUrl.url);
 
-
             let priceInfo = {
                 price: null,
                 timestamp: new Date(),
                 url: gameUrl.url,
-                platform: ''
+                platform: "",
             };
 
-            if (gameUrl.url.includes("microsoft.com") && !preventDoubleMicrosoft) {
+            if (
+                gameUrl.url.includes("microsoft.com") &&
+                !preventDoubleMicrosoft
+            ) {
                 preventDoubleMicrosoft = true;
                 priceInfo.price = await xboxScrapePrice(gameUrl.url);
-                priceInfo.platform = 'xbox';
-            } else if (gameUrl.url.includes("playstation.com") && !preventDoublePlaystation) {
+                priceInfo.platform = "xbox";
+            } else if (
+                gameUrl.url.includes("playstation.com") &&
+                !preventDoublePlaystation
+            ) {
                 preventDoublePlaystation = true;
                 priceInfo.price = await playstationScrapePrice(gameUrl.url);
-                priceInfo.platform = 'playstation';
-            } else if (gameUrl.url.includes("store.steampowered.com") && !preventDoubleSteam) {
+                priceInfo.platform = "playstation";
+            } else if (
+                gameUrl.url.includes("store.steampowered.com") &&
+                !preventDoubleSteam
+            ) {
                 preventDoubleSteam = true;
                 priceInfo.price = await steamScrapePrice(gameUrl.url);
-                priceInfo.platform = 'steam';
+                priceInfo.platform = "steam";
             }
-
 
             if (priceInfo.price) {
                 const fieldName = `${priceInfo.platform}_game_price`;
-                await db.collection("games").doc(data.game_id).update({
-                    [fieldName]: priceInfo
-                });
+                await db
+                    .collection("games")
+                    .doc(data.game_id)
+                    .set(
+                        {
+                            [fieldName]: priceInfo,
+                            last_price_update: new Date(),
+                        },
+                        { merge: true }
+                    );
 
-                await db.collection("games").doc(data.game_id).update({
-                    last_price_update: new Date()
-                });
-
-                console.log(`Price updated for game ${data.game_id} with price ${priceInfo.price}`);
+                console.log(
+                    `Price updated for game ${data.game_id} with price ${priceInfo.price}`
+                );
             }
         }
 
@@ -102,17 +114,23 @@ async function xboxScrapePrice(url) {
         const response = await axios.get(url);
         const $ = cheerio.load(response.data);
 
-        console.log("Loaded HTML content for Xbox Store");
-
         let finalPrice = "";
         let discountedPrice = "";
         // let originalPrice = "";
 
-        const discountedPriceElement = $(".Price-module__listedDiscountPrice___67yG1");
-        let originalPriceElement = $("div.ProductDetailsHeader-module__showOnMobileView___uZ1Dz span");
-        let originalPrice = $('div.ProductDetailsHeader-module__showOnMobileView___uZ1Dz span').first().text();
+        const discountedPriceElement = $(
+            ".Price-module__listedDiscountPrice___67yG1"
+        );
+        let originalPriceElement = $(
+            "div.ProductDetailsHeader-module__showOnMobileView___uZ1Dz span"
+        );
+        let originalPrice = $(
+            "div.ProductDetailsHeader-module__showOnMobileView___uZ1Dz span"
+        )
+            .first()
+            .text();
 
-        if (!discountedPriceElement.length) {
+        if (discountedPriceElement.length) {
             console.log("Discounted price element found");
             finalPrice = discountedPriceElement.first().text().trim();
             discountedPrice = finalPrice;
@@ -137,14 +155,14 @@ async function xboxScrapePrice(url) {
         }
 
         // Remove the '+' sign from the price at the end
-        finalPrice = finalPrice.replace('+', '');
-        discountedPrice = discountedPrice.replace('+', '');
-        originalPrice = originalPrice.replace('+', '');
+        finalPrice = finalPrice.replace("+", "");
+        discountedPrice = discountedPrice.replace("+", "");
+        originalPrice = originalPrice.replace("+", "");
 
         return {
             finalPrice: finalPrice,
             discountedPrice: discountedPrice,
-            originalPrice: originalPrice
+            originalPrice: originalPrice,
         };
     } catch (error) {
         console.error("Error in xboxScrapePrice:", error);
@@ -152,19 +170,20 @@ async function xboxScrapePrice(url) {
     }
 }
 
-
-
-
-
 async function playstationScrapePrice(url) {
     console.log("Scraping Playstation Store");
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
 
     // Final price is the price with any discounts applied
-    let finalPrice = $("span[data-qa='mfeCtaMain#offer0#finalPrice']").first().text().trim();
+    let finalPrice = $("span[data-qa='mfeCtaMain#offer0#finalPrice']")
+        .first()
+        .text()
+        .trim();
     let discountedPrice = "";
-    let originalPriceElement = $("span[data-qa='mfeCtaMain#offer0#originalPrice']");
+    let originalPriceElement = $(
+        "span[data-qa='mfeCtaMain#offer0#originalPrice']"
+    );
 
     // Price is the original price without any discounts
     let originalPrice;
@@ -180,10 +199,9 @@ async function playstationScrapePrice(url) {
     return {
         finalPrice: finalPrice,
         discountedPrice: discountedPrice,
-        originalPrice: originalPrice
+        originalPrice: originalPrice,
     };
 }
-
 
 async function steamScrapePrice(url) {
     // Extract the app_id from the URL
@@ -197,15 +215,24 @@ async function steamScrapePrice(url) {
     const appId = match[1];
 
     // Specify the country as USA to ensure prices are in USD
-    const countryCode = 'us';
+    const countryCode = "us";
 
     // Make a request to the Steam API
     try {
-        const apiResponse = await axios.get(`https://store.steampowered.com/api/appdetails?appids=${appId}&cc=${countryCode}`);
+        const apiResponse = await axios.get(
+            `https://store.steampowered.com/api/appdetails?appids=${appId}&cc=${countryCode}`
+        );
         const appDetails = apiResponse.data[appId].data;
 
-        if (appDetails && appDetails.price_overview && appDetails.price_overview.currency === 'USD') {
-            console.log("Final Price in USD: " + appDetails.price_overview.final_formatted);
+        if (
+            appDetails &&
+            appDetails.price_overview &&
+            appDetails.price_overview.currency === "USD"
+        ) {
+            console.log(
+                "Final Price in USD: " +
+                    appDetails.price_overview.final_formatted
+            );
             let finalPrice = appDetails.price_overview.final_formatted;
             let originalPrice = appDetails.price_overview.initial_formatted;
             let discountPrice = finalPrice;
@@ -218,10 +245,13 @@ async function steamScrapePrice(url) {
             return {
                 finalPrice: finalPrice,
                 discountedPrice: discountPrice,
-                originalPrice: originalPrice
+                originalPrice: originalPrice,
             };
         } else {
-            console.error("Price information in USD not available for app_id:", appId);
+            console.error(
+                "Price information in USD not available for app_id:",
+                appId
+            );
             return "";
         }
     } catch (error) {
@@ -229,6 +259,3 @@ async function steamScrapePrice(url) {
         return "";
     }
 }
-
-
-
