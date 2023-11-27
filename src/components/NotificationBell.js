@@ -11,7 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from "react-router-dom";
 import "../styles/NotificationBell.css";
 
-export default function NotificationBell({ userUid }) {
+export default function NotificationBell({ userUid, isOpen, onToggle }) {
     const [notifications, setNotifications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [panelOpen, setPanelOpen] = useState(false);
@@ -170,13 +170,15 @@ export default function NotificationBell({ userUid }) {
         return <div><CircularProgress /></div>;
     }
 
-    const togglePanel = () => {
-        setPanelOpen(!panelOpen);
-    };
+    // const togglePanel = () => {
+    //     onToggle(); // This will handle the logic in the App component
+    //     setPanelOpen(!panelOpen); // Toggle the current panel's state
+    // };
+    
 
     return (
         <div className="relative">
-            <div onClick={togglePanel} className="cursor-pointer z-10">
+            <div onClick={onToggle} className="cursor-pointer z-10">
                 {notifications.length === 0 ? (
                     <BellSlashIcon
                         className="h-8 w-8 text-gray-400"
@@ -191,8 +193,8 @@ export default function NotificationBell({ userUid }) {
                     </Badge>
                 )}
             </div>
-            {panelOpen && (
-                <div className="notification-panel">
+            {isOpen  && (
+               <div className="notification-panel" style={{ display: isOpen ? 'block' : 'none' }}>
                     <div className="flex justify-end p-2">
                     <button
                         className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"

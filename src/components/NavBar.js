@@ -7,17 +7,22 @@ import { Avatar } from "@material-tailwind/react";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import NotificationBell from "./NotificationBell";
+import SalesNotifications from "./SalesNotifications";
 
 function App() {
     const [user, setUser] = useState(null);
     const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
     const [profilePic, setProfilePic] = useState(null);
     const navigate = useNavigate();
+    const [isSalesNotificationOpen, setIsSalesNotificationOpen] =
+        useState(false);
+    const [isNotificationBellOpen, setIsNotificationBellOpen] = useState(false);
+
     const [selectedPlatform, setSelectedPlatform] = useState("All Platform"); // Initial selected genre
 
     const gamePlatforms = [
         { value: "select-platform", label: "Select Platform" },
-    ]
+    ];
     const gameGenres = [
         { value: "select-genre", label: "Select Genre" },
         { value: "point-and-click", label: "Point-and-Click" },
@@ -35,7 +40,10 @@ function App() {
         { value: "turn-based-strategy", label: "Turn-based Strategy (TBS)" },
         { value: "tactical", label: "Tactical" },
         { value: "quiz-trivia", label: "Quiz/Trivia" },
-        { value: "hack-and-slash-beat-em-up", label: "Hack and Slash/Beat 'em Up" },
+        {
+            value: "hack-and-slash-beat-em-up",
+            label: "Hack and Slash/Beat 'em Up",
+        },
         { value: "pinball", label: "Pinball" },
         { value: "adventure", label: "Adventure" },
         { value: "arcade", label: "Arcade" },
@@ -45,6 +53,17 @@ function App() {
         { value: "moba", label: "MOBA" },
     ];
     const [isSearchBarFocused, setIsSearchBarFocused] = useState(false);
+
+    const toggleSalesNotificationPanel = () => {
+        setIsSalesNotificationOpen(!isSalesNotificationOpen);
+        setIsNotificationBellOpen(false); // Close the NotificationBell when opening SalesNotifications
+    };
+    
+    const toggleNotificationBellPanel = () => {
+        setIsNotificationBellOpen(!isNotificationBellOpen);
+        setIsSalesNotificationOpen(false); // Close the SalesNotifications when opening NotificationBell
+    };
+    
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (authUser) => {
@@ -119,31 +138,36 @@ function App() {
                         onFocus={() => setIsSearchBarFocused(true)}
                     />
                     {isSearchBarFocused && (
-                    <select
-                        value={selectedGenre}
-                        onChange={(e) => setSelectedGenre(e.target.value)}
-                        className="bg-gray-200 p-2 rounded mr-2"
-                    >
-                    {gameGenres.map((genre) => (
-                    <option key={genre.value} value={genre.value}>
-                    {genre.label}
-                    </option>
-                    ))}
-                    </select>
+                        <select
+                            value={selectedGenre}
+                            onChange={(e) => setSelectedGenre(e.target.value)}
+                            className="bg-gray-200 p-2 rounded mr-2"
+                        >
+                            {gameGenres.map((genre) => (
+                                <option key={genre.value} value={genre.value}>
+                                    {genre.label}
+                                </option>
+                            ))}
+                        </select>
                     )}
                     {isSearchBarFocused && (
-                    <select
-                        value={selectedPlatform}
-                        onChange={(e) => setSelectedPlatform(e.target.value)}
-                        className="bg-gray-200 p-2 rounded mr-2"
-                    >
-                    {gamePlatforms.map((platform) => (
-                        <option key={platform.value} value={platform.value}>
-                        {platform.label}
-                        </option>
-                    ))}
-                    </select>
-)}
+                        <select
+                            value={selectedPlatform}
+                            onChange={(e) =>
+                                setSelectedPlatform(e.target.value)
+                            }
+                            className="bg-gray-200 p-2 rounded mr-2"
+                        >
+                            {gamePlatforms.map((platform) => (
+                                <option
+                                    key={platform.value}
+                                    value={platform.value}
+                                >
+                                    {platform.label}
+                                </option>
+                            ))}
+                        </select>
+                    )}
                     <button
                         onClick={handleSearch}
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -155,14 +179,27 @@ function App() {
                     className="hidden w-full md:block md:w-auto"
                     id="navbar-default"
                 >
-                <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-gray-600 md:bg-gray-600 border-gray-700">
-                <Link to="/top-games" className="block py-2 pl-3 pr-4 text-white rounded hover-bg-gray-100 md:hover-bg-transparent md-border-0 md:hover-text-blue-700 md-p-0 dark-text-white md-dark-hover-text-blue-500 dark-hover-bg-gray-500 dark-hover-text-white md-dark-hover-bg-transparent">
-                    Top Games
-                </Link>
+                    <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-gray-600 md:bg-gray-600 border-gray-700">
+                        <Link
+                            to="/top-games"
+                            className="block py-2 pl-3 pr-4 text-white rounded hover-bg-gray-100 md:hover-bg-transparent md-border-0 md:hover-text-blue-700 md-p-0 dark-text-white md-dark-hover-text-blue-500 dark-hover-bg-gray-500 dark-hover-text-white md-dark-hover-bg-transparent"
+                        >
+                            Top Games
+                        </Link>
                         <li>
                             {user ? (
                                 <div className="flex items-center space-x-4">
-                                    <NotificationBell userUid={user.uid} />
+                                    <SalesNotifications 
+    userUid={user.uid} 
+    isOpen={isSalesNotificationOpen}
+    onToggle={toggleSalesNotificationPanel}
+/>
+<NotificationBell 
+    userUid={user.uid} 
+    isOpen={isNotificationBellOpen}
+    onToggle={toggleNotificationBellPanel}
+/>
+
                                     <div className="relative">
                                         <Avatar
                                             src={
