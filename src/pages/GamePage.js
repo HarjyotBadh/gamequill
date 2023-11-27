@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { query, collection, where, getDocs } from "firebase/firestore";
@@ -9,7 +9,7 @@ import MediaPlayer from "../components/MediaPlayer";
 import DescriptionBox from "../components/DescriptionBox";
 import ReviewBar from "../components/ReviewBar";
 import ReviewSnapshot from "../components/ReviewSnapshot";
-import { fetchGameData } from "../functions/GameFunctions";
+import { fetchGameData, updateGamePrice } from "../functions/GameFunctions";
 import Footer from "../components/Footer";
 import "../styles/GamePage.css";
 
@@ -22,6 +22,8 @@ export default function GamePage({ game_id }) {
     const [showFriendReviews, setShowFriendReviews] = useState(false);
     const [showSpoilers, setShowSpoilers] = useState(true);
     const [currentUserId, setCurrentUserId] = useState(null);
+    const [priceUpdated, setPriceUpdated] = useState(false);
+    const priceUpdateCalled = useRef(false);
     game_id = searchParams.get("game_id");
 
     useEffect(() => {
@@ -43,66 +45,73 @@ export default function GamePage({ game_id }) {
             }
         });
     }, [game_id]);
-    
-    
-
-    // Sets dark mode based on user's system preferences
-    const [darkMode, setDarkMode] = React.useState(
-        () =>
-            window.matchMedia &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches
-    );
-
-    // Sets dark mode based on user's system preferences
-    React.useEffect(() => {
-        const matcher = window.matchMedia("(prefers-color-scheme: dark)");
-        const onChange = (e) => setDarkMode(e.matches);
-
-        matcher.addListener(onChange);
-
-        return () => {
-            matcher.removeListener(onChange);
-        };
-    }, []);
 
     useEffect(() => {
-        const storedGameData = JSON.parse(
-            localStorage.getItem(`gameData_${game_id}`)
-        );
-
-        if (storedGameData &&
-            storedGameData.game &&
-            storedGameData.game.name) {
-            console.log("Loading gameData from localStorage");
-            setGameData(storedGameData.game);
-            setScreenshots(storedGameData.screenshotUrls);
-            setVideos(storedGameData.videoIds);
-        } else {
-            (async () => {
-                console.log("Calling fetchGameData in GamePage.js");
-                const fetchedGameData = await fetchGameData(game_id);
-
-                if (fetchedGameData) {
-                    setGameData(fetchedGameData.game);
-                    setScreenshots(fetchedGameData.screenshotUrls);
-                    setVideos(fetchedGameData.videoIds);
-
-                    // Store the fetched data in localStorage
-                    localStorage.setItem(
-                        `gameData_${game_id}`,
-                        JSON.stringify(fetchedGameData)
-                    );
-                } else {
-                    window.location.href = "/home";
-                }
-            })();
-        }
-    }, [game_id]);
+      const fetchGameDataAndUpdatePrice = async () => {
+          console.log("Fetching game data from Firestore");
+          const fetchedGameData = await fetchGameData(game_id);
+  
+          if (fetchedGameData && fetchedGameData.game) {
+              let shouldUpdatePrice = false;
+              const now = new Date();
+  
+              if (fetchedGameData.game.last_price_update) {
+                  const lastUpdate = new Date(fetchedGameData.game.last_price_update?.seconds * 1000);
+                  const oneDay = 24 * 60 * 60 * 1000;
+  
+                  if (now - lastUpdate >= oneDay) {
+                      shouldUpdatePrice = true;
+                  }
+              } else {
+                  shouldUpdatePrice = true;
+              }
+  
+              if (shouldUpdatePrice && !priceUpdateCalled.current) {
+                  console.log("Updating game price");
+                  priceUpdateCalled.current = true;
+                  try {
+                      await updateGamePrice(game_id);
+                      setPriceUpdated(true); // Update state to indicate price updated
+                  } catch (error) {
+                      console.error("Error updating price:", error);
+                  }
+              } else {
+                  console.log("Game price already updated today");
+              }
+  
+              setGameData(fetchedGameData.game);
+              setScreenshots(fetchedGameData.screenshotUrls);
+              setVideos(fetchedGameData.videoIds);
+          } else {
+              window.location.href = "/home";
+          }
+      };
+  
+      fetchGameDataAndUpdatePrice();
+  }, [game_id, currentUserId]);
+  
+  // Second useEffect for fetching updated game data after price update
+  useEffect(() => {
+      if (priceUpdated) {
+          const fetchUpdatedGameData = async () => {
+              const fetchedGameData = await fetchGameData(game_id);
+              if (fetchedGameData && fetchedGameData.game) {
+                  setGameData(fetchedGameData.game);
+                  // Update other state variables if necessary
+                  setScreenshots(fetchedGameData.screenshotUrls);
+                  setVideos(fetchedGameData.videoIds);
+              }
+  
+              setPriceUpdated(false); // Reset price updated state
+          };
+  
+          fetchUpdatedGameData();
+      }
+  }, [priceUpdated, game_id]);
 
     return (
         <div
-            className={`game-page-wrapper ${darkMode ? "dark" : "light"}`}
-            data-theme={darkMode ? "dark" : "light"}
+            className={`game-page-wrapper`}
         >
             <NavBar />
 

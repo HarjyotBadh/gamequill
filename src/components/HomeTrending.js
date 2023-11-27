@@ -18,7 +18,7 @@ import {
 function App() {
   const [gamesData, setGamesData] = useState([]);
 
-  const game_ids = [96437, 254339, 213639, 127044, 78511];
+  const game_ids = [96437, 254339, 148241, 127044, 78511];
 
   useEffect(() => {
     // Check if gamesData exists in sessionStorage
@@ -59,7 +59,6 @@ function App() {
       }
     };
     (async () => {
-      console.log("Calling fetchMultipleGameData in HomeTrending.js");
       const fetchedGamesData = await fetchMultipleGameData(game_ids);
       setGamesData(fetchedGamesData);
 
