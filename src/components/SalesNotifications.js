@@ -140,7 +140,7 @@ export default function SalesNotifications({ userUid, isOpen, onToggle }) {
                         title={`${salesNotifications.length} games on sale`}
                     >
                         <Badge
-                            badgeContent={salesNotifications.length}
+                            badgeContent={salesNotifications.length - 1}
                             color="primary"
                         >
                             <PresentationChartLineIcon

@@ -2,7 +2,7 @@
 .likes-container {
     text-align: center;
     padding: 100px;
-    background-color: #e3f2fd; /* Slightly different shade for differentiation */
+    background-color: var(--wrapper); /* Slightly different shade for differentiation */
     font-family: Arial, sans-serif;
   }
   
@@ -10,7 +10,7 @@
     font-size: 28px;
     font-weight: bold;
     margin-bottom: 20px;
-    color: #333;
+    color: var(--text-color);
   }
   
   .likes {

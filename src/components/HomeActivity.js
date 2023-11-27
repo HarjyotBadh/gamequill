@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import "../styles/HomeActivity.css";
 import UserActivity from "./UserActivity";
 import { fetchFriendsRecentReviews } from "../functions/ReviewFunctions";
@@ -13,13 +13,12 @@ function App() {
                 const theUserId = authObj.uid;
 
                 fetchFriendsRecentReviews(3, theUserId)
-                    .then(data => {
+                    .then((data) => {
                         setReviews(data);
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.error(err);
                     });
-
             } else {
                 // Handle the case when the user is not logged in if needed
             }
@@ -37,7 +36,10 @@ function App() {
                     {reviews.map((review, index) => (
                         <div className="user-activity" key={index}>
                             <UserActivity
-                                cover={review.gameCover.replace('t_thumb', 't_1080p')}
+                                cover={review.gameCover.replace(
+                                    "t_thumb",
+                                    "t_1080p"
+                                )}
                                 username={review.username}
                                 rating={review.starRating}
                                 note={review.reviewText}

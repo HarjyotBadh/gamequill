@@ -80,6 +80,7 @@ export default function TitleCard({ gameData }) {
         <Rating
           name="read-only"
           value={averageRating}
+          precision={0.2}
           readOnly
           sx={{
             "& .MuiRating-iconFilled": {

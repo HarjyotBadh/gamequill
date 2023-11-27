@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Avatar, IconButton, Tooltip } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ReplayIcon from "@mui/icons-material/Replay";
-import { generateStars } from "../functions/RatingFunctions";
+import Rating from "@mui/material/Rating";
 import {
     fetchReviewsByGameId,
     parseReviewWithSpoilersToHTML,
@@ -81,12 +81,16 @@ export default function ReviewSnapshot({
     }
 
     async function handleRepost(review) {
-        const repostDocRef = doc(db, "reposts", `${currentUserId}_${review.id}`);
-    
+        const repostDocRef = doc(
+            db,
+            "reposts",
+            `${currentUserId}_${review.id}`
+        );
+
         // Check if the review has been reposted by the current user
         const repostDoc = await getDoc(repostDocRef);
         const isReposted = repostDoc.exists();
-    
+
         if (isReposted) {
             // If already reposted, delete the repost document
             await deleteDoc(repostDocRef);
@@ -104,13 +108,17 @@ export default function ReviewSnapshot({
             return prevReviews.map((r) => {
                 if (r.id === review.id) {
                     // Ensure that userReposts is an array
-                    const userReposts = Array.isArray(r.userReposts) ? r.userReposts : [];
-                    
+                    const userReposts = Array.isArray(r.userReposts)
+                        ? r.userReposts
+                        : [];
+
                     return {
                         ...r,
                         // Update userReposts based on the existence of the repost document
                         userReposts: isReposted
-                            ? userReposts.filter((entry) => entry.userId !== currentUserId)
+                            ? userReposts.filter(
+                                  (entry) => entry.userId !== currentUserId
+                              )
                             : [...userReposts, { userId: currentUserId }],
                     };
                 }
@@ -173,7 +181,21 @@ export default function ReviewSnapshot({
                                         {review.starRating.toFixed(1)}
                                     </span>
                                     <div className="rating">
-                                        {generateStars(review.starRating)}
+                                        <Rating
+                                            name="read-only"
+                                            value={review.starRating}
+                                            precision={0.5}
+                                            readOnly
+                                            sx={{
+                                                "& .MuiRating-iconFilled": {
+                                                    color: "var(--rating-color)",
+                                                },
+                                                "& .MuiRating-iconEmpty": {
+                                                    color: "var(--star-color)",
+                                                },
+                                            }}
+                                        />
+
                                     </div>
                                 </div>
                                 <div className="like-repost-container">
