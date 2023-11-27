@@ -37,6 +37,9 @@ function App() {
           <HomePerRecommend />
           <HomeRecommend />
         </div>
+        <div class="grid-upcoming">
+          
+        </div>
       </div>
       <Footer />
     </div>
