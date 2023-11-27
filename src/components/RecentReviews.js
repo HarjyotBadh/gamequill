@@ -18,17 +18,19 @@ const RecentReviews = () => {
 
   // Load sorting preferences from browser cookies on component mount
   useEffect(() => {
-    // const unsub = auth.onAuthStateChanged((authObj) => {
-    //   unsub();
-    //   if (authObj) {
-    //     const theuserId = authObj.uid;
-    //     setUserId(theuserId);
-    //     console.log(theuserId);
-    //     fetchReviews();
-    //   } else {
-    //     // not logged in
-    //   }
-    // });
+
+    const unsub = auth.onAuthStateChanged((authObj) => {
+      unsub();
+      if (authObj) {
+        const theuserId = authObj.uid;
+        setUserId(theuserId);
+        console.log(theuserId);
+        fetchReviews();
+      } else {
+        // not logged in
+      }
+    });
+
 
     const fetchReviews = async () => {
       try {
