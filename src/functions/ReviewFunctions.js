@@ -212,6 +212,59 @@ export function parseReviewWithSpoilersToHTML(reviewText) {
 }
 
 /**
+ * Fetches the most recent reposted reviews for the specified user.
+ * @param {number} numReposts - The number of reposted reviews to fetch (use -1 for all reposts).
+ * @param {string} userId - The UID of the user to fetch reposted reviews.
+ * @returns {Array} A list of reposted review objects.
+ */
+export async function fetchUserRepostedReviews(numReposts, userId) {
+    try {
+        // Query the "Reposts" collection to get documents where userId matches
+        const repostsQuery = query(
+            collection(db, "reposts"),
+            where("userId", "==", userId),
+            orderBy("timestamp", "desc")
+        );
+
+        const repostsSnapshot = await getDocs(repostsQuery);
+
+        // Fetch the corresponding review data for each repost
+        const repostedReviewsData = [];
+        for (const repostDoc of repostsSnapshot.docs) {
+            const reviewId = repostDoc.data().reviewId;
+            const reviewRef = doc(db, "reviews", reviewId);
+            const reviewDoc = await getDoc(reviewRef);
+
+            if (reviewDoc.exists()) {
+                const reviewData = reviewDoc.data();
+                const userDataRef = doc(db, "profileData", reviewData.uid);
+                const userDataDoc = await getDoc(userDataRef);
+                const userData = userDataDoc.data();
+
+                // Construct the reposted review object
+                repostedReviewsData.push({
+                    id: reviewDoc.id,
+                    username: userData.username,
+                    profilePicture: userData.profilePicture,
+                    ...reviewData,
+                });
+            }
+        }
+
+        // Sort the reposted reviews by timestamp and limit the number of reviews
+        if (numReposts !== -1) {
+            repostedReviewsData.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
+            return repostedReviewsData.slice(0, numReposts);
+        }
+
+        return repostedReviewsData;
+    } catch (error) {
+        console.error("Error fetching reposted reviews:", error);
+        throw error;
+    }
+}
+
+/**
  * Fetches comments for a specific review from the Firestore database.
  * @param {string} review_id - The ID of the review for which to fetch comments.
  * @returns {Array} An array of comment objects, each including the comment data and the associated user data.
@@ -295,5 +348,6 @@ export async function fetchRepliesByCommentId(review_id, comment_id) {
         throw new Error("Error fetching replies");
     }
 }
+
 
 
