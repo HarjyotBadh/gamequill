@@ -2,19 +2,21 @@ import React from "react";
 import { Spinner } from "@material-tailwind/react";
 import { fetchReviewsByGameId } from "../functions/ReviewFunctions";
 import { Link } from "react-router-dom";
-import "../styles/GameCardList.css";
-import GameLog from "./GameLog";
-import GameLike from "./GameLike";
-import AddWishlistButton from "./AddWishlistButton";
+import Card from "@mui/material/Card";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Rating from "@mui/material/Rating";
+import GameInteractionButtons from "./GameInterationButtons";
 import AddToList from "./AddToList";
+import { doc, updateDoc, arrayRemove } from "firebase/firestore";
+import { db, auth } from "../firebase";
 import {
   calculateAverageRating,
   generateStars,
 } from "../functions/RatingFunctions";
-import { doc, updateDoc, arrayRemove } from "firebase/firestore";
-import { db, auth } from "../firebase";
 
-export default function TitleCard({
+export default function GameCardList({
   gameDataArray,
   gameData,
   viewMode,
@@ -23,6 +25,7 @@ export default function TitleCard({
   setGameDataArray,
   listOwner,
   index,
+  onDrop,
 }) {
   const [averageRating, setAverageRating] = React.useState(0);
   const [darkMode, setDarkMode] = React.useState(
@@ -55,7 +58,6 @@ export default function TitleCard({
   const bigCoverUrl = gameData.cover
     ? gameData.cover.url.replace("/t_thumb/", "/t_cover_big/")
     : null;
-  // const textSizeClass = gameData.name.length > 25 ? "text-xl" : "text-4xl";
 
   const stars = generateStars(averageRating);
   const isListOwner = auth.currentUser && auth.currentUser.uid === listOwner;
@@ -70,7 +72,6 @@ export default function TitleCard({
       setGameDataArray((prevData) =>
         prevData.filter((data) => data.id !== gameId)
       );
-      //window.location.reload();
     } catch (error) {
       console.error("Error removing game from list:", error);
     }
@@ -86,6 +87,7 @@ export default function TitleCard({
 
   const handleDrop = async (e) => {
     e.preventDefault();
+    if (!isListOwner) return;
     const draggedIndex = parseInt(e.dataTransfer.getData("text/plain"), 10);
     const hoverIndex = index;
 
@@ -102,50 +104,87 @@ export default function TitleCard({
     await updateDoc(listDocRef, {
       games: newGameIds,
     });
+    onDrop(draggedIndex, hoverIndex);
   };
 
   return (
-    <div
+    <Card
       className={`game-card-list ${darkMode ? "dark" : "light"} ${viewMode}`}
+      sx={{
+        bgcolor: "var(--background)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        borderRadius: "20px",
+      }}
       data-theme={darkMode ? "dark" : "light"}
-      draggable="true"
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
+      draggable={isListOwner ? "true" : "false"}
+      onDragStart={isListOwner ? handleDragStart : null}
+      onDragOver={isListOwner ? handleDragOver : null}
+      onDrop={isListOwner ? handleDrop : null}
     >
       {bigCoverUrl && (
         <Link to={`/game?game_id=${gameData.id}`}>
-          {" "}
-          {/* Wrap the image in a Link */}
-          <img src={bigCoverUrl} alt={gameData.name} />
+          <CardMedia
+            component="img"
+            height="140"
+            image={bigCoverUrl}
+            alt={gameData.name}
+          />
         </Link>
       )}
-      <h2 className="title-card-text">{gameData.name}</h2>
-      <p>{gameData.involved_companies?.[0]?.company?.name || "N/A"}</p>
-      <p className="numericRating">{averageRating}</p>
-      <div className="rating">{stars}</div>
-
-      <div class="play-buttons-container flex flex-row">
-        <div class="play-button">
-          <GameLog gameID={gameData.id} />
-        </div>
-        <div class="play-button">
-          <GameLike gameID={gameData.id} />
-        </div>
-      </div>
-      <div class="play-button">
-        <AddWishlistButton gameID={gameData.id} />
-      </div>
-      {isListOwner ? (
-        <button
-          className="removeFromListButton"
-          onClick={() => handleRemoveFromList(gameData.id)}
+      <CardContent>
+        <Typography
+          gutterBottom
+          variant="h5"
+          component="div"
+          sx={{ color: "var(--text-color)" }}
         >
-          Remove from List
-        </button>
-      ) : (
+          {gameData.name}
+        </Typography>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ color: "var(--secondary-text-color)" }}
+        >
+          {gameData.involved_companies?.[0]?.company?.name || "N/A"}
+        </Typography>
+        <Typography
+          variant="h6"
+          sx={{
+            color: "var(--rating-color)",
+            fontSize: 25,
+            fontWeight: "bold",
+          }}
+        >
+          {averageRating}
+        </Typography>
+        <Rating
+          name="read-only"
+          value={averageRating}
+          readOnly
+          sx={{
+            "& .MuiRating-iconFilled": {
+              color: "var(--rating-color)",
+            },
+            "& .MuiRating-iconEmpty": {
+              color: "var(--star-color)",
+            },
+          }}
+        />
+        <div className="play-buttons-container">
+          <GameInteractionButtons gameID={gameData.id} />
+        </div>
         <AddToList gameID={gameData.id} />
-      )}
-    </div>
+        {isListOwner ? (
+          <button
+            className="removeFromListButton"
+            onClick={() => handleRemoveFromList(gameData.id)}
+          >
+            Remove from List
+          </button>
+        ) : null}
+      </CardContent>
+    </Card>
   );
 }

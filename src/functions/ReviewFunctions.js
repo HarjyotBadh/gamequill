@@ -212,6 +212,59 @@ export function parseReviewWithSpoilersToHTML(reviewText) {
 }
 
 /**
+ * Fetches the most recent reposted reviews for the specified user.
+ * @param {number} numReposts - The number of reposted reviews to fetch (use -1 for all reposts).
+ * @param {string} userId - The UID of the user to fetch reposted reviews.
+ * @returns {Array} A list of reposted review objects.
+ */
+export async function fetchUserRepostedReviews(numReposts, userId) {
+    try {
+        // Query the "Reposts" collection to get documents where userId matches
+        const repostsQuery = query(
+            collection(db, "reposts"),
+            where("userId", "==", userId),
+            orderBy("timestamp", "desc")
+        );
+
+        const repostsSnapshot = await getDocs(repostsQuery);
+
+        // Fetch the corresponding review data for each repost
+        const repostedReviewsData = [];
+        for (const repostDoc of repostsSnapshot.docs) {
+            const reviewId = repostDoc.data().reviewId;
+            const reviewRef = doc(db, "reviews", reviewId);
+            const reviewDoc = await getDoc(reviewRef);
+
+            if (reviewDoc.exists()) {
+                const reviewData = reviewDoc.data();
+                const userDataRef = doc(db, "profileData", reviewData.uid);
+                const userDataDoc = await getDoc(userDataRef);
+                const userData = userDataDoc.data();
+
+                // Construct the reposted review object
+                repostedReviewsData.push({
+                    id: reviewDoc.id,
+                    username: userData.username,
+                    profilePicture: userData.profilePicture,
+                    ...reviewData,
+                });
+            }
+        }
+
+        // Sort the reposted reviews by timestamp and limit the number of reviews
+        if (numReposts !== -1) {
+            repostedReviewsData.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
+            return repostedReviewsData.slice(0, numReposts);
+        }
+
+        return repostedReviewsData;
+    } catch (error) {
+        console.error("Error fetching reposted reviews:", error);
+        throw error;
+    }
+}
+
+/**
  * Fetches comments for a specific review from the Firestore database.
  * @param {string} review_id - The ID of the review for which to fetch comments.
  * @returns {Array} An array of comment objects, each including the comment data and the associated user data.
@@ -219,6 +272,7 @@ export function parseReviewWithSpoilersToHTML(reviewText) {
  */
 export async function fetchCommentsByReviewId(review_id) {
     try {
+        console.log("Reading from Firebase: fetchCommentsByReviewId");
         const q = query(collection(db, "reviews", review_id, "comments"));
         const querySnapshot = await getDocs(q);
         const comments = [];
@@ -240,10 +294,60 @@ export async function fetchCommentsByReviewId(review_id) {
             }
         }
 
+        // Sort comments by timestamp (most recent first)
+        comments.sort((a, b) => {
+            return b.timestamp.seconds - a.timestamp.seconds;
+        });
+
         return comments;
     } catch (error) {
         console.error("Error fetching comments: ", error);
         throw new Error("Error fetching comments");
     }
 }
+
+/**
+ * Fetches replies for a specific comment from the Firestore database.
+ * @param {string} review_id - The ID of the review.
+ * @param {string} comment_id - The ID of the comment for which to fetch replies.
+ * @returns {Array} An array of reply objects, each including the reply data and the associated user data.
+ * @throws {Error} If an error occurs while fetching data.
+ */
+export async function fetchRepliesByCommentId(review_id, comment_id) {
+    try {
+        console.log("Reading from Firebase: fetchRepliesByCommentId");
+        const q = query(collection(db, "reviews", review_id, "comments", comment_id, "replies"));
+        const querySnapshot = await getDocs(q);
+        const replies = [];
+
+        for (const docu of querySnapshot.docs) {
+            const replyData = docu.data();
+
+            // Retrieve related user data using the uid from the reply document
+            const userRef = doc(db, "profileData", replyData.uid.toString());
+            const userDoc = await getDoc(userRef);
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                replies.push({
+                    id: docu.id,
+                    username: userData.username,
+                    profilePicture: userData.profilePicture,
+                    ...replyData,
+                });
+            }
+        }
+
+        // Sort replies by timestamp (most recent first)
+        replies.sort((a, b) => {
+            return b.timestamp.seconds - a.timestamp.seconds;
+        });
+
+        return replies;
+    } catch (error) {
+        console.error("Error fetching replies: ", error);
+        throw new Error("Error fetching replies");
+    }
+}
+
+
 

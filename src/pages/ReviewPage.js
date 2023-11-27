@@ -9,7 +9,6 @@ import CommentDisplay from "../components/CommentDisplay";
 import CommentCreator from "../components/CommentCreator";
 import StarSelection from "../components/StarSelection";
 import ReviewProfile from "../components/ReviewProfile";
-import ReplyDisplay from "../components/ReplyDisplay";
 import { useNavigate } from "react-router-dom";
 import "../styles/ReviewPage.css";
 import Footer from "../components/Footer";
@@ -22,31 +21,20 @@ import {
     where,
     getDocs,
 } from "firebase/firestore";
+import Switch from "@mui/material/Switch";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 export default function ReviewPage() {
     const { review_id } = useParams();
     const [reviewData, setReviewData] = React.useState(null);
     const [gameData, setGameData] = React.useState(null);
-    const [darkMode, setDarkMode] = React.useState(
-        () =>
-            window.matchMedia &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches
-    );
     const [showSpoilers, setShowSpoilers] = React.useState(false);
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
     const [gameID, setGameID] = React.useState(null);
     const [hasCommented, setHasCommented] = React.useState(false);
     const currentUserUid = auth.currentUser?.uid;
     const navigate = useNavigate();
-
-    React.useEffect(() => {
-        const matcher = window.matchMedia("(prefers-color-scheme: dark)");
-        const onChange = (e) => setDarkMode(e.matches);
-        matcher.addListener(onChange);
-        return () => {
-            matcher.removeListener(onChange);
-        };
-    }, []);
 
     React.useEffect(() => {
         const fetchReviewAndGameData = async () => {
@@ -93,12 +81,12 @@ export default function ReviewPage() {
             } catch (error) {
                 console.error("Error fetching review or game data: ", error);
                 // In case of an error or no document found, redirect user to home page.
-                navigate("/");
+                // navigate("/");
             }
         };
 
         fetchReviewAndGameData();
-    }, [review_id]);
+    }, [review_id, hasCommented]);
 
     const openDeleteModal = () => {
         setShowDeleteModal(true);
@@ -160,10 +148,7 @@ export default function ReviewPage() {
     }
 
     return (
-        <div
-            className={`review-page-wrapper ${darkMode ? "dark" : "light"}`}
-            data-theme={darkMode ? "dark" : "light"}
-        >
+        <div className={`review-page-wrapper`}>
             <NavBar />
             <div className="review-page-layout">
                 {/* Left side */}
@@ -189,14 +174,24 @@ export default function ReviewPage() {
                             readOnly
                         />
                         <div className="toggle-spoilers">
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={showSpoilers}
-                                    onChange={toggleSpoilers}
+                            <FormGroup>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={showSpoilers}
+                                            onChange={toggleSpoilers}
+                                            name="showSpoilers"
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Show Spoilers"
+                                    sx={{
+                                        '& .MuiFormControlLabel-label': { 
+                                            color: 'var(--text-color)'
+                                        }
+                                    }}
                                 />
-                                Show Spoilers
-                            </label>
+                            </FormGroup>
                         </div>
 
                         {currentUserUid === reviewData.uid && (
@@ -258,9 +253,9 @@ export default function ReviewPage() {
                         <CommentDisplay
                             review_id={review_id}
                             hasCommented={hasCommented}
+                            setHasCommented={setHasCommented}
                             currentUserUid={currentUserUid}
                         />
-                        
                     </div>
                 </div>
                 {/* End of right-container */}

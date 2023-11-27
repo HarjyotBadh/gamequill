@@ -136,11 +136,11 @@ function Profile({ profileData, setProfileData, userId }) {
             Favorite Genres
             {isUser && <EditGenre genres={genres} setGenres={setGenres} />}
           </div>
-          <div className="FavoriteGenres flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-whitetext-black">
+          <div className="FavoriteGenres flex justify-start ml-20 border-2 dark:border-white border-black w-96 p-2 gap-4 dark:text-whitetext-black">
             {profileData.favoriteGenres.map((genre, index) => (
               <div
                 key={index}
-                className="w-24 h-32 text-center border dark:border-white border-black"
+                className="w-24 text-center border dark:border-white border-black"
               >
                 <GenreIcon g={genre} />
                 {genre.charAt(0).toUpperCase() + genre.slice(1)}
@@ -214,7 +214,7 @@ function Profile({ profileData, setProfileData, userId }) {
             />
             <p>
               <Link to="/recent-reviews" className="button">
-                Recent Reviews
+                Recent Activity
               </Link>
             </p>
             <p>

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../firebase";
-import { doc, updateDoc, setDoc } from "firebase/firestore";
-import { Avatar } from "@material-tailwind/react";
+import { doc, updateDoc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { Link } from "react-router-dom";
-import { HandThumbUpIcon } from "@heroicons/react/24/solid";
-import { ArrowPathIcon } from "@heroicons/react/24/solid";
+import { Avatar, IconButton, Tooltip } from "@mui/material";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ReplayIcon from "@mui/icons-material/Replay";
 import { generateStars } from "../functions/RatingFunctions";
 import {
     fetchReviewsByGameId,
@@ -27,7 +27,7 @@ export default function ReviewSnapshot({
     game_id,
     showFriendReviews,
     showSpoilers,
-    currentUserId
+    currentUserId,
 }) {
     const [reviews, setReviews] = useState([]);
     // const currentUserId = auth.currentUser.uid;
@@ -81,43 +81,44 @@ export default function ReviewSnapshot({
     }
 
     async function handleRepost(review) {
+        const repostDocRef = doc(db, "reposts", `${currentUserId}_${review.id}`);
+    
         // Check if the review has been reposted by the current user
-        const isReposted =
-            review.userReposts && review.userReposts.includes(currentUserId);
-
-        // Clone the userReposts array
-        let updatedUserReposts = [...(review.userReposts || [])];
-        // Add or remove the user's ID based on the current repost status
+        const repostDoc = await getDoc(repostDocRef);
+        const isReposted = repostDoc.exists();
+    
         if (isReposted) {
-            updatedUserReposts = updatedUserReposts.filter(
-                (uid) => uid !== currentUserId
-            );
+            // If already reposted, delete the repost document
+            await deleteDoc(repostDocRef);
         } else {
-            updatedUserReposts.push(currentUserId);
+            // If not reposted, create a new repost document
+            await setDoc(repostDocRef, {
+                userId: currentUserId,
+                reviewId: review.id,
+                timestamp: new Date(),
+            });
         }
-
-        // Update the review in the database
-        const reviewRef = doc(db, "reviews", review.id);
-        await updateDoc(reviewRef, {
-            userReposts: updatedUserReposts,
-        });
-
-        
 
         // Update the state to re-render the component
         setReviews((prevReviews) => {
             return prevReviews.map((r) => {
                 if (r.id === review.id) {
+                    // Ensure that userReposts is an array
+                    const userReposts = Array.isArray(r.userReposts) ? r.userReposts : [];
+                    
                     return {
                         ...r,
-                        userReposts: updatedUserReposts,
+                        // Update userReposts based on the existence of the repost document
+                        userReposts: isReposted
+                            ? userReposts.filter((entry) => entry.userId !== currentUserId)
+                            : [...userReposts, { userId: currentUserId }],
                     };
                 }
                 return r;
             });
         });
     }
-    
+
     useEffect(() => {
         async function getData() {
             let reviewsData = await fetchReviewsByGameId(game_id);
@@ -152,7 +153,7 @@ export default function ReviewSnapshot({
     return (
         <div className="review-snapshot">
             {reviews.map((review) => {
-                // Check and truncate the review if necessary
+                // Truncating long review texts
                 let displayText = review.reviewText;
                 if (review.reviewText.length > 1000) {
                     displayText = `${review.reviewText.substring(0, 997)}...`;
@@ -174,53 +175,55 @@ export default function ReviewSnapshot({
                                     <div className="rating">
                                         {generateStars(review.starRating)}
                                     </div>
-                                    <div className="like-button-container">
-                                        <HandThumbUpIcon
-                                            className={
-                                                review.userLikes &&
-                                                review.userLikes.includes(
-                                                    currentUserId
-                                                )
-                                                    ? "liked"
-                                                    : "not-liked"
-                                            }
-                                            onClick={() => handleLike(review)}
-                                        />
-                                        <span className="like-count">
-                                            {(review.userLikes
-                                                ? review.userLikes.length
-                                                : 0) + " likes"}
-                                        </span>
-                                    </div>
                                 </div>
-                            </div>
-                            <div className="likes-button-container">
-                                <ArrowPathIcon
-                                    className={
-                                        review.userReposts &&
-                                        review.userReposts.includes(
-                                            currentUserId
-                                        )
-                                            ? "reposted"
-                                            : "not-reposted"
-                                    }
-                                    onClick={() => handleRepost(review)}
-                                />
-                                <span className="repost-count">
-                                    {(review.userReposts
-                                        ? review.userReposts.length
-                                        : 0) + " reposts"}
-                                </span>
+                                <div className="like-repost-container">
+                                    <Tooltip title="Like">
+                                        <IconButton
+                                            onClick={() => handleLike(review)}
+                                        >
+                                            <ThumbUpIcon
+                                                className={
+                                                    review.userLikes?.includes(
+                                                        currentUserId
+                                                    )
+                                                        ? "liked"
+                                                        : "not-liked"
+                                                }
+                                            />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <span className="like-count">
+                                        {review.userLikes?.length || 0}
+                                    </span>
+                                    <Tooltip title="Repost">
+                                        <IconButton
+                                            onClick={() => handleRepost(review)}
+                                        >
+                                            <ReplayIcon
+                                                className={
+                                                    review.userReposts?.includes(
+                                                        currentUserId
+                                                    )
+                                                        ? "reposted-icon"
+                                                        : "not-reposted-icon"
+                                                }
+                                            />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <span className="repost-count">
+                                        {review.userReposts?.length || 0}
+                                    </span>
+                                </div>
                             </div>
                             <Link
                                 to={`/Profile?user_id=${review.uid}`}
-                                className="user-info-container"
+                                className="review-user-info-container"
                             >
                                 <Avatar
-                                    className="custom-avatarr medium-avatarr"
                                     src={review.profilePicture}
+                                    className="custom-avatar medium-avatar"
                                 />
-                                <div className="user-info">
+                                <div className="review-user-info">
                                     <span className="review-username">
                                         {review.username}
                                     </span>
@@ -241,7 +244,7 @@ export default function ReviewSnapshot({
 
                         <Link to={`/review/${review.id}`}>
                             <p
-                                className="review-text-snapshott"
+                                className="review-text-snapshot"
                                 dangerouslySetInnerHTML={{
                                     __html: DOMPurify.sanitize(
                                         parseReviewWithSpoilersToHTML(
@@ -249,9 +252,7 @@ export default function ReviewSnapshot({
                                         )
                                     ),
                                 }}
-                            >
-                                {/* Content will be inserted by dangerouslySetInnerHTML */}
-                            </p>
+                            />
                         </Link>
                     </div>
                 );

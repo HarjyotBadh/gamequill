@@ -35,21 +35,6 @@ export default function ReviewCreationPage() {
     const [isDialogOpen, setIsDialogOpen] = React.useState(false);
     const [containsSpoiler, setContainsSpoiler] = React.useState(false);
 
-    const [darkMode, setDarkMode] = React.useState(
-        () =>
-            window.matchMedia &&
-            window.matchMedia("(prefers-color-scheme: dark)").matches
-    );
-
-    React.useEffect(() => {
-        const matcher = window.matchMedia("(prefers-color-scheme: dark)");
-        const onChange = (e) => setDarkMode(e.matches);
-        matcher.addListener(onChange);
-        return () => {
-            matcher.removeListener(onChange);
-        };
-    }, []);
-
     const showErrorDialog = (message) => {
         setError(message);
         setIsDialogOpen(true);
@@ -129,8 +114,7 @@ export default function ReviewCreationPage() {
 
     return (
         <div
-            className={`review-page-wrapper ${darkMode ? "dark" : "light"}`}
-            data-theme={darkMode ? "dark" : "light"}
+            className={`review-page-wrapper`}
         >
             <NavBar />
 
@@ -159,7 +143,6 @@ export default function ReviewCreationPage() {
                         />
                         <label
                             className="ml-2 spoiler-label"
-                            style={{ color: darkMode ? "white" : "black" }}
                         >
                             Contains spoilers
                         </label>
@@ -203,9 +186,7 @@ export default function ReviewCreationPage() {
                             right: 'auto',
                             transform: 'translate(-50%, -50%)'
                         }}
-                        className={`rounded-lg z-50 max-w-xl ${
-                            darkMode ? "dark-dialog" : "light-dialog"
-                        }`}
+                        className={`rounded-lg z-50 max-w-xl`}
                     >
                         <DialogHeader className="bg-red-500 text-white text-lg font-semibold p-4 rounded-t-lg flex items-center">
                             Error
