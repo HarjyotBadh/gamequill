@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
-import { db, auth } from "../firebase"; // Ensure you have this import
-import {
-    doc,
-    getDoc,
-    updateDoc,
-    arrayUnion,
-    arrayRemove,
-  } from "firebase/firestore";
 import "../styles/FeedbackPage.css";
 
 export default function FeedbackPage() {

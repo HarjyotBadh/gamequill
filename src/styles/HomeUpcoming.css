@@ -1,0 +1,24 @@
+.upcoming-container {
+
+}
+
+.upcoming-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr); /* Create a 12-column grid */
+    gap: 6.5px; /* Adjust the gap between grid items as needed */
+    border-radius: 25px;
+    margin-bottom: 50px;
+}
+
+.upcoming-head {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.upcoming-item {
+}
+
+.upcoming-cover-rounded {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}

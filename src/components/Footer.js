@@ -11,6 +11,9 @@ export default function Footer() {
             <h1 className="text-2xl font-bold">GameQuill</h1>
           </div>
           <div className="space-x-6">
+          <Link to="/about">
+              About
+            </Link>
             <Link to="/feedback">
               Feedback
             </Link>
