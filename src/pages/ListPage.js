@@ -235,8 +235,8 @@ const ListPage = () => {
                   strokeWidth={1.5}
                   stroke="currentColor"
                   className="w-6 h-6"
-                  onClick={() => console.log("clicked")}
                   cursor={"pointer"}
+                  title="Edit List Name"
                 >
                   <path
                     strokeLinecap="round"
@@ -250,20 +250,25 @@ const ListPage = () => {
               contentStyle={{
                 border: "2px solid white",
                 //color: "white",
-                height: 300,
-                width: 300,
+                height: 400,
+                width: 400,
                 backgroundColor: "grey",
               }}
             >
               {(close) => (
-                <div className="edit-name-modal">
-                  <h2>Edit List Name</h2>
+                <div className="edit-name-modal" style={{ margin: "10px" }}>
+                  <h2 style={{ margin: "10px 0" }}>Edit List Name</h2>
                   <input
                     type="text"
                     value={newListName}
                     onChange={(e) => setNewListName(e.target.value)}
+                    style={{ margin: "10px 0" }}
                   />
-                  <button className="save-button" onClick={handleEditListName}>
+                  <button
+                    className="save-button"
+                    onClick={handleEditListName}
+                    style={{ margin: "10px 0" }}
+                  >
                     Save
                   </button>
                   <button
@@ -272,6 +277,7 @@ const ListPage = () => {
                     onClick={() => {
                       close();
                     }}
+                    style={{ margin: "10px 0" }}
                   >
                     Close
                   </button>

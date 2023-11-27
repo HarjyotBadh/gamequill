@@ -229,6 +229,7 @@
     background-color: #dc3545;
     color: #fff;
     border: red;
+    height: 50px;
   }
   .list-title {
     font-size: 2em;

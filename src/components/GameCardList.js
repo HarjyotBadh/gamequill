@@ -111,7 +111,6 @@ export default function GameCardList({
     <Card
       className={`game-card-list ${darkMode ? "dark" : "light"} ${viewMode}`}
       sx={{
-        maxWidth: 250,
         bgcolor: "var(--background)",
         display: "flex",
         flexDirection: "column",
