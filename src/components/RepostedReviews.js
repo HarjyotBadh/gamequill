@@ -1,6 +1,6 @@
-// RepostedReviews.js
+// LikedReviews.js
 import React, { useEffect, useState } from "react";
-import { collection, query, where, getDocs, orderBy, doc, getDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
 import { db } from "../firebase";
 import ReviewCard from "./ReviewCard";
 
@@ -10,30 +10,15 @@ const RepostedReviews = ({ userId, showAllReviews, reviewsToShow }) => {
   useEffect(() => {
     const fetchRepostedReviews = async () => {
       try {
-        // Query the "Reposts" collection to get documents where userId matches
-        const repostsQuery = query(
-          collection(db, "reposts"),
-          where("userId", "==", userId),
-          orderBy("timestamp", "desc") // Assuming you have a timestamp field in Reposts
+        const repostedReviewsQuery = query(
+          collection(db, "reviews"),
+          where("userReposts", "array-contains", userId),
         );
-        
-        const repostsSnapshot = await getDocs(repostsQuery);
-
-        // Fetch the corresponding review data for each repost
-        const repostedReviewsData = [];
-        for (const repostDoc of repostsSnapshot.docs) {
-          const reviewId = repostDoc.data().reviewId;
-          const reviewRef = doc(db, "reviews", reviewId);
-          const reviewDoc = await getDoc(reviewRef);
-
-          if (reviewDoc.exists()) {
-            repostedReviewsData.push({
-              id: reviewDoc.id,
-              ...reviewDoc.data(),
-            });
-          }
-        }
-
+        const repostedReviewsSnapshot = await getDocs(repostedReviewsQuery);
+        const repostedReviewsData = repostedReviewsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
         setRepostedReviews(repostedReviewsData);
       } catch (error) {
         console.error("Error fetching reposted reviews:", error);
