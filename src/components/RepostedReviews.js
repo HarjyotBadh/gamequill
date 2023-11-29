@@ -13,6 +13,7 @@ const RepostedReviews = ({ userId, showAllReviews, reviewsToShow }) => {
         const repostedReviewsQuery = query(
           collection(db, "reviews"),
           where("userReposts", "array-contains", userId),
+          orderBy("timestamp", "desc") // Order by timestamp in descending order
         );
         const repostedReviewsSnapshot = await getDocs(repostedReviewsQuery);
         const repostedReviewsData = repostedReviewsSnapshot.docs.map((doc) => ({

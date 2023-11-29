@@ -50,7 +50,7 @@ function TopGames() {
         const conditions = "rating > 70 & total_rating_count > 25";
 
         const requestBody = `
-          fields name, aggregated_rating, genres.name;
+          fields name, aggregated_rating, genres.name, cover.url;
           where ${conditions};
           sort aggregated_rating desc;
           limit 500;
