@@ -7,6 +7,7 @@ import NavBar from "../components/NavBar";
 import RepostedReviews from "../components/RepostedReviews";
 import LikedReviews from "../components/LikedReviews";
 import "../styles/RecentReviews.css";
+import Footer from '../components/Footer';
 
 const RecentReviews = () => {
   const [userReviews, setUserReviews] = useState([]);
@@ -82,7 +83,7 @@ const RecentReviews = () => {
   };
 
   return (
-    <div>
+    <div className="recent-reviews-wrapper">
       <NavBar />
       <div className="recent-reviews">
         <h2>Your Created Reviews</h2>
@@ -133,6 +134,7 @@ const RecentReviews = () => {
           reviewsToShow={reviewsToShow}
         />
       </div>
+      <Footer />
     </div>
   );
 };
