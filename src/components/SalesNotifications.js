@@ -118,7 +118,9 @@ export default function SalesNotifications({ userUid, isOpen, onToggle }) {
                                 filteredGames[Math.floor(Math.random() * filteredGames.length)];
                             // Change the name of the random game to "Recommendation: {gameName}"
                             randomGame.gameName = `Recommendation: ${randomGame.gameName}`;
-                            allSalesNotifications.push(randomGame); // Add the random game to the list
+
+                            // Add the game to the beginning of the array
+                            allSalesNotifications.unshift(randomGame);
                         }
 
                         setSalesNotifications(allSalesNotifications); // Update state with all sales notifications
@@ -155,7 +157,7 @@ export default function SalesNotifications({ userUid, isOpen, onToggle }) {
                         />
                     </Tooltip>
                 ) : (
-                    <Tooltip title={`${salesNotifications.length} games on sale`}>
+                    <Tooltip title={`${salesNotifications.length - 1} games on sale`}>
                         <Badge badgeContent={salesNotifications.length - 1} color="primary">
                             <PresentationChartLineIcon
                                 className="h-8 w-8 text-gray-400"
