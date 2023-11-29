@@ -22,11 +22,11 @@ export default function HomeUpcoming() {
         const getGames = async (userId) => {
             try {
                 const corsAnywhereUrl = "http://localhost:8080/";
-                const apiUrl = "https://api.igdb.com/v4/games";
+                const apiUrl = "https://api.igdb.com/v4/release_dates";
 
                 let arr = new Array(6);
                 console.log("arr size:  " + arr.length);
-                const currentTime = Date.now();
+                const currentTime = Math.floor(Date.now() / 1000);
                 const timeRange = 2600000; // one month is about 2.6 million seconds
                 const futureTime = currentTime + timeRange;
                 console.log("currentTime:  " + currentTime);
@@ -39,14 +39,15 @@ export default function HomeUpcoming() {
                         "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
                         Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
                     },
-                    body: `fields name, category, release_dates.*, status, cover.url, id; sort rating desc; limit:100;`,
+                    body: `fields game.*, game.cover.url, date; where date > ${currentTime}; sort date asc; limit 100;`,
                 }); 
 
                 const gameResults = await response.json();
 
                 let gameRandom = gameResults.sort(() => Math.random() - 0.5);
-
                 gameRandom = gameResults.slice(0, 6);
+
+                console.log(gameRandom);
 
                 setUpcomingGames(gameRandom);
 
@@ -68,10 +69,10 @@ export default function HomeUpcoming() {
                 {upcomingGames.map((gameData, index) => (
                     <div key={index}>
                         <UpcomingItem
-                            name={gameData?.name}
-                            cover={formatCoverUrl(gameData?.cover?.url)}
-                            gameid={gameData?.id || ""}
-                            ti={gameData.release_dates[0]?.date}
+                            name={gameData.game?.name}
+                            cover={formatCoverUrl(gameData.game?.cover?.url)}
+                            gameid={gameData.game?.id || ""}
+                            ti={gameData?.date}
                         />
                     </div>
                 ))}
