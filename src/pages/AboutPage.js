@@ -38,14 +38,15 @@ export default function AboutPage() {
           <div class="about-text">
             <h4 class="about-name">HARJYOT BADH</h4>
             <p>
-              "This is Harjyot's bio/testimonial. Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-              labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-              nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-              consequat. Duis aute irure dolor in reprehenderit in voluptate
-              velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-              occaecat cupidatat non proident, sunt in culpa qui officia
-              deserunt mollit anim id est laborum."
+              "Harjyot Badh is a Computer Science Student at Purdue University with a
+                            concentration in Software Engineering and Machine Intelligence. He also
+                            is purusing a Certficiate in Entreprenuership and Innovation. He is a
+                            passionate gamer and loves to play games in his free time. For
+                            GameQuill, Harjyot worked on the backend and frontend of the website. He
+                            also worked on the database and the API. Harjyot worked primarly on the
+                            game page, review page, and notifications. Harjyot's favorite game is
+                            Star Wars Battlefront 2, the classic one. Spider-Man is his all time
+                            favorite fictional character."
             </p>
           </div>
         </div>
