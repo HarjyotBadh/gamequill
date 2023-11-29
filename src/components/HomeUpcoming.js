@@ -40,7 +40,7 @@ export default function HomeUpcoming() {
                         Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
                     },
                     body: `fields name, category, release_dates.*, status, cover.url, id; sort rating desc; limit:100;`,
-                });
+                }); 
 
                 const gameResults = await response.json();
 
