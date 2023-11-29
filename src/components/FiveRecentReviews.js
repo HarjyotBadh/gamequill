@@ -36,11 +36,11 @@ export default function FiveRecentReviews({user_id}) {
           <RecentReview
             class="rr"
             cover={review.gameCover.replace("t_thumb", "t_1080p")}
-            username={review.username} // Assuming review object has username
+            username={review.username}
             rating={review.starRating}
             note={review.reviewText}
-            id={review.gameID} // Assuming review object has gameId
-            reviewId={review.id} // Assuming review object has id
+            id={review.gameID}
+            reviewId={review.id}
             time={review.timestamp}
           />
         </div>

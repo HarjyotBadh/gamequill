@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { Avatar, IconButton, Tooltip } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ReplayIcon from "@mui/icons-material/Replay";
-import { generateStars } from "../functions/RatingFunctions";
+import Rating from "@mui/material/Rating";
 import {
     fetchReviewsByGameId,
     parseReviewWithSpoilersToHTML,
@@ -181,7 +181,21 @@ export default function ReviewSnapshot({
                                         {review.starRating.toFixed(1)}
                                     </span>
                                     <div className="rating">
-                                        {generateStars(review.starRating)}
+                                        <Rating
+                                            name="read-only"
+                                            value={review.starRating}
+                                            precision={0.5}
+                                            readOnly
+                                            sx={{
+                                                "& .MuiRating-iconFilled": {
+                                                    color: "var(--rating-color)",
+                                                },
+                                                "& .MuiRating-iconEmpty": {
+                                                    color: "var(--star-color)",
+                                                },
+                                            }}
+                                        />
+
                                     </div>
                                 </div>
                                 <div className="like-repost-container">

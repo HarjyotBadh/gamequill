@@ -1,6 +1,11 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import {
+    getFirestore,
+    initializeFirestore,
+    persistentLocalCache,
+    persistentSingleTabManager,
+} from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
@@ -15,6 +20,12 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
+initializeFirestore(app, {
+    localCache: persistentLocalCache({
+        tabManager: persistentSingleTabManager(),
+    }),
+});
 
 // Initialize other Firebase services
 const auth = getAuth(app);
