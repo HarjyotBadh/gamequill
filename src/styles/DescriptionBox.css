@@ -58,3 +58,24 @@
     height: auto;
     margin-bottom: 16px;
 }
+
+.gosidways {
+    display: flex;
+    flex-direction: column;
+}
+
+.genrestuff {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 20px;
+    margin-left: 30px;
+    margin-right: 30px;
+    color: var(--text-color);
+
+}
+
+.genre-gohorizontal {
+    text-align: center;
+    align-content: center;
+}

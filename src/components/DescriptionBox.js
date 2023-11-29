@@ -16,6 +16,7 @@ import E10_Image from "../images/esrb_logos/esrb_e10.png";
 import T_Image from "../images/esrb_logos/esrb_t.png";
 import M_Image from "../images/esrb_logos/esrb_m.png";
 import AO_Image from "../images/esrb_logos/esrb_ao.png";
+import GenreIcon from "./GenreIcon";
 
 export default function DescriptionBox({ gameData }) {
 
@@ -222,7 +223,17 @@ export default function DescriptionBox({ gameData }) {
         <h1> Summary </h1>
         <p>{summary}</p>
         <h1> Genres </h1>
-        <p>{genres}</p>
+        <div class="genrestuff">
+          {gameData.genres?.map((gen, index) => (
+            <div key={index}>
+              <div class="genre-gohorizontal">
+                {gen.name}
+                <GenreIcon g={gen.name} />
+              </div>
+            </div>
+          ))}
+        </div>
+
         {storyline && <h1> Storyline </h1>}
         {storyline && <p>{storyline}</p>}
         <h1> Platforms </h1>

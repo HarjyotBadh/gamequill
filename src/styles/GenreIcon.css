@@ -1,0 +1,10 @@
+@media (prefers-color-scheme: light) {
+    .a {
+      filter: invert(100%);
+    }
+  }
+
+.b {
+  max-width: 100px;
+}
+  
