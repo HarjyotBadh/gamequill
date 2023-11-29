@@ -1,6 +1,8 @@
 /* RecentReviews.css */
+.recent-reviews-wrapper {
+  background-color: var(--wrapper);
+}
 .recent-reviews {
-  background: #f7f7f7; /* Light gray background */
   padding: 20px;
   border-radius: 10px;
   margin: 20px 0;
@@ -50,7 +52,6 @@
 }
 
 .sort-options input[type="checkbox"]:checked {
-  background-color: #333;
   border: 2px solid #333;
 }
 

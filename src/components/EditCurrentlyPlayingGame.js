@@ -24,7 +24,7 @@ export default function EditCurrentlyPlayingGame({
       headers: {
         Accept: "application/json",
         "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-        Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
+        Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
       },
       body: `search "${searchQuery}";fields name,cover.url, id; limit:5; where category = (0,8,9);`,
     })
