@@ -74,14 +74,17 @@ export default function AboutPage() {
           <div class="about-text">
             <h4 class="about-name">BAILEY HARRELL</h4>
             <p>
-              "This is Bailey's bio/testimonial. Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-              labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-              nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-              consequat. Duis aute irure dolor in reprehenderit in voluptate
-              velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-              occaecat cupidatat non proident, sunt in culpa qui officia
-              deserunt mollit anim id est laborum."
+              "Bailey Harrell is a Computer Science Student at Purdue University
+              with a concentration in Software Engineering and Computer
+              Graphics. He also is pursuing a minor in Film and Video Studies.
+              Bailey was born and raised in Fort Worth, Texas, and came to
+              Purdue for school. For GameQuill, Bailey worked primarily on the
+              Profile Page, Lists, and the Search Page. Bailey's favorite game
+              is Marvel's Spider-Man 2 because Spider-Man is his all time
+              favorite fictional character. An avid cinephile, Bailey enjoys
+              watching movies and writing reviews on Letterboxd. He came up with
+              the idea for GameQuill from utilizing this app so often, and many
+              of the features were directly inspired from that application."
             </p>
           </div>
         </div>
