@@ -28,6 +28,9 @@ export default function ProfilePage({ userId }) {
             docData.favoriteGenres || defaultProfileData.favoriteGenres,
           name: docData.name || defaultProfileData.name,
           username: docData.username || defaultProfileData.username,
+          notificationPreferences:
+            docData.notificationPreferences ||
+            defaultProfileData.notificationPreferences,
         };
         setProfileData(data);
       } else {
@@ -73,6 +76,11 @@ export default function ProfilePage({ userId }) {
     favoriteGenres: ["", "", "", ""],
     name: "",
     username: "",
+    notificationPreferences: {
+      steam: true,
+      xbox: true,
+      playstation: true,
+    },
   };
 
   const [profileData, setProfileData] = useState(defaultProfileData);

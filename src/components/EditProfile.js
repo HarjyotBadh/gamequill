@@ -10,6 +10,7 @@ import {
     getDocs,
     writeBatch,
     arrayRemove,
+    updateDoc,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import {
@@ -26,6 +27,10 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import TextField from "@mui/material/TextField";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Typography from "@mui/material/Typography";
+import FormGroup from "@mui/material/FormGroup";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { styled } from "@mui/material/styles";
 import "../styles/EditProfile.css";
@@ -42,21 +47,27 @@ const CustomTextField = styled(TextField)({
 });
 
 export default function EditProfile({ profileData, setProfileData }) {
-    // console.log(profileData);
-    //const uid = "GPiU3AHpvyOhnbsVSzap";
     const auth = getAuth();
     var uid;
-    // if (auth.currentUser == null) {
-    //   window.location.href = "/login";
-    //   //uid = "GPiU3AHpvyOhnbsVSzap";
-    // } else {
     uid = auth.currentUser.uid;
-    // }
     const [hasChanges, setHasChanges] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [password, setPassword] = useState("");
     const [deleteError, setDeleteError] = useState("");
+    const [notificationSettings, setNotificationSettings] = useState({
+        steam: true,
+        playstation: true,
+        xbox: true,
+    });
+
+    // Handle change in notification settings
+    const handleNotificationChange = (platform) => (event) => {
+        setNotificationSettings(prevSettings => ({
+            ...prevSettings,
+            [platform]: event.target.checked,
+        }));
+    };
 
     const openDeleteModal = () => {
         setShowDeleteModal(true);
@@ -79,6 +90,12 @@ export default function EditProfile({ profileData, setProfileData }) {
             pronouns: profileData.pronouns || "",
             bio: profileData.bio || "",
             profilePicture: profileData.profilePicture || "",
+        });
+        console.log(profileData.notificationPreferences?.steam);
+        setNotificationSettings({
+            steam: profileData.notificationPreferences?.steam ?? true,
+            playstation: profileData.notificationPreferences?.playstation ?? true,
+            xbox: profileData.notificationPreferences?.xbox ?? true,
         });
     }, [profileData]);
 
@@ -189,22 +206,28 @@ export default function EditProfile({ profileData, setProfileData }) {
         }
     };
 
+    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const updatedFormData = { ...formData };
+        // Merge formData with notificationSettings
+        const updatedData = {
+            ...formData,
+            notificationPreferences: notificationSettings,
+        };
 
         // Update Firestore with new data
         const docRef = doc(db, "profileData", uid);
-        await setDoc(docRef, updatedFormData, { merge: true });
+        await setDoc(docRef, updatedData, { merge: true });
 
         // Update the profileData state with the new data
-        await setProfileData((prevProfileData) => ({
+        setProfileData((prevProfileData) => ({
             ...prevProfileData,
-            ...updatedFormData,
-            profilePicture: updatedFormData.profilePicture,
+            ...updatedData,
+            profilePicture: updatedData.profilePicture,
         }));
-        await setHasChanges(true);
+
+        setHasChanges(false);
     };
 
     return (
@@ -331,6 +354,7 @@ export default function EditProfile({ profileData, setProfileData }) {
                                 },
                             }}
                         />
+
                         <Button
                             variant="contained"
                             component="label"
@@ -349,6 +373,108 @@ export default function EditProfile({ profileData, setProfileData }) {
                             />
                         </Button>
                     </DialogContent>
+
+                    <DialogContent
+                        style={{
+                            backgroundColor: "var(--background)",
+                            color: "var(--text-color)",
+                            borderRadius: "10px",
+                            padding: "20px",
+                            marginBottom: "20px",
+                        }}
+                    >
+                        <Typography variant="h6" gutterBottom style={{ marginTop: "20px" }}>
+                            Sales Notification Settings
+                        </Typography>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={notificationSettings.steam}
+                                        onChange={handleNotificationChange("steam")}
+                                        name="steam"
+                                        sx={{
+                                            "& .MuiSwitch-switchBase.Mui-checked": {
+                                                color: "var(--rating-color)",
+                                            },
+                                            "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
+                                                {
+                                                    backgroundColor: "var(--rating-color)",
+                                                },
+                                            "& .MuiSwitch-switchBase.Mui-checked:hover": {
+                                                backgroundColor:
+                                                    "rgba(var(--rating-color-rgb), 0.08)",
+                                            },
+                                        }}
+                                    />
+                                }
+                                label="Steam Sales Notifications"
+                                sx={{
+                                    ".MuiFormControlLabel-label": {
+                                        color: "var(--secondary-text-color)",
+                                    },
+                                }}
+                            />
+
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={notificationSettings.playstation}
+                                        onChange={handleNotificationChange("playstation")}
+                                        name="playstation"
+                                        sx={{
+                                            "& .MuiSwitch-switchBase.Mui-checked": {
+                                                color: "var(--rating-color)",
+                                            },
+                                            "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
+                                                {
+                                                    backgroundColor: "var(--rating-color)",
+                                                },
+                                            "& .MuiSwitch-switchBase.Mui-checked:hover": {
+                                                backgroundColor:
+                                                    "rgba(var(--rating-color-rgb), 0.08)",
+                                            },
+                                        }}
+                                    />
+                                }
+                                label="PlayStation Sales Notifications"
+                                sx={{
+                                    ".MuiFormControlLabel-label": {
+                                        color: "var(--secondary-text-color)",
+                                    },
+                                }}
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={notificationSettings.xbox}
+                                        onChange={handleNotificationChange("xbox")}
+                                        name="xbox"
+                                        sx={{
+                                            "& .MuiSwitch-switchBase.Mui-checked": {
+                                                color: "var(--rating-color)",
+                                            },
+                                            "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track":
+                                                {
+                                                    backgroundColor: "var(--rating-color)",
+                                                },
+                                            "& .MuiSwitch-switchBase.Mui-checked:hover": {
+                                                backgroundColor:
+                                                    "rgba(var(--rating-color-rgb), 0.08)",
+                                            },
+                                        }}
+                                    />
+                                }
+                                label="Xbox Sales Notifications"
+                                sx={{
+                                    ".MuiFormControlLabel-label": {
+                                        color: "var(--secondary-text-color)",
+                                    },
+                                }}
+                            />
+                        </FormGroup>
+                    </DialogContent>
+
                     <DialogActions style={{ justifyContent: "space-between" }}>
                         <Button
                             onClick={openDeleteModal}
