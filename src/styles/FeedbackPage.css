@@ -6,6 +6,7 @@
     margin-top: 75px;
     background-color: var(--wrapper);
     margin-bottom: 150px;
+    height: 50vh;
   }
 
 .feedback-text-area {
