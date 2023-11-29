@@ -1,4 +1,7 @@
 /* likes.css */
+.likes-wrapper {
+  background-color: var(--wrapper);
+}
 .likes-container {
     text-align: center;
     padding: 100px;
