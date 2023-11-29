@@ -27,7 +27,7 @@ export default function AboutPage() {
                     
                     <div class="about-text">
                         <h4 class="about-name">JACK FURMANEK</h4>
-                        <p>"This is Jack's bio/testimonial. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."</p>
+                        <p>Jack Furmanek is a Computer Science student at Purdue University, and also pursuing a minor in Mathematics. In his free time, he likes to play video games, watch TV shows, and build LEGO sets. Jack is interested in frontend programming, graphic design, and the user experience. He was responsible for the general layout of the home page, defining the site's visual style. He also designed some of the site's icons, including the ones for genres.</p>
                     </div>
                     <img class="about-img" src={tempcover} alt="what?" />
                 </div>

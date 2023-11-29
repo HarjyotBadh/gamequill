@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/GenreIcon.css";
 import genpac from "../images/genres/gq-genre-pointandclick.png";
 import genfighting from "../images/genres/gq-genre-fighting.png";
 import genshooter from "../images/genres/gq-genre-shooter.png";
@@ -18,6 +19,8 @@ import genhas from "../images/genres/gq-genre-hackandslash.png";
 import genadventure from "../images/genres/gq-genre-adventure.png";
 import genarcade from "../images/genres/gq-genre-arcade.png";
 import gencards from "../images/genres/gq-genre-cards.png";
+import genindie from "../images/genres/gq-genre-indie.png";
+import genpinball from "../images/genres/gq-genre-pinball.png";
 
 export default function GenreIcon({ g }) {
   var ispac = false;
@@ -39,7 +42,21 @@ export default function GenreIcon({ g }) {
   var isadventure = false;
   var isarcade = false;
   var iscards = false;
+  var ispinball = false;
+  var isindie = false;
 
+  if (g == "Real Time Strategy (RTS)") {
+    isrts = true;
+  }
+  if (g == "Puzzle") {
+    ispuzzle = true;
+  }
+  if (g == "Indie") {
+    isindie = true;
+  }
+  if (g == "Pinball") {
+    ispinball = true;
+  }
   if (g == "Point-and-Click") {
     ispac = true;
   }
@@ -97,23 +114,27 @@ export default function GenreIcon({ g }) {
 
   return (
     <div>
-      {ispac ? <img src={genpac} alt="Genre" /> : <img />}
-      {isfighting ? <img src={genfighting} alt="Genre" /> : <img />}
-      {isshooter ? <img src={genshooter} alt="Genre" /> : <img />}
-      {ismusic ? <img src={genmusic} alt="Genre" /> : <img />}
-      {isplatform ? <img src={genplatform} alt="Genre" /> : <img />}
-      {isracing ? <img src={genracing} alt="Genre" /> : <img />}
-      {isrpg ? <img src={genrpg} alt="Genre" /> : <img />}
-      {issim ? <img src={gensim} alt="Genre" /> : <img />}
-      {issport ? <img src={gensport} alt="Genre" /> : <img />}
-      {isstrategy ? <img src={genstrategy} alt="Genre" /> : <img />}
-      {istbs ? <img src={gentbs} alt="Genre" /> : <img />}
-      {istactical ? <img src={gentactical} alt="Genre" /> : <img />}
-      {isquiz ? <img src={genquiz} alt="Genre" /> : <img />}
-      {ishas ? <img src={genhas} alt="Genre" /> : <img />}
-      {isadventure ? <img src={genadventure} alt="Genre" /> : <img />}
-      {isarcade ? <img src={genarcade} alt="Genre" /> : <img />}
-      {iscards ? <img src={gencards} alt="Genre" /> : <img />}
+      {isrts ? <img class="a b" src={genrts} alt="Genre" /> : <img />}
+      {ispuzzle ? <img class="a b" src={genpuzzle} alt="Genre" /> : <img />}
+      {isindie ? <img class="a b" src={genindie} alt="Genre" /> : <img />}
+      {ispinball ? <img class="a b" src={genpinball} alt="Genre" /> : <img />}
+      {ispac ? <img class="a b" src={genpac} alt="Genre" /> : <img />}
+      {isfighting ? <img class="a b" src={genfighting} alt="Genre" /> : <img />}
+      {isshooter ? <img class="a b" src={genshooter} alt="Genre" /> : <img />}
+      {ismusic ? <img class="a b" src={genmusic} alt="Genre" /> : <img />}
+      {isplatform ? <img class="a b" src={genplatform} alt="Genre" /> : <img />}
+      {isracing ? <img class="a b" src={genracing} alt="Genre" /> : <img />}
+      {isrpg ? <img class="a b" src={genrpg} alt="Genre" /> : <img />}
+      {issim ? <img class="a b" src={gensim} alt="Genre" /> : <img />}
+      {issport ? <img class="a b" src={gensport} alt="Genre" /> : <img />}
+      {isstrategy ? <img class="a b" src={genstrategy} alt="Genre" /> : <img />}
+      {istbs ? <img class="a b" src={gentbs} alt="Genre" /> : <img />}
+      {istactical ? <img class="a b" src={gentactical} alt="Genre" /> : <img />}
+      {isquiz ? <img class="a b" src={genquiz} alt="Genre" /> : <img />}
+      {ishas ? <img class="a b" src={genhas} alt="Genre" /> : <img />}
+      {isadventure ? <img class="a b" src={genadventure} alt="Genre" /> : <img />}
+      {isarcade ? <img class="a b" src={genarcade} alt="Genre" /> : <img />}
+      {iscards ? <img class="a b" src={gencards} alt="Genre" /> : <img />}
     </div>
   );
 }
