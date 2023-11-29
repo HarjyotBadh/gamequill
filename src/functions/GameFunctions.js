@@ -135,7 +135,7 @@ export const fetchGameDataFromIGDB = async (game_ids) => {
             headers: {
                 Accept: "application/json",
                 "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
+                Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
             },
             body: `
                 fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*,themes.name;
@@ -199,7 +199,7 @@ export async function fetchSimilarGames(genres, themes) {
             headers: {
                 Accept: "application/json",
                 "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
+                Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
             },
             body: requestBody,
         });
@@ -264,7 +264,7 @@ export async function fetchSingularSimilarGame(genres, themes) {
             headers: {
                 Accept: "application/json",
                 "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp",
+                Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
             },
             body: requestBody,
         });
