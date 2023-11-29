@@ -10,9 +10,13 @@
 
 .title-cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 2fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr)); /* Updated to display 3 games per row */
   gap: 20px;
   justify-content: center;
+}
+
+.title-card-box {
+  width: 100%; /* Ensure each box takes up the full width of its container */
 }
 
 .title-card {

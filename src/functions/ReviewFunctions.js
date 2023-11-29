@@ -152,40 +152,78 @@ export async function fetchFriendsRecentReviews(numReviews, currentUserId) {
  * @returns {Array} - The {num} most recent reviews from {uid}.
  */
 export async function fetchUserRecentReviews(num, uid) {
-
     let review_list = [];
-
-    // Base query
+    let reviewIds = new Set(); // Set to track unique review IDs
+ 
+    // Base query for user's own reviews
     let reviewsQuery = query(
         collection(db, "reviews"),
         where("uid", "==", uid),
         orderBy("timestamp", "desc")
     );
-
-    // Add limit if numReviews isn't -1
+ 
+    // Add limit if num isn't -1
     if (num !== -1) {
         reviewsQuery = query(reviewsQuery, limit(num));
     }
-
+ 
+    // Fetch and process user's own reviews
     const reviewDocs = await getDocs(reviewsQuery);
-
     for (let reviewDoc of reviewDocs.docs) {
-        const reviewData = reviewDoc.data();
-        const userDataRef = doc(db, "profileData", uid);
-        const userDataDoc = await getDoc(userDataRef);
-        const userData = userDataDoc.data();
-
-        // Construct the review object
-        review_list.push({
-            id: reviewDoc.id,
-            username: userData.username,
-            profilePicture: userData.profilePicture,
-            ...reviewData,
-        });
+        if (!reviewIds.has(reviewDoc.id)) {
+            const reviewData = reviewDoc.data();
+            const userDataRef = doc(db, "profileData", uid);
+            const userDataDoc = await getDoc(userDataRef);
+            const userData = userDataDoc.data();
+ 
+            // Construct the review object
+            review_list.push({
+                id: reviewDoc.id,
+                username: userData.username,
+                profilePicture: userData.profilePicture,
+                ...reviewData,
+            });
+            reviewIds.add(reviewDoc.id);
+        }
     }
-
+ 
+    // Query for reviews reposted by the user
+    let repostedReviewsQuery = query(
+        collection(db, "reviews"),
+        where("userReposts", "array-contains", uid)
+    );
+ 
+    // Fetch and process reposted reviews
+    const repostedReviewDocs = await getDocs(repostedReviewsQuery);
+    for (let repostedReviewDoc of repostedReviewDocs.docs) {
+        if (!reviewIds.has(repostedReviewDoc.id)) {
+            const repostedReviewData = repostedReviewDoc.data();
+            const originalPosterUid = repostedReviewData.uid;
+            const originalPosterDataRef = doc(db, "profileData", originalPosterUid);
+            const originalPosterDataDoc = await getDoc(originalPosterDataRef);
+            const originalPosterData = originalPosterDataDoc.data();
+ 
+            // Construct the reposted review object
+            review_list.push({
+                id: repostedReviewDoc.id,
+                username: originalPosterData.username,
+                profilePicture: originalPosterData.profilePicture,
+                ...repostedReviewData,
+                repostedBy: uid, // Indicate this review is reposted by the user
+            });
+            reviewIds.add(repostedReviewDoc.id);
+        }
+    }
+ 
+    // You might want to sort review_list by timestamp if needed
+    review_list.sort((a, b) => b.timestamp - a.timestamp);
+ 
+    // Only return the first {num} reviews if num isn't -1
+    if (num !== -1) {
+        review_list = review_list.slice(0, num);
+    }
+ 
     return review_list;
-
 }
 
 
@@ -219,36 +257,30 @@ export function parseReviewWithSpoilersToHTML(reviewText) {
  */
 export async function fetchUserRepostedReviews(numReposts, userId) {
     try {
-        // Query the "Reposts" collection to get documents where userId matches
-        const repostsQuery = query(
-            collection(db, "reposts"),
-            where("userId", "==", userId),
+        // Query the "Reviews" collection to get documents where userReposts array contains userId
+        const reviewsQuery = query(
+            collection(db, "reviews"),
+            where("userReposts", "array-contains", userId),
             orderBy("timestamp", "desc")
         );
 
-        const repostsSnapshot = await getDocs(repostsQuery);
+        const reviewsSnapshot = await getDocs(reviewsQuery);
 
         // Fetch the corresponding review data for each repost
         const repostedReviewsData = [];
-        for (const repostDoc of repostsSnapshot.docs) {
-            const reviewId = repostDoc.data().reviewId;
-            const reviewRef = doc(db, "reviews", reviewId);
-            const reviewDoc = await getDoc(reviewRef);
+        for (const reviewDoc of reviewsSnapshot.docs) {
+            const reviewData = reviewDoc.data();
+            const userDataRef = doc(db, "profileData", reviewData.uid);
+            const userDataDoc = await getDoc(userDataRef);
+            const userData = userDataDoc.data();
 
-            if (reviewDoc.exists()) {
-                const reviewData = reviewDoc.data();
-                const userDataRef = doc(db, "profileData", reviewData.uid);
-                const userDataDoc = await getDoc(userDataRef);
-                const userData = userDataDoc.data();
-
-                // Construct the reposted review object
-                repostedReviewsData.push({
-                    id: reviewDoc.id,
-                    username: userData.username,
-                    profilePicture: userData.profilePicture,
-                    ...reviewData,
-                });
-            }
+            // Construct the reposted review object
+            repostedReviewsData.push({
+                id: reviewDoc.id,
+                username: userData.username,
+                profilePicture: userData.profilePicture,
+                ...reviewData,
+            });
         }
 
         // Sort the reposted reviews by timestamp and limit the number of reviews
