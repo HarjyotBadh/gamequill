@@ -93,14 +93,14 @@ export default function AboutPage() {
           <div class="about-text">
             <h4 class="about-name">AAYUSH NARAYANAN</h4>
             <p>
-              "This is Aayush's bio/testimonial. Lorem ipsum dolor sit amet,
-              consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-              labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-              nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-              consequat. Duis aute irure dolor in reprehenderit in voluptate
-              velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-              occaecat cupidatat non proident, sunt in culpa qui officia
-              deserunt mollit anim id est laborum."
+              "Aayush Narayanan is a Computer Science Student at Purdue University
+              with a concentration in Software Engineering and Machine
+              Intelligence.
+              Aayush was born and raised in Boston, Massachusetts, and came to
+              Purdue for school. For GameQuill, Aayush worked primarily on the
+              Authenticartion, Wishlist, Recent Activity, and Reposts. Aayush's favorite game
+              is JJ Squawkers because it is extremely fun. In his free time, Aayush likes
+              to play and watch basketball."
             </p>
           </div>
           <div className="about-img">
