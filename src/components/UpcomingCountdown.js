@@ -43,7 +43,10 @@ const UpcomingCountdown = ({ time }) => {
 
     return (
         <div>
-            {Object.keys(timeLeft).length ? countdownDisplay(timeLeft) : <span>Time's up!</span>}
+            {Object.keys(timeLeft).length ? countdownDisplay(timeLeft) : 
+                <div class="countdown-text-over">
+                    this text shouldn't be here because the timestamp is in the past
+                </div>}
         </div>
     );
 };
