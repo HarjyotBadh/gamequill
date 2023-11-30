@@ -237,21 +237,20 @@ export default function NotificationBell({ userUid, isOpen, onToggle }) {
                                 <div className="flex items-center p-3">
                                     {/* Keep the image click handlers as they are */}
                                     {notification.type === "follow" ? (
-                                        <a
-                                            onClick={(e) => {
-                                                e.stopPropagation(); // This stops the li onClick from being triggered
-                                                navigate(
-                                                    `/Profile?user_id=${notification.senderUID}`
-                                                );
-                                            }}
-                                            className="cursor-pointer"
-                                        >
-                                            <img
-                                                src={notification.imageSrc}
-                                                alt="User avatar"
-                                                className="h-12 w-12 object-cover mr-3 rounded-full"
-                                            />
-                                        </a>
+                                        <button
+                                        onClick={(e) => {
+                                            e.stopPropagation(); // This stops the li onClick from being triggered
+                                            navigate(`/Profile?user_id=${notification.senderUID}`);
+                                        }}
+                                        className="cursor-pointer style-as-link" // Add your link-like styles to 'style-as-link'
+                                    >
+                                        <img
+                                            src={notification.imageSrc}
+                                            alt="User avatar"
+                                            className="h-12 w-12 object-cover mr-3 rounded-full"
+                                        />
+                                    </button>
+                                    
                                     ) : (
                                         <a
                                             onClick={(e) => {

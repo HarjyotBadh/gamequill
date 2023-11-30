@@ -1,8 +1,6 @@
 // TitleCardGrid.jsx
 import React from "react";
 import GameCardList from "./GameCardList";
-import { useDrop } from "react-dnd";
-
 import "../styles/ListPage.css";
 
 const TitleCardGrid = ({

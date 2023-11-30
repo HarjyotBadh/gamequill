@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { db, auth } from "../firebase";
-import { doc, updateDoc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import { doc, updateDoc} from "firebase/firestore";
 import { Link } from "react-router-dom";
 import { Avatar, IconButton, Tooltip } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -87,15 +87,6 @@ export default function ReviewSnapshot({
     
         // Clone the userReposts array
         let updatedUserReposts = [...(review.userReposts || [])];
-    
-        
-        // Construct the review object to pass to the notification function
-        const reviewObject = {
-            reviewID: review.id,
-            gameID: review.gameID, // Make sure the review object contains the gameId
-            gameName: review.gameName, // Make sure the review object contains the gameName
-            gameCoverUrl: review.gameCover, // Make sure the review object contains the gameCoverUrl
-        };
     
         // Add or remove the user's ID based on the current repost status
         if (isReposted) {

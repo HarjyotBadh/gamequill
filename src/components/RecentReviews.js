@@ -62,7 +62,6 @@ const RecentReviews = () => {
   }, [sortByRating, sortLowestToHighest, userReviews]);
 
   const userCreatedReviews = userReviews.filter((review) => review.uid === userId);
-  const repostedReviews = userReviews.filter((review) => review.uid !== userId);
 
   const handleShowAllReviews = () => {
     setShowAllReviews(true);

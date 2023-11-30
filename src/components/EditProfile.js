@@ -209,6 +209,7 @@ export default function EditProfile({ profileData, setProfileData }) {
         const updatedData = {
             ...formData,
             notificationPreferences: notificationSettings,
+            usernameLowerCase: formData.username.toLowerCase(),
         };
 
         // Update Firestore with new data
