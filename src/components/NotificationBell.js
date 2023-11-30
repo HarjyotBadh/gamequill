@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import {
-    BellIcon,
-    BellSlashIcon,
-    TrashIcon,
-} from "@heroicons/react/24/outline";
+import { BellIcon, BellSlashIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Badge from "@mui/material/Badge";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
@@ -25,8 +21,7 @@ export default function NotificationBell({ userUid, isOpen, onToggle }) {
                     const docSnap = await getDoc(docRef);
 
                     if (docSnap.exists()) {
-                        const notificationsData =
-                            docSnap.data().notifications || [];
+                        const notificationsData = docSnap.data().notifications || [];
                         const notificationsWithDetails = await Promise.all(
                             notificationsData.map(async (notification) => {
                                 // Fetch the sender's username and profile picture/avatar
@@ -35,16 +30,13 @@ export default function NotificationBell({ userUid, isOpen, onToggle }) {
                                     "profileData",
                                     notification.senderUID
                                 );
-                                const senderProfileSnap = await getDoc(
-                                    senderProfileRef
-                                );
+                                const senderProfileSnap = await getDoc(senderProfileRef);
 
                                 // Default to a generic avatar if no profile picture is available
                                 const profilePicture =
                                     senderProfileSnap.exists() &&
                                     senderProfileSnap.data().profilePicture
-                                        ? senderProfileSnap.data()
-                                              .profilePicture
+                                        ? senderProfileSnap.data().profilePicture
                                         : "default-avatar-path";
 
                                 return {
@@ -89,15 +81,13 @@ export default function NotificationBell({ userUid, isOpen, onToggle }) {
 
             if (userProfileSnap.exists()) {
                 // Get current notifications array
-                const currentNotifications =
-                    userProfileSnap.data().notifications || [];
+                const currentNotifications = userProfileSnap.data().notifications || [];
 
                 // Find the index of the notification to delete
                 const notificationIndex = currentNotifications.findIndex(
                     (n) =>
                         n.senderUID === notificationToDelete.senderUID &&
-                        n.timestamp.seconds ===
-                            notificationToDelete.timestamp.seconds &&
+                        n.timestamp.seconds === notificationToDelete.timestamp.seconds &&
                         n.type === notificationToDelete.type
                 );
 
@@ -114,9 +104,7 @@ export default function NotificationBell({ userUid, isOpen, onToggle }) {
                     });
 
                     // Update the local state
-                    setNotifications(
-                        notifications.filter((n) => n !== notificationToDelete)
-                    );
+                    setNotifications(notifications.filter((n) => n !== notificationToDelete));
                 }
             }
         } catch (error) {
@@ -183,30 +171,18 @@ export default function NotificationBell({ userUid, isOpen, onToggle }) {
             <div onClick={onToggle} className="cursor-pointer z-10">
                 {notifications.length === 0 ? (
                     <Tooltip title={`No notifications`}>
-                        <BellSlashIcon
-                            className="h-8 w-8 text-gray-400"
-                            aria-hidden="true"
-                        />
+                        <BellSlashIcon className="h-8 w-8 text-gray-400" aria-hidden="true" />
                     </Tooltip>
                 ) : (
                     <Tooltip title={`${notifications.length} notifications`}>
-                        <Badge
-                            badgeContent={notifications.length}
-                            color="primary"
-                        >
-                            <BellIcon
-                                className="h-8 w-8 text-gray-400"
-                                aria-hidden="true"
-                            />
+                        <Badge badgeContent={notifications.length} color="primary">
+                            <BellIcon className="h-8 w-8 text-gray-400" aria-hidden="true" />
                         </Badge>
                     </Tooltip>
                 )}
             </div>
             {isOpen && (
-                <div
-                    className="notification-panel"
-                    style={{ display: isOpen ? "block" : "none" }}
-                >
+                <div className="notification-panel" style={{ display: isOpen ? "block" : "none" }}>
                     <div className="flex justify-end p-2">
                         <button
                             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
@@ -223,41 +199,50 @@ export default function NotificationBell({ userUid, isOpen, onToggle }) {
                                 onClick={() => {
                                     // Navigate based on the type of notification when the item is clicked
                                     if (notification.type === "follow") {
-                                        navigate(
-                                            `/Profile?user_id=${notification.senderUID}`
-                                        );
+                                        navigate(`/Profile?user_id=${notification.senderUID}`);
                                     } else {
-                                        navigate(
-                                            `/review/${notification.reviewID}`
-                                        );
+                                        navigate(`/review/${notification.reviewID}`);
                                     }
                                 }}
-                                
                             >
                                 <div className="flex items-center p-3">
                                     {/* Keep the image click handlers as they are */}
                                     {notification.type === "follow" ? (
                                         <button
-                                        onClick={(e) => {
-                                            e.stopPropagation(); // This stops the li onClick from being triggered
-                                            navigate(`/Profile?user_id=${notification.senderUID}`);
-                                        }}
-                                        className="cursor-pointer style-as-link" // Add your link-like styles to 'style-as-link'
-                                    >
-                                        <img
-                                            src={notification.imageSrc}
-                                            alt="User avatar"
-                                            className="h-12 w-12 object-cover mr-3 rounded-full"
-                                        />
-                                    </button>
-                                    
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // This stops the li onClick from being triggered
+                                                navigate(
+                                                    `/Profile?user_id=${notification.senderUID}`
+                                                );
+                                            }}
+                                            className="cursor-pointer style-as-link" // Add your link-like styles to 'style-as-link'
+                                        >
+                                            <img
+                                                src={notification.imageSrc}
+                                                alt="User avatar"
+                                                className="h-12 w-12 object-cover mr-3 rounded-full"
+                                            />
+                                        </button>
+                                    ) : notification.type === "repost" ? (
+                                        // Code for repost notifications
+                                        <a
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // Prevent triggering li onClick
+                                                navigate(`/game?game_id=${notification.gameID}`);
+                                            }}
+                                            className="cursor-pointer game-cover-wrapper"
+                                        >
+                                            <img
+                                                src={notification.gameCoverUrl}
+                                                alt="Game cover"
+                                                className="rounded"
+                                            />
+                                        </a>
                                     ) : (
                                         <a
                                             onClick={(e) => {
                                                 e.stopPropagation(); // This stops the li onClick from being triggered
-                                                navigate(
-                                                    `/game?game_id=${notification.gameID}`
-                                                );
+                                                navigate(`/game?game_id=${notification.gameID}`);
                                             }}
                                             className="cursor-pointer game-cover-wrapper"
                                         >
@@ -270,8 +255,11 @@ export default function NotificationBell({ userUid, isOpen, onToggle }) {
                                     )}
                                     <div className="flex-grow">
                                         <span>
+                                            {/* Display different message based on notification type */}
                                             {notification.type === "follow"
                                                 ? `${notification.senderUsername} followed you`
+                                                : notification.type === "repost"
+                                                ? `${notification.senderUsername} reposted your review on ${notification.gameName}`
                                                 : `${notification.senderUsername} liked your review on ${notification.gameName}`}
                                         </span>
                                         <div className="notification-time-text">

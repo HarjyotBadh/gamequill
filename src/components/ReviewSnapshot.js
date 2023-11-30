@@ -13,7 +13,7 @@ import {
 } from "../functions/ReviewFunctions";
 import "../styles/ReviewSnapshot.css";
 import DOMPurify from "dompurify";
-import { sendLikeNotification } from "../functions/NotificationFunctions";
+import { sendLikeNotification, sendRepostNotification } from "../functions/NotificationFunctions";
 
 /**
  * Renders a snapshot of reviews for a given game, with options to filter by spoilers and friends' reviews.
@@ -87,6 +87,14 @@ export default function ReviewSnapshot({
     
         // Clone the userReposts array
         let updatedUserReposts = [...(review.userReposts || [])];
+
+        // Construct the review object to pass to the notification function
+        const reviewObject = {
+            reviewID: review.id,
+            gameID: review.gameID, // Make sure the review object contains the gameId
+            gameName: review.gameName, // Make sure the review object contains the gameName
+            gameCoverUrl: review.gameCover, // Make sure the review object contains the gameCoverUrl
+        };
     
         // Add or remove the user's ID based on the current repost status
         if (isReposted) {
@@ -95,6 +103,8 @@ export default function ReviewSnapshot({
             );
         } else {
             updatedUserReposts.push(currentUserId);
+
+            await sendRepostNotification(review.uid, currentUserId, reviewObject);
             
         }
     

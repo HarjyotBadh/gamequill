@@ -8,6 +8,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import NotificationBell from "./NotificationBell";
 import SalesNotifications from "./SalesNotifications";
+import { TrophyIcon } from "@heroicons/react/24/outline";
+import Tooltip from "@mui/material/Tooltip";
 
 function App() {
     const [user, setUser] = useState(null);
@@ -54,7 +56,7 @@ function App() {
         try {
             await signOut(auth);
             setShowLogoutConfirmation(false);
-            
+
             // Redirect to the home page or another desired page after logging out.
             navigate("/");
         } catch (error) {
@@ -91,7 +93,7 @@ function App() {
                         placeholder="Search for games or users"
                         className="bg-gray-200 p-2 rounded mr-2 w-96"
                     />
-                   
+
                     <button
                         onClick={handleSearch}
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -105,8 +107,11 @@ function App() {
                             to="/top-games"
                             className="block py-2 pl-3 pr-4 text-white rounded hover-bg-gray-100 md:hover-bg-transparent md-border-0 md:hover-text-blue-700 md-p-0 dark-text-white md-dark-hover-text-blue-500 dark-hover-bg-gray-500 dark-hover-text-white md-dark-hover-bg-transparent"
                         >
-                            Top Games
+                            <Tooltip title="Top Games" placement="bottom">
+                            <TrophyIcon className="h-8 w-8 text-gray-400" /> {/* Adjust the size as needed */}
+                            </Tooltip>
                         </Link>
+
                         <li>
                             {user ? (
                                 <div className="flex items-center space-x-4">
