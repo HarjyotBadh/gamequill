@@ -30,7 +30,7 @@ export default function FiveRecentReviews({user_id}) {
 
   return (
     <div>
-      <div class="frr-text text-black dark:text-white">Five Recent Reviews</div>
+      <div class="frr-text text-black dark:text-white">Recent Activity</div>
       {reviews.map((review, index) => (
         <div key={review}>
           <RecentReview

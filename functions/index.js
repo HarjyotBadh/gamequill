@@ -24,7 +24,7 @@ exports.updateGamePrice = functions.https.onCall(async (data, context) => {
         const igdbHeaders = {
             Accept: "application/json",
             "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6", // Replace with your IGDB Client ID
-            Authorization: "Bearer 7zs23d87qtkquji3ep0vl0tpo2hzkp", // Replace with your IGDB access token
+            Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo", // Replace with your IGDB access token
         };
 
         // Make an API call to IGDB
@@ -102,7 +102,11 @@ async function xboxScrapePrice(url) {
         let finalPrice = "";
         let discountedPrice = "";
 
-        const discountedPriceElement = $(".Price-module__listedDiscountPrice___67yG1");
+        const discountedPriceElement = $("div.ProductDetailsHeader-module__showOnMobileView___uZ1Dz span");
+        
+        // The discounted price is the second span element
+        discountedPrice = discountedPriceElement.eq(1).text().trim();
+
         let originalPriceElement = $(
             "div.ProductDetailsHeader-module__showOnMobileView___uZ1Dz span"
         );
@@ -110,9 +114,9 @@ async function xboxScrapePrice(url) {
             .first()
             .text();
 
-        if (discountedPriceElement.length) {
+        if (discountedPriceElement.length && discountedPrice[0] === "$") {
             console.log("Discounted price element found");
-            finalPrice = discountedPriceElement.first().text().trim();
+            finalPrice = discountedPriceElement.eq(1).text().trim();
             discountedPrice = finalPrice;
         } else {
 
