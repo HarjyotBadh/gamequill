@@ -4,7 +4,6 @@ import {
   collection,
   updateDoc,
   doc,
-  arrayUnion,
   query,
   where,
   limit,
@@ -62,7 +61,6 @@ export default function EditFeaturedList({ setFeaturedList }) {
       await updateDoc(docRef, {
         featuredList: featuredList,
       });
-      console.log("Featured List updated successfully");
     } catch (error) {
       console.error("Error updating featured list:", error);
     }

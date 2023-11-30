@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import NavBar from "../components/NavBar";
 import HomeTrending from "../components/HomeTrending";
 import HomeActivity from "../components/HomeActivity";
@@ -14,7 +14,7 @@ function App() {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log("User is already signed in:", user);
+        // User is signed in.
       } else {
         window.location.href = "/login";
       }

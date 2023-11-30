@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import UpcomingItem from "./UpcomingItem";
+import UpcomingItem from "./UpcomingItem"
+import NoCover from "../images/temp_images/Default_No_Image_Available_Vertical.jpg"
+import "../styles/HomeUpcoming.css"
 import { db, auth } from "../firebase";
 import { getDoc, doc } from "firebase/firestore";
-import "../styles/HomeUpcoming.css";
 
 export default function HomeUpcoming() {
   const [upcomingGames, setUpcomingGames] = useState([]);
@@ -42,6 +43,7 @@ export default function HomeUpcoming() {
           body: `fields game.*, game.cover.url, date, platform; where date > ${currentTime}; sort date asc; limit 100;`,
         });
 
+
         const gameResults = await response.json();
 
         let gameRandom = gameResults.sort(() => Math.random() - 0.5);
@@ -57,8 +59,12 @@ export default function HomeUpcoming() {
   }, []);
 
   const formatCoverUrl = (url) => {
-    return url ? url.replace("/t_thumb/", "/t_cover_big/") : "";
-  };
+        if (url) {
+            return url.replace("/t_thumb/", "/t_cover_big/");
+        } else {
+            return NoCover;
+        }
+    };
 
   return (
     <div class="upcoming-container">

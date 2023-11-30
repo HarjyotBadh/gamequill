@@ -48,7 +48,6 @@ export default function GamePage({ game_id }) {
 
     useEffect(() => {
       const fetchGameDataAndUpdatePrice = async () => {
-          console.log("Fetching game data from Firestore");
           const fetchedGameData = await fetchGameData(game_id);
   
           if (fetchedGameData && fetchedGameData.game) {
@@ -67,7 +66,7 @@ export default function GamePage({ game_id }) {
               }
   
               if (shouldUpdatePrice && !priceUpdateCalled.current) {
-                  console.log("Updating game price");
+                  console.log("Game Price Not Updated Today. Updating now...");
                   priceUpdateCalled.current = true;
                   try {
                       await updateGamePrice(game_id);

@@ -10,7 +10,7 @@ const ReviewCard = ({ review, gameName }) => {
   const getColorByRating = (rating) => {
     if (rating < 3) return "red";
     if (rating > 3) return "green";
-    if (rating = 3) return "gold";
+    if (rating === 3) return "gold";
   };
 
   const ratingColor = getColorByRating(review.starRating);

@@ -57,7 +57,6 @@ export default function EditCurrentlyPlayingGame({
           currentlyPlayingGame: gameData.game,
         });
         setCurrentlyPlayingGame(gameData.game);
-        console.log("Currently playing game updated successfully");
       } catch (error) {
         console.error("Error updating currently playing game:", error);
       }
@@ -75,7 +74,6 @@ export default function EditCurrentlyPlayingGame({
           strokeWidth={1.5}
           stroke="currentColor"
           className="w-6 h-6"
-          onClick={() => console.log("clicked")}
           cursor={"pointer"}
         >
           <path

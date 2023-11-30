@@ -26,8 +26,14 @@ function Login() {
         password
       );
       // User is successfully logged in here
-      const user = userCredential.user;
-      console.log("User logged in:", user);
+      if (userCredential.user) {
+        // If user exists
+        console.log("User exists");
+        window.location.href = "/home";
+      } else {
+        // If user does not exist
+        console.log("User does not exist");
+      }
       window.location.href = "/home";
       // You can perform additional actions or navigate to another page upon successful login
     } catch (error) {

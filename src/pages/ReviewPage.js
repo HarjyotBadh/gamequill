@@ -51,11 +51,9 @@ export default function ReviewPage() {
                     storedGameData.game &&
                     storedGameData.game.name
                 ) {
-                    console.log("Loading gameData from localStorage");
                     setGameData(storedGameData);
                 } else {
                     // Get the game data from IGDB
-                    console.log("Calling fetchGameData in ReviewPage.js");
                     const gameDataResult = await fetchGameData(
                         fetchedReview.gameID
                     );
@@ -86,7 +84,7 @@ export default function ReviewPage() {
         };
 
         fetchReviewAndGameData();
-    }, [review_id, hasCommented]);
+    }, [review_id, hasCommented, currentUserUid]);
 
     const openDeleteModal = () => {
         setShowDeleteModal(true);

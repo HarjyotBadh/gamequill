@@ -6,7 +6,6 @@ function SearchPageWrapper() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const query = queryParams.get("query");
-  console.log(query);
 
   return <SearchPage searchQuery={query} />;
 }

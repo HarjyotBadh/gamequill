@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "../styles/UserActivity.css";
 import tempcover from "../images/temp_images/tempcover.png";
 import { Link } from "react-router-dom";

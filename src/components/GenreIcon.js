@@ -22,119 +22,37 @@ import gencards from "../images/genres/gq-genre-cards.png";
 import genindie from "../images/genres/gq-genre-indie.png";
 import genpinball from "../images/genres/gq-genre-pinball.png";
 
-export default function GenreIcon({ g }) {
-  var ispac = false;
-  var isfighting = false;
-  var isshooter = false;
-  var ismusic = false;
-  var isplatform = false;
-  var ispuzzle = false;
-  var isracing = false;
-  var isrts = false;
-  var isrpg = false;
-  var issim = false;
-  var issport = false;
-  var isstrategy = false;
-  var istbs = false;
-  var istactical = false;
-  var isquiz = false;
-  var ishas = false;
-  var isadventure = false;
-  var isarcade = false;
-  var iscards = false;
-  var ispinball = false;
-  var isindie = false;
+const genreImages = {
+  "Real Time Strategy (RTS)": genrts,
+  "Puzzle": genpuzzle,
+  "Indie": genindie,
+  "Pinball": genpinball,
+  "Point-and-Click": genpac,
+  "Fighting": genfighting,
+  "Shooter": genshooter,
+  "Music": genmusic,
+  "Platform": genplatform,
+  "Racing": genracing,
+  "Role-playing (RPG)": genrpg,
+  "Simulator": gensim,
+  "Sport": gensport,
+  "Strategy": genstrategy,
+  "Turn-based strategy (TBS)": gentbs,
+  "Tactical": gentactical,
+  "Quiz/Trivia": genquiz,
+  "Hack and slash/Beat 'em up": genhas,
+  "Adventure": genadventure,
+  "Arcade": genarcade,
+  "Card & Board Game": gencards,
+};
 
-  if (g == "Real Time Strategy (RTS)") {
-    isrts = true;
-  }
-  if (g == "Puzzle") {
-    ispuzzle = true;
-  }
-  if (g == "Indie") {
-    isindie = true;
-  }
-  if (g == "Pinball") {
-    ispinball = true;
-  }
-  if (g == "Point-and-Click") {
-    ispac = true;
-  }
-  if (g == "Fighting") {
-    isfighting = true;
-  }
-  if (g == "Shooter") {
-    isshooter = true;
-  }
-  if (g == "Music") {
-    ismusic = true;
-  }
-  if (g == "Platform") {
-    isplatform = true;
-  }
-  if (g == "Racing") {
-    isracing = true;
-  }
-  if (g == "Role-playing (RPG)") {
-    isrpg = true;
-  }
-  if (g == "Simulator") {
-    issim = true;
-  }
-  if (g == "Sport") {
-    issport = true;
-  }
-  if (g == "Strategy") {
-    isstrategy = true;
-  }
-  if (g == "Turn-based Strategy (TBS)") {
-    istbs = true;
-  }
-  if (g == "Tactical") {
-    istactical = true;
-  }
-  if (g == "Quiz/Trivia") {
-    isquiz = true;
-  }
-  if (g == "Hack and Slash/Beat 'em Up") {
-    ishas = true;
-  }
-  if (g == "Adventure") {
-    isadventure = true;
-  }
-  if (g == "Arcade") {
-    isarcade = true;
-  }
-  if (g == "Card & Board Game") {
-    iscards = true;
-  }
-  if (g == "Puzzle") {
-    ispuzzle = true;
-  }
+export default function GenreIcon({ g }) {
+  
+  const genreImage = genreImages[g];
 
   return (
     <div>
-      {isrts ? <img class="a b" src={genrts} alt="Genre" /> : <img />}
-      {ispuzzle ? <img class="a b" src={genpuzzle} alt="Genre" /> : <img />}
-      {isindie ? <img class="a b" src={genindie} alt="Genre" /> : <img />}
-      {ispinball ? <img class="a b" src={genpinball} alt="Genre" /> : <img />}
-      {ispac ? <img class="a b" src={genpac} alt="Genre" /> : <img />}
-      {isfighting ? <img class="a b" src={genfighting} alt="Genre" /> : <img />}
-      {isshooter ? <img class="a b" src={genshooter} alt="Genre" /> : <img />}
-      {ismusic ? <img class="a b" src={genmusic} alt="Genre" /> : <img />}
-      {isplatform ? <img class="a b" src={genplatform} alt="Genre" /> : <img />}
-      {isracing ? <img class="a b" src={genracing} alt="Genre" /> : <img />}
-      {isrpg ? <img class="a b" src={genrpg} alt="Genre" /> : <img />}
-      {issim ? <img class="a b" src={gensim} alt="Genre" /> : <img />}
-      {issport ? <img class="a b" src={gensport} alt="Genre" /> : <img />}
-      {isstrategy ? <img class="a b" src={genstrategy} alt="Genre" /> : <img />}
-      {istbs ? <img class="a b" src={gentbs} alt="Genre" /> : <img />}
-      {istactical ? <img class="a b" src={gentactical} alt="Genre" /> : <img />}
-      {isquiz ? <img class="a b" src={genquiz} alt="Genre" /> : <img />}
-      {ishas ? <img class="a b" src={genhas} alt="Genre" /> : <img />}
-      {isadventure ? <img class="a b" src={genadventure} alt="Genre" /> : <img />}
-      {isarcade ? <img class="a b" src={genarcade} alt="Genre" /> : <img />}
-      {iscards ? <img class="a b" src={gencards} alt="Genre" /> : <img />}
+      {genreImage ? <img class="genre-icon" src={genreImage} alt={`Genre: ${g}`} /> : <span>Genre not found</span>}
     </div>
   );
 }

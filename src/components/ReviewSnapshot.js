@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { db, auth } from "../firebase";
-import { doc, updateDoc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import { doc, updateDoc} from "firebase/firestore";
 import { Link } from "react-router-dom";
 import { Avatar, IconButton, Tooltip } from "@mui/material";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
@@ -13,7 +13,7 @@ import {
 } from "../functions/ReviewFunctions";
 import "../styles/ReviewSnapshot.css";
 import DOMPurify from "dompurify";
-import { sendLikeNotification } from "../functions/NotificationFunctions";
+import { sendLikeNotification, sendRepostNotification } from "../functions/NotificationFunctions";
 
 /**
  * Renders a snapshot of reviews for a given game, with options to filter by spoilers and friends' reviews.
@@ -87,8 +87,7 @@ export default function ReviewSnapshot({
     
         // Clone the userReposts array
         let updatedUserReposts = [...(review.userReposts || [])];
-    
-        
+
         // Construct the review object to pass to the notification function
         const reviewObject = {
             reviewID: review.id,
@@ -104,6 +103,8 @@ export default function ReviewSnapshot({
             );
         } else {
             updatedUserReposts.push(currentUserId);
+
+            await sendRepostNotification(review.uid, currentUserId, reviewObject);
             
         }
     

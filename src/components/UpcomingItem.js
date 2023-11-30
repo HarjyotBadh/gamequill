@@ -1,8 +1,7 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import tempcover from "../images/temp_images/tempcover.png";
-import UpcomingCountdown from "./UpcomingCountdown";
-import "../styles/UpcomingItem.css";
+import React from 'react'
+import { Link } from 'react-router-dom';
+import UpcomingCountdown from "./UpcomingCountdown"
+import "../styles/UpcomingItem.css"
 
 export default function UpcomingItem({ name, cover, gameid, ti, platform }) {
   const platformMapping = {

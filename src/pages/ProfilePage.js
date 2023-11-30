@@ -5,7 +5,6 @@ import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "../styles/ProfilePage.css";
-import Footer from "../components/Footer";
 export default function ProfilePage({ userId }) {
   const [loading, setLoading] = useState(true);
 
@@ -37,9 +36,9 @@ export default function ProfilePage({ userId }) {
         setProfileData(defaultProfileData);
       }
       if (snapshot.exists()) {
-        console.log("Doc data", snapshot.data());
+        // Doc data exists
       } else {
-        console.log("Doc does not exist");
+        console.error("Doc does not exist");
         window.location.href = "/home";
       }
     };
@@ -47,7 +46,6 @@ export default function ProfilePage({ userId }) {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        console.log("User is signed in:", user);
         uid = user.uid; // use the uid from the auth state change
         if (userId) {
           uid = userId;

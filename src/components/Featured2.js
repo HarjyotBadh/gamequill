@@ -20,7 +20,7 @@ export default function Featured1({ gameData, screenshots, limitSize }) {
         return (
             <div class="image-cont rounded-corners">
                 <div class="image-container2">
-                    <img src={tempscreenshot} alt="Error Loading Image" />
+                    <img src={tempscreenshot} alt="Error Loading" />
                 </div>
             </div>
         );
@@ -39,7 +39,7 @@ export default function Featured1({ gameData, screenshots, limitSize }) {
             <div class="image-container2">
                 <img
                     src={imageUrl}
-                    alt="Error Loading Image"
+                    alt="Error Loading"
                     class={limitSize ? "limited-height" : ""}
                 />
             </div>

@@ -28,8 +28,6 @@ function Profile({ profileData, setProfileData, userId }) {
   if (auth.currentUser != null && userId === auth.currentUser.uid) {
     isUser = true;
   }
-  console.log("isUser:  " + isUser);
-
   useEffect(() => {
     const corsAnywhereUrl = "http://localhost:8080/";
     const apiUrl = "https://api.igdb.com/v4/covers";

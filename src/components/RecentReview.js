@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import "../styles/RecentReview.css";
 import Rating from "@mui/material/Rating";
 import tempcover from "../images/temp_images/tempcover.png";

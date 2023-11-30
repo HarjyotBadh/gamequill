@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -67,7 +67,7 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
 
             <Popup open={open} closeOnDocumentClick onClose={closeModal}>
                 <div className="modal">
-                    <a className="close" onClick={closeModal}>
+                    <a className="close" onClick={closeModal} href="close">
                         &times;
                     </a>
                     {selectedImageIndex !== null && (

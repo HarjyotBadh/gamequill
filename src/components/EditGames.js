@@ -15,15 +15,9 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [gameData, setGameData] = useState([]);
   const [selectedSearchedGame, setSelectedSearchedGame] = useState(null);
-  //const uid = "GPiU3AHpvyOhnbsVSzap";
   const auth = getAuth();
   var uid;
-  // if (auth.currentUser == null) {
-  //   window.location.href = "/login";
-  //   //uid = "GPiU3AHpvyOhnbsVSzap";
-  // } else {
   uid = auth.currentUser.uid;
-  // }
 
   // Define a function to handle replacing a favorite game
   const handleReplaceFavorite = async () => {
@@ -37,8 +31,6 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
         selectedCardIndex = gameCovers.findIndex((card) => card === null);
       }
       updatedFavorites[selectedCardIndex] = selectedSearchedGame.coverUrl;
-      // updatedFavorites[gameCovers.indexOf(selectedGame)] =
-      //   selectedSearchedGame.coverUrl;
       if (selectedGameId == null) {
         gameIds[selectedCardIndex] = selectedSearchedGame.id;
       } else {
@@ -46,13 +38,12 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
       }
       setGameCovers(updatedFavorites);
       setSelectedGame(null);
-      setSelectedSearchedGame(null); // Reset selected searched game
+      setSelectedSearchedGame(null);
       const docRef = doc(db, "profileData", uid);
       try {
         await updateDoc(docRef, {
           favoriteGames: gameIds,
         });
-        console.log("Fåavorite games updated successfully");
       } catch (error) {
         console.error("Error updating favorite games:", error);
       }
@@ -64,7 +55,6 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
     e.preventDefault();
     const corsAnywhereUrl = "http://localhost:8080/";
     const apiUrl = "https://api.igdb.com/v4/games";
-    console.log("Search: ", searchQuery);
 
     fetch(corsAnywhereUrl + apiUrl, {
       method: "POST",
@@ -84,7 +74,6 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
             id: game.id,
           }));
           setGameData(gamesData);
-          console.log("gamesData", gamesData);
         }
       })
       .catch((err) => {
@@ -109,7 +98,6 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
           strokeWidth={1.5}
           stroke="currentColor"
           className="w-6 h-6"
-          onClick={() => console.log("clicked")}
           cursor={"pointer"}
         >
           <path

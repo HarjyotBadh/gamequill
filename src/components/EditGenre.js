@@ -62,7 +62,6 @@ export default function EditGenre({ genres, setGenres }) {
   };
   const handleSave = async () => {
     const updatedGenres = selectedOptions.map((option) => option.value);
-    //console.log("genres: ", updatedGenres);
     const docRef = doc(db, "profileData", uid);
     try {
       await updateDoc(docRef, {
@@ -87,7 +86,6 @@ export default function EditGenre({ genres, setGenres }) {
           strokeWidth={1.5}
           stroke="currentColor"
           className="w-6 h-6"
-          onClick={() => console.log("clicked")}
           cursor={"pointer"}
         >
           <path

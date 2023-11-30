@@ -14,7 +14,6 @@ export async function sendLikeNotification(receiverUID, senderUID, reviewObject)
 
     // If the sender and receiver are the same, do not send a notification
     if (senderUID === receiverUID) {
-        console.log("User liked their own review, no notification sent.");
         return;
     }
 
@@ -37,7 +36,6 @@ export async function sendLikeNotification(receiverUID, senderUID, reviewObject)
 
             // If the notification already exists, do not send a new one
             if (existingNotification) {
-                console.log("Notification already sent.");
                 return;
             }
 
@@ -72,7 +70,7 @@ export async function sendLikeNotification(receiverUID, senderUID, reviewObject)
 
             console.log("Notification sent successfully.");
         } else {
-            console.log("Receiver profile data does not exist.");
+            console.error("Receiver profile data does not exist.");
         }
     } catch (error) {
         console.error("Error sending notification:", error);
@@ -88,7 +86,6 @@ export async function sendLikeNotification(receiverUID, senderUID, reviewObject)
  * @returns {Promise<void>} - A promise that resolves when the notification has been sent successfully.
  */
 export async function sendFollowerNotification(receiverUID, senderUID) {
-    console.log("Sending follow notification...");
     const profileDataRef = doc(db, "profileData", receiverUID);
 
     try {
@@ -105,11 +102,8 @@ export async function sendFollowerNotification(receiverUID, senderUID) {
                 notification.senderUID === senderUID
             );
 
-            console.log("Existing notification:");
-
             // If the notification already exists, do not send a new one
             if (existingNotification) {
-                console.log("Follow notification already sent.");
                 return;
             }
 
@@ -138,16 +132,77 @@ export async function sendFollowerNotification(receiverUID, senderUID) {
                 notifications: arrayUnion(newNotification)
             });
 
-            console.log("Follow notification sent successfully.");
         } else {
-            console.log("Receiver profile data does not exist.");
+            console.error("Receiver profile data does not exist.");
         }
     } catch (error) {
         console.error("Error sending follow notification:", error);
     }
 }
 
-// @TODO: Create a notification for when a user reposts.
-export async function sendRepostNotification(receiverUID, senderUID) {
+export async function sendRepostNotification(receiverUID, senderUID, reviewObject) {
+        // If the sender and receiver are the same, do not send a notification
+        if (senderUID === receiverUID) {
+            return;
+        }
+    
+        const profileDataRef = doc(db, "profileData", receiverUID);
+    
+        try {
+            // Get the current profile data
+            const profileDataSnap = await getDoc(profileDataRef);
+    
+            // If the document exists
+            if (profileDataSnap.exists()) {
+                const profileData = profileDataSnap.data();
+    
+                // Check for existing notifications
+                const existingNotification = profileData.notifications?.find(notification =>
+                    notification.type === 'repost' &&
+                    notification.senderUID === senderUID &&
+                    notification.reviewID === reviewObject.reviewID
+                );
+    
+                // If the notification already exists, do not send a new one
+                if (existingNotification) {
+                    return;
+                }
+    
+                // Prepare the new notification object
+                const newNotification = {
+                    type: 'repost',
+                    senderUID: senderUID,
+                    reviewID: reviewObject.reviewID,
+                    gameID: reviewObject.gameID,
+                    gameName: reviewObject.gameName,
+                    gameCoverUrl: reviewObject.gameCoverUrl,
+                    timestamp: new Date() // Current time
+                };
+    
+                // If there are more than 25 notifications, remove the oldest one
+                if (profileData.notifications && profileData.notifications.length >= 25) {
+    
+                    // Sort notifications by timestamp to find the oldest
+                    const sortedNotifications = profileData.notifications.sort((a, b) => a.timestamp - b.timestamp);
+                    const oldestNotification = sortedNotifications[0];
+    
+                    // Remove the oldest notification
+                    await updateDoc(profileDataRef, {
+                        notifications: arrayRemove(oldestNotification)
+                    });
+                }
+    
+                // Add the new notification
+                await updateDoc(profileDataRef, {
+                    notifications: arrayUnion(newNotification)
+                });
+    
+                console.log("Notification sent successfully.");
+            } else {
+                console.error("Receiver profile data does not exist.");
+            }
+        } catch (error) {
+            console.error("Error sending notification:", error);
+        }
 
 }

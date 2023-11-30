@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Popup from "reactjs-popup";
 import {
     setDoc,
     doc,
@@ -10,7 +9,6 @@ import {
     getDocs,
     writeBatch,
     arrayRemove,
-    updateDoc,
 } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import {
@@ -50,7 +48,6 @@ export default function EditProfile({ profileData, setProfileData }) {
     const auth = getAuth();
     var uid;
     uid = auth.currentUser.uid;
-    const [hasChanges, setHasChanges] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [password, setPassword] = useState("");
@@ -91,7 +88,6 @@ export default function EditProfile({ profileData, setProfileData }) {
             bio: profileData.bio || "",
             profilePicture: profileData.profilePicture || "",
         });
-        console.log(profileData.notificationPreferences?.steam);
         setNotificationSettings({
             steam: profileData.notificationPreferences?.steam ?? true,
             playstation: profileData.notificationPreferences?.playstation ?? true,
@@ -113,7 +109,6 @@ export default function EditProfile({ profileData, setProfileData }) {
             ...formData,
             [name]: value,
         });
-        setHasChanges(true);
     };
 
     const handleFileUpload = async (e) => {
@@ -214,6 +209,7 @@ export default function EditProfile({ profileData, setProfileData }) {
         const updatedData = {
             ...formData,
             notificationPreferences: notificationSettings,
+            usernameLowerCase: formData.username.toLowerCase(),
         };
 
         // Update Firestore with new data
@@ -227,7 +223,9 @@ export default function EditProfile({ profileData, setProfileData }) {
             profilePicture: updatedData.profilePicture,
         }));
 
-        setHasChanges(false);
+        // Close the modal
+        setShowModal(false);
+
     };
 
     return (

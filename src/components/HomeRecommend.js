@@ -39,7 +39,6 @@ function App() {
       unsub();
       if (authObj) {
         const theuserId = authObj.uid;
-        console.log(theuserId);
         getGenres(theuserId);
       } else {
         // not logged in
@@ -57,7 +56,7 @@ function App() {
         setFavoriteGenres(genres);
 
         const genrePromises = genres.map(async (genre) => {
-          if (genre != "") {
+          if (genre !== "") {
             const genreNumber = genreMapping[genre];
             const response = await fetch(corsAnywhereUrl + apiUrl, {
               method: "POST",

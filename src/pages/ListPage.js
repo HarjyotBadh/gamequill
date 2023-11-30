@@ -7,7 +7,6 @@ import {
   getDoc,
   updateDoc,
   arrayUnion,
-  arrayRemove,
   deleteDoc,
 } from "firebase/firestore";
 import { useEffect } from "react";
@@ -82,7 +81,6 @@ const ListPage = () => {
   }, []);
   useEffect(() => {
     fetchGameDatas();
-    console.log(gameDataArray);
   }, [gameIds]);
   //fetchListData();
 
@@ -220,7 +218,7 @@ const ListPage = () => {
   };
 
   return (
-    <div className="listPage bg-white dark:bg-gray-500 ${viewMode}">
+    <div className="listPage bg-white dark:bg-gray-500">
       <Navbar />
       <div className="list-container bg-white dark:bg-gray-500">
         <h1 className="list-title text-black dark:text-white flex flex-row">
