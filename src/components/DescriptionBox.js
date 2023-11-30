@@ -25,7 +25,6 @@ export default function DescriptionBox({ gameData }) {
   // Get the game's summary, storyline, and genres.
   const summary = gameData.summary;
   const storyline = gameData.storyline;
-  const genres = gameData.genres?.map((genre) => genre.name).join(", ");
 
   // Get the game's ESRB rating and description.
   const esrbAgeRating = gameData.age_ratings?.find(

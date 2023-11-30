@@ -117,9 +117,7 @@ export const fetchMultipleGameData = async (game_ids) => {
  * @returns {Object[]} Array of game data from IGDB.
  */
 export const fetchGameDataFromIGDB = async (game_ids) => {
-    console.log(
-        "==================FETCHING DATA FROM IGDB===================="
-    );
+
     const corsAnywhereUrl = "http://localhost:8080/";
     const apiUrl = "https://api.igdb.com/v4/games";
 

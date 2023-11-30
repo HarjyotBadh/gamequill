@@ -3,12 +3,10 @@ import "../styles/ProfileTitleCard.css";
 
 export default function ProfileTitleCard({ gameData }) {
   if (!gameData) return <div></div>;
-  //console.log("gameData", gameData);
 
   const bigCoverUrl = gameData
     ? gameData.replace("/t_thumb/", "/t_cover_big/")
     : null;
-  // console.log("this - " + bigCoverUrl);
 
   return (
     <div className="profile-game-card">

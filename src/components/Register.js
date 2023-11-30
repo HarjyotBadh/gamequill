@@ -133,7 +133,7 @@ function Register() {
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.log("Registration failed:", errorCode, errorMessage);
+      console.error("Registration failed:", errorCode, errorMessage);
       setRegistrationError(errorMessage);
       setShowPopup(true);
     }

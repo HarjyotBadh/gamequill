@@ -85,8 +85,6 @@ export async function fetchFriendsRecentReviews(numReviews, currentUserId) {
     if (!currentUserId) {
         console.error("No current user ID provided");
         return [];
-    } else {
-        console.log("UID provided.");
     }
     
     // Retrieve the current user's friends list
@@ -304,7 +302,6 @@ export async function fetchUserRepostedReviews(numReposts, userId) {
  */
 export async function fetchCommentsByReviewId(review_id) {
     try {
-        console.log("Reading from Firebase: fetchCommentsByReviewId");
         const q = query(collection(db, "reviews", review_id, "comments"));
         const querySnapshot = await getDocs(q);
         const comments = [];
@@ -347,7 +344,6 @@ export async function fetchCommentsByReviewId(review_id) {
  */
 export async function fetchRepliesByCommentId(review_id, comment_id) {
     try {
-        console.log("Reading from Firebase: fetchRepliesByCommentId");
         const q = query(collection(db, "reviews", review_id, "comments", comment_id, "replies"));
         const querySnapshot = await getDocs(q);
         const replies = [];

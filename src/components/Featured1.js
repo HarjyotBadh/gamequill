@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../styles/Featured1.css';
 import tempscreenshot from "../images/temp_images/tempscreenshot.png";
 import { calculateAverageRating } from "../functions/RatingFunctions"

@@ -45,13 +45,11 @@ const GameLike = ({ gameID }) => {
         await updateDoc(docRef, {
           likes: arrayRemove(gameID),
         });
-        // console.log('Removed game ID from Like array');
       } else {
         // Add the gameID to the 'likes' array
         await updateDoc(docRef, {
           likes: arrayUnion(gameID),
         });
-        // console.log('Added game ID to Like array');
       }
     } catch (error) {
       console.error("Error updating data in Firestore:", error);

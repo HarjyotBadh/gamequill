@@ -5,7 +5,6 @@ import Badge from "@mui/material/Badge";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useNavigate } from "react-router-dom";
 import { PresentationChartLineIcon } from "@heroicons/react/24/outline";
-import { fetchSingularSimilarGame } from "../functions/GameFunctions";
 import Tooltip from "@mui/material/Tooltip";
 import "../styles/NotificationBell.css";
 

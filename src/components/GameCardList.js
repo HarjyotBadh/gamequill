@@ -13,7 +13,6 @@ import { doc, updateDoc, arrayRemove } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import {
   calculateAverageRating,
-  generateStars,
 } from "../functions/RatingFunctions";
 
 export default function GameCardList({
@@ -59,7 +58,6 @@ export default function GameCardList({
     ? gameData.cover.url.replace("/t_thumb/", "/t_cover_big/")
     : null;
 
-  const stars = generateStars(averageRating);
   const isListOwner = auth.currentUser && auth.currentUser.uid === listOwner;
 
   const handleRemoveFromList = async (gameId) => {

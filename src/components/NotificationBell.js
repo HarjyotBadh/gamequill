@@ -232,6 +232,7 @@ export default function NotificationBell({ userUid, isOpen, onToggle }) {
                                         );
                                     }
                                 }}
+                                
                             >
                                 <div className="flex items-center p-3">
                                     {/* Keep the image click handlers as they are */}

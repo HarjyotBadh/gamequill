@@ -14,7 +14,6 @@ export async function sendLikeNotification(receiverUID, senderUID, reviewObject)
 
     // If the sender and receiver are the same, do not send a notification
     if (senderUID === receiverUID) {
-        console.log("User liked their own review, no notification sent.");
         return;
     }
 
@@ -37,7 +36,6 @@ export async function sendLikeNotification(receiverUID, senderUID, reviewObject)
 
             // If the notification already exists, do not send a new one
             if (existingNotification) {
-                console.log("Notification already sent.");
                 return;
             }
 
@@ -72,7 +70,7 @@ export async function sendLikeNotification(receiverUID, senderUID, reviewObject)
 
             console.log("Notification sent successfully.");
         } else {
-            console.log("Receiver profile data does not exist.");
+            console.error("Receiver profile data does not exist.");
         }
     } catch (error) {
         console.error("Error sending notification:", error);
@@ -88,7 +86,6 @@ export async function sendLikeNotification(receiverUID, senderUID, reviewObject)
  * @returns {Promise<void>} - A promise that resolves when the notification has been sent successfully.
  */
 export async function sendFollowerNotification(receiverUID, senderUID) {
-    console.log("Sending follow notification...");
     const profileDataRef = doc(db, "profileData", receiverUID);
 
     try {
@@ -105,11 +102,8 @@ export async function sendFollowerNotification(receiverUID, senderUID) {
                 notification.senderUID === senderUID
             );
 
-            console.log("Existing notification:");
-
             // If the notification already exists, do not send a new one
             if (existingNotification) {
-                console.log("Follow notification already sent.");
                 return;
             }
 
@@ -138,9 +132,8 @@ export async function sendFollowerNotification(receiverUID, senderUID) {
                 notifications: arrayUnion(newNotification)
             });
 
-            console.log("Follow notification sent successfully.");
         } else {
-            console.log("Receiver profile data does not exist.");
+            console.error("Receiver profile data does not exist.");
         }
     } catch (error) {
         console.error("Error sending follow notification:", error);

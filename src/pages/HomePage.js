@@ -14,7 +14,7 @@ function App() {
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log("User is already signed in:", user);
+        // User is signed in.
       } else {
         window.location.href = "/login";
       }

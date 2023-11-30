@@ -30,7 +30,7 @@ const GameLog = ({ gameID }) => {
                 console.log("No such document!");
             }
         } else {
-            console.log("User not logged in");
+            console.error("User not logged in");
         }
       } catch (error) {
         console.error("Error fetching data from Firestore:", error);
@@ -53,13 +53,11 @@ const GameLog = ({ gameID }) => {
         await updateDoc(docRef, {
           plays: arrayRemove(gameID),
         });
-        // console.log('Removed game ID from array');
       } else {
         // Add the gameID to the 'played' array
         await updateDoc(docRef, {
           plays: arrayUnion(gameID),
         });
-        // console.log('Added game ID to array');
       }
     } catch (error) {
       console.error("Error updating data in Firestore:", error);

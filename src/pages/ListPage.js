@@ -82,7 +82,6 @@ const ListPage = () => {
   }, []);
   useEffect(() => {
     fetchGameDatas();
-    console.log(gameDataArray);
   }, [gameIds]);
   //fetchListData();
 

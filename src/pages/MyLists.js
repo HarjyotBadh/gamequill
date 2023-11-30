@@ -1,12 +1,11 @@
 // MyListsPage.js
 
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { db, auth } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
 import NavBar from "../components/NavBar";
 import ListPreview from "../components/ListPreview";
-import { getListData, getMultipleListData } from "../functions/ListFunctions";
+import { getMultipleListData } from "../functions/ListFunctions";
 import "../styles/MyLists.css";
 
 const MyListsPage = ({ userId }) => {

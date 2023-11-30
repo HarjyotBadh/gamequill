@@ -77,10 +77,6 @@ function TopGames() {
           ? responseData.filter(game => game.genres && game.genres.some(g => g.name.toLowerCase() === selectedGenre.label.toLowerCase()))
           : responseData.slice(0, 10); // Display the top 10 if no genre is selected
     
-        // Log selected genre and filtered games for debugging
-        console.log("Selected Genre:", selectedGenre ? selectedGenre.label : "None");
-        console.log("Filtered Games:", filteredGames);
-    
         // Process the response data
         setTopGamesData(filteredGames);
       } catch (error) {

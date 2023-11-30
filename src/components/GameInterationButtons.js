@@ -92,13 +92,11 @@ const GameInteractionButtons = ({ gameID }) => {
                 await updateDoc(docRef, {
                     plays: arrayRemove(gameID),
                 });
-                // console.log('Removed game ID from array');
             } else {
                 // Add the gameID to the 'played' array
                 await updateDoc(docRef, {
                     plays: arrayUnion(gameID),
                 });
-                // console.log('Added game ID to array');
             }
         } catch (error) {
             console.error("Error updating data in Firestore:", error);

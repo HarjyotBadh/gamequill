@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
-import TitleCard from "../components/TitleCard";
-import { Link } from "react-router-dom";
 import "../styles/SearchPage.css";
 import GameColumn from "../components/GamesColumn";
 import UserColumn from "../components/UserColumn";
@@ -299,88 +297,84 @@ const SearchPage = ({ searchQuery }) => {
     { value: "Acorn Archimedes", label: "Acorn Archimedes" },
   ];
 
-  const searchGames = async () => {
-    try {
-      const corsAnywhereUrl = "http://localhost:8080/";
-      const apiUrl = "https://api.igdb.com/v4/games";
-
-      var genreNumber = null;
-      if (selectedGenre != "") {
-        genreNumber = genreMapping[selectedGenre];
-      }
-      var platformNumber = null;
-      if (selectedPlatform != "") {
-        platformNumber = platformMapping[selectedPlatform];
-      }
-      console.log(platformNumber);
-
-      const response = await fetch(corsAnywhereUrl + apiUrl, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-          Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
-        },
-        body: `search "${searchQuery}";fields name, cover.url, aggregated_rating, involved_companies.company.name; limit:50; where category = (0,8,9)${
-          genreNumber ? ` & genres = (${genreNumber})` : ""
-        }${platformNumber ? ` & platforms = (${platformNumber})` : ""};`,
-      });
-
-      const data = await response.json();
-      if (data.length) {
-        const gamesData = data.map((game) => ({
-          id: game.id,
-          gameData: {
-            ...game,
-            aggregated_rating: game.aggregated_rating || 0, // Set to 0 if aggregated_rating is undefined
-          },
-        }));
-        gamesData.sort(
-          (a, b) => b.gameData.aggregated_rating - a.gameData.aggregated_rating
-        );
-        console.log(gamesData);
-        setGames(gamesData);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const searchUsers = async () => {
-    try {
-      const userResults = [];
-
-      const usersCollection = collection(db, "profileData");
-      const q = query(
-        usersCollection,
-        where("usernameLowerCase", ">=", searchQuery.toLowerCase()),
-        where("usernameLowerCase", "<=", searchQuery.toLowerCase() + "\uf8ff"),
-        limit(10)
-      );
-      const querySnapshot = await getDocs(q);
-
-      querySnapshot.forEach((doc) => {
-        const userData = doc.data();
-        userResults.push({
-          username: userData.username,
-          userId: doc.id,
-        });
-      });
-
-      setUsers(userResults);
-      // console.log(users[0].username);
-      console.log(users);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
+  
   useEffect(() => {
+    const searchGames = async () => {
+      try {
+        const corsAnywhereUrl = "http://localhost:8080/";
+        const apiUrl = "https://api.igdb.com/v4/games";
+  
+        var genreNumber = null;
+        if (selectedGenre !== "") {
+          genreNumber = genreMapping[selectedGenre];
+        }
+        var platformNumber = null;
+        if (selectedPlatform !== "") {
+          platformNumber = platformMapping[selectedPlatform];
+        }
+        const response = await fetch(corsAnywhereUrl + apiUrl, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+            Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+          },
+          body: `search "${searchQuery}";fields name, cover.url, aggregated_rating, involved_companies.company.name; limit:50; where category = (0,8,9)${
+            genreNumber ? ` & genres = (${genreNumber})` : ""
+          }${platformNumber ? ` & platforms = (${platformNumber})` : ""};`,
+        });
+  
+        const data = await response.json();
+        if (data.length) {
+          const gamesData = data.map((game) => ({
+            id: game.id,
+            gameData: {
+              ...game,
+              aggregated_rating: game.aggregated_rating || 0, // Set to 0 if aggregated_rating is undefined
+            },
+          }));
+          gamesData.sort(
+            (a, b) => b.gameData.aggregated_rating - a.gameData.aggregated_rating
+          );
+          setGames(gamesData);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    const searchUsers = async () => {
+      try {
+        const userResults = [];
+  
+        const usersCollection = collection(db, "profileData");
+        const q = query(
+          usersCollection,
+          where("usernameLowerCase", ">=", searchQuery.toLowerCase()),
+          where("usernameLowerCase", "<=", searchQuery.toLowerCase() + "\uf8ff"),
+          limit(10)
+        );
+        const querySnapshot = await getDocs(q);
+  
+        querySnapshot.forEach((doc) => {
+          const userData = doc.data();
+          userResults.push({
+            username: userData.username,
+            userId: doc.id,
+          });
+        });
+  
+        setUsers(userResults);
+      } catch (error) {
+        console.error(error);
+      }
+    };
     if (searchQuery) {
       searchGames();
       searchUsers();
     }
-  }, [searchQuery, selectedGenre, selectedPlatform]);
+}, [searchQuery, selectedGenre, selectedPlatform, genreMapping, platformMapping]);
+
 
   const handleGenreChange = (event) => {
     if (event.target.value === "All Genres") {
