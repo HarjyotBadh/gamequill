@@ -10,6 +10,8 @@ import genracing from "../images/genres/gq-genre-racing.png";
 import genrts from "../images/genres/gq-genre-rts.png";
 import genrpg from "../images/genres/gq-genre-rpg.png";
 import gensim from "../images/genres/gq-genre-sim.png";
+import gennovel from "../images/genres/gq-genre-visualnovel.png";
+import genmoba from "../images/genres/gq-genre-moba.png";
 import gensport from "../images/genres/gq-genre-sport.png";
 import genstrategy from "../images/genres/gq-genre-strategy.png";
 import gentbs from "../images/genres/gq-genre-turnbased.png";
@@ -36,6 +38,8 @@ const genreImages = {
   "role-playing (rpg)": genrpg,
   "simulator": gensim,
   "sport": gensport,
+  "visual novel": gennovel,
+  "moba": genmoba,
   "strategy": genstrategy,
   "turn-based strategy (tbs)": gentbs,
   "tactical": gentactical,
