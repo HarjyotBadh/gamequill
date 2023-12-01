@@ -23,32 +23,32 @@ import genindie from "../images/genres/gq-genre-indie.png";
 import genpinball from "../images/genres/gq-genre-pinball.png";
 
 const genreImages = {
-  "Real Time Strategy (RTS)": genrts,
-  "Puzzle": genpuzzle,
-  "Indie": genindie,
-  "Pinball": genpinball,
-  "Point-and-Click": genpac,
-  "Fighting": genfighting,
-  "Shooter": genshooter,
-  "Music": genmusic,
-  "Platform": genplatform,
-  "Racing": genracing,
-  "Role-playing (RPG)": genrpg,
-  "Simulator": gensim,
-  "Sport": gensport,
-  "Strategy": genstrategy,
-  "Turn-based strategy (TBS)": gentbs,
-  "Tactical": gentactical,
-  "Quiz/Trivia": genquiz,
-  "Hack and slash/Beat 'em up": genhas,
-  "Adventure": genadventure,
-  "Arcade": genarcade,
-  "Card & Board Game": gencards,
+  "real time strategy (rts)": genrts,
+  "puzzle": genpuzzle,
+  "indie": genindie,
+  "pinball": genpinball,
+  "point-and-click": genpac,
+  "fighting": genfighting,
+  "shooter": genshooter,
+  "music": genmusic,
+  "platform": genplatform,
+  "racing": genracing,
+  "role-playing (rpg)": genrpg,
+  "simulator": gensim,
+  "sport": gensport,
+  "strategy": genstrategy,
+  "turn-based strategy (tbs)": gentbs,
+  "tactical": gentactical,
+  "quiz/trivia": genquiz,
+  "hack and slash/beat 'em up": genhas,
+  "adventure": genadventure,
+  "arcade": genarcade,
+  "card & board game": gencards,
 };
 
 export default function GenreIcon({ g }) {
   
-  const genreImage = genreImages[g];
+  const genreImage = genreImages[g.toLowerCase()];
 
   return (
     <div>
