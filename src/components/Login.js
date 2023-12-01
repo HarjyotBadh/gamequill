@@ -49,7 +49,7 @@ function Login() {
       <img
         src={gamequillLogo}
         alt="GameQuill Logo"
-        className="image-container"
+        className="register-image-container"
       />
       <h1 className="login-page-title">Login Page</h1>
       <form onSubmit={handleSubmit} className="form-container">
