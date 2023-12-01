@@ -38,11 +38,11 @@ export default function EditFeaturedList({ setFeaturedList }) {
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
           const listData = doc.data();
-          listResults.push({
+          const listResult = {
+            ...listData,
             id: doc.id,
-            name: listData.name,
-            data: listData,
-          });
+          };
+          listResults.push(listResult);
         });
         setFilteredLists(listResults);
       } else {
@@ -109,7 +109,7 @@ export default function EditFeaturedList({ setFeaturedList }) {
                 {/* <button onClick={() => handleSelectList(list.id)}>
                   {list.name}
                 </button> */}
-                <ListPreview list={list.data} />
+                <ListPreview list={list} />
                 <button onClick={() => handleSelectList(list.id)}>
                   Select List
                 </button>
