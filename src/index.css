@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+    box-sizing: border-box;
+  }
+  
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 0.5vw;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: var(--wrapper);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-text-color);
+    border-radius: 10px;
+  }
+
 /* Define only the values for the light theme */
 :root {
     --background-light: #e5e7eb;

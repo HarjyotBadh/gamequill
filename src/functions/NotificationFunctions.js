@@ -132,6 +132,8 @@ export async function sendFollowerNotification(receiverUID, senderUID) {
                 notifications: arrayUnion(newNotification)
             });
 
+            console.log("Follow notification sent successfully.");
+
         } else {
             console.error("Receiver profile data does not exist.");
         }

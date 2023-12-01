@@ -52,7 +52,7 @@ export default function GenreIcon({ g }) {
 
   return (
     <div>
-      {genreImage ? <img class="genre-icon" src={genreImage} alt={`Genre: ${g}`} /> : <span>Genre not found</span>}
+      {genreImage ? <img class="a b" src={genreImage} alt={`Genre: ${g}`} /> : <span>Genre not found</span>}
     </div>
   );
 }
