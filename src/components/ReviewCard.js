@@ -3,6 +3,7 @@ import "../styles/ReviewCard.css";
 import { Link } from 'react-router-dom';
 import DOMPurify from "dompurify";
 import { parseReviewWithSpoilersToHTML } from "../functions/ReviewFunctions";
+import Rating from "@mui/material/Rating";
 
 const ReviewCard = ({ review, gameName }) => {
   const { reviewText, timestamp, gameCover } = review;
@@ -70,7 +71,20 @@ const ReviewCard = ({ review, gameName }) => {
           {gameCover && <img src={gameCover} alt={gameName} />}
         </div>
       </div>
-      <div className="stars-rating">{stars}</div>
+      <Rating
+                            name="read-only"
+                            value={review.starRating}
+                            precision={0.5}
+                            readOnly
+                            sx={{
+                                "& .MuiRating-iconFilled": {
+                                    color: "var(--rating-color)",
+                                },
+                                "& .MuiRating-iconEmpty": {
+                                    color: "var(--star-color)",
+                                },
+                            }}
+                        />
       <div className="review-text">
         <p
           dangerouslySetInnerHTML={{
