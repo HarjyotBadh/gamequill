@@ -6,13 +6,13 @@
   padding: 20px;
   border-radius: 10px;
   margin: 20px 0;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
 }
 
 .recent-reviews h2 {
   font-size: 1.8rem; /* Slightly larger font size */
   margin-bottom: 15px;
-  color: #333;
+  color: var(--text-color);
 }
 
 .review-list {
@@ -34,7 +34,7 @@
   display: flex;
   align-items: center;
   font-size: 1.2rem;
-  color: #333;
+  color: var(--secondary-text-color);
 }
 
 .sort-options input {
@@ -46,20 +46,20 @@
   appearance: none;
   width: 18px;
   height: 18px;
-  border: 2px solid #333;
+  border: 2px solid var(--secondary-text-color);
   border-radius: 3px;
   cursor: pointer;
 }
 
 .sort-options input[type="checkbox"]:checked {
-  border: 2px solid #333;
+  border: 2px solid var(--rating-color);
 }
 
 .sort-options input[type="checkbox"]:checked::before {
   content: "✔";
   display: block;
   text-align: center;
-  line-height: 18px;
+  /* line-height: 18px; */
   font-size: 1rem;
-  color: #fff;
+  color: var(--rating-color);
 }

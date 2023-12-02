@@ -1,6 +1,6 @@
 /* ReviewCard.css */
 .review-card {
-  background: #fff;
+  background: var(--background);
   border: 2px solid;
   border-radius: 10px;
   margin: 10px;
@@ -22,7 +22,7 @@
 .game-name {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #333;
+  color: var(--text-color);
   margin-bottom: 10px;
   flex-grow: 1; /* Allow game name to grow and fill available space */
 }
@@ -35,7 +35,7 @@
 }
 
 .timestamp {
-  color: #777;
+  color: var(--secondary-text-color);
   font-size: 0.9rem;
   margin-top: 10px;
 }
@@ -43,6 +43,7 @@
 .review-text {
   font-size: 1rem;
   margin-top: 10px;
+  color: var(--secondary-text-color);
 }
 
 /* You can customize the color scheme further based on your project's design. */
