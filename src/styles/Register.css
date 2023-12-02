@@ -16,13 +16,14 @@
 .register-title {
   font-size: 24px;
   margin-bottom: 20px;
+  color: var(--text-color); /* Text color */
 }
 
 .register-form {
   width: 100%;
   max-width: 350px;
   padding: 20px;
-  background-color: var(--wrapper); /* Form background color */
+  background-color: var(--background); /* Form background color */
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Box shadow */
 }
@@ -38,10 +39,10 @@ label {
 }
 
 .register-button {
-  background-color: blue; /* Button background color */
+  background-color: var(--rating-color); /* Button background color */
   border: none;
   margin-left: 70px;
-  color: white;
+  color: var(--text-color);
   padding: 15px;
   text-align: center;
   text-decoration: none;
@@ -54,21 +55,22 @@ label {
 }
 
 .register-button:hover {
-  background-color: darkblue;
+  background-color: var(--rating-color);
 }
 
 p {
-  margin-top: 20px;
+  margin-top: 40px;
+  color: var(--secondary-text-color);
 }
 
 .link-to-login {
-  color: blue;
+  color: var(--rating-color);
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .link-to-login:hover {
-  color: darkblue;
+  color: var(--rating-color);
 }
 
 /* Styles for the error message popup */
@@ -99,7 +101,7 @@ p {
 }
 
 .popup button {
-  background-color: blue;
+  background-color: var(--rating-color);
   border: none;
   color: white;
   padding: 10px 20px;
@@ -112,5 +114,5 @@ p {
 }
 
 .popup button:hover {
-  background-color: darkblue;
+  background-color: var(--rating-color);
 }

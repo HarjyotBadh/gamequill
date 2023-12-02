@@ -5,6 +5,7 @@
   justify-content: center;
   height: 100vh; /* Set height to 100% of the viewport height */
   background-color: var(--wrapper); /* Background color */
+  color: var(--secondary-text-color);
 }
 .mainlogin-image-container {
   width: 65%; /* Adjust the width as desired */
@@ -14,14 +15,14 @@
 .login-page-title {
   font-size: 24px;
   margin-bottom: 20px;
-  color: #333; /* Title color */
+  color: var(--text-color); /* Text color */
 }
 
 .form-container {
   width: 100%;
   max-width: 350px;
   padding: 20px;
-  background-color: var(--wrapper); /* Form background color */
+  background-color: var(--background); /* Form background color */
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Box shadow */
 }
@@ -33,7 +34,7 @@
 label {
   display: block;
   font-size: 16px;
-  color: #333; /* Label color */
+  color: var(--secondary-text-color); /* Label color */
 }
 
 input {
@@ -45,10 +46,10 @@ input {
 }
 
 .login-button {
-  background-color: blue; /* Button background color */
+  background-color: var(--rating-color); /* Button background color */
   border: none;
   margin-left: 70px;
-  color: white;
+  color: var(--text-color);
   padding: 15px;
   text-align: center;
   text-decoration: none;
@@ -61,17 +62,17 @@ input {
 }
 
 .login-button:hover {
-  background-color: darkblue; /* Hover color */
+  background-color: var(--rating-color); /* Hover color */
 }
 
 .link-to-register {
-  color: blue; /* Link color */
+  color: var(--rating-color); /* Link color */
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .link-to-register:hover {
-  color: darkblue; /* Hover color */
+  color: var(--rating-color); /* Hover color */
 }
 
 .error-message {

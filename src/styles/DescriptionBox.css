@@ -72,7 +72,7 @@
     color: var(--text-color);
     align-items: flex-start;
     gap: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 60px;
 }
 
 .description-genre-icon {
