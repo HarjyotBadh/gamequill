@@ -45,7 +45,7 @@ function TopGames() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const corsAnywhereUrl = "http://localhost:8080/";
+        // const corsAnywhereUrl = "http://localhost:8080/";
         const apiUrl = "https://api.igdb.com/v4/games";
         const conditions = "rating > 70 & total_rating_count > 25";
 
@@ -56,7 +56,7 @@ function TopGames() {
           limit 500;
         `;
     
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
+        const response = await fetch(apiUrl, {
           method: "POST",
           headers: {
             Accept: "application/json",

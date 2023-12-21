@@ -16,10 +16,10 @@ export default function EditCurrentlyPlayingGame({
 
   const search = (e) => {
     e.preventDefault();
-    const corsAnywhereUrl = "http://localhost:8080/";
+    // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
     const apiUrl = "https://api.igdb.com/v4/games";
 
-    fetch(corsAnywhereUrl + apiUrl, {
+    fetch(apiUrl, {
       method: "POST",
       headers: {
         Accept: "application/json",

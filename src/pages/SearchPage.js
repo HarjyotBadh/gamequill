@@ -300,7 +300,7 @@ const SearchPage = ({ searchQuery }) => {
   useEffect(() => {
     const searchGames = async () => {
       try {
-        const corsAnywhereUrl = "http://localhost:8080/";
+        // const corsAnywhereUrl = "http://localhost:8080/";
         const apiUrl = "https://api.igdb.com/v4/games";
 
         var genreNumber = null;
@@ -311,7 +311,7 @@ const SearchPage = ({ searchQuery }) => {
         if (selectedPlatform !== "") {
           platformNumber = platformMapping[selectedPlatform];
         }
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
+        const response = await fetch(apiUrl, {
           method: "POST",
           headers: {
             Accept: "application/json",

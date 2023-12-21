@@ -29,7 +29,7 @@ function Profile({ profileData, setProfileData, userId }) {
     isUser = true;
   }
   useEffect(() => {
-    const corsAnywhereUrl = "http://localhost:8080/";
+    // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
     const apiUrl = "https://api.igdb.com/v4/covers";
 
     const fetchCovers = async () => {
@@ -42,7 +42,7 @@ function Profile({ profileData, setProfileData, userId }) {
       setCurrentlyPlayingGame(docSnapshot.data().currentlyPlayingGame);
       setFeaturedList(docSnapshot.data().featuredList || null);
       const coverPromises = favoriteGames.map(async (id) => {
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
+        const response = await fetch(apiUrl, {
           method: "POST",
           headers: {
             Accept: "application/json",

@@ -118,7 +118,7 @@ export const fetchMultipleGameData = async (game_ids) => {
  */
 export const fetchGameDataFromIGDB = async (game_ids) => {
 
-    const corsAnywhereUrl = "http://localhost:8080/";
+    // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
     const apiUrl = "https://api.igdb.com/v4/games";
 
     // Ensure game_ids is always an array
@@ -128,7 +128,7 @@ export const fetchGameDataFromIGDB = async (game_ids) => {
 
     // Fetch game data from IGDB
     try {
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
+        const response = await fetch(apiUrl, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -168,7 +168,7 @@ export const fetchGameDataFromIGDB = async (game_ids) => {
  * @returns {Object[]} An array of game objects with formatted screenshot URLs.
  */
 export async function fetchSimilarGames(genres, themes) {
-    const corsAnywhereUrl = "http://localhost:8080/";
+    // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
     const apiUrl = "https://api.igdb.com/v4/games";
 
     // Extracting ids from genres and themes
@@ -192,7 +192,7 @@ export async function fetchSimilarGames(genres, themes) {
         "; sort rating desc; limit 100;";
 
     try {
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
+        const response = await fetch(apiUrl, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -233,7 +233,7 @@ export async function fetchSimilarGames(genres, themes) {
  * @returns {Object} A game object with formatted screenshot URLs.
  */
 export async function fetchSingularSimilarGame(genres, themes) {
-    const corsAnywhereUrl = "http://localhost:8080/";
+    // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
     const apiUrl = "https://api.igdb.com/v4/games";
 
     // Extracting ids from genres and themes
@@ -257,7 +257,7 @@ export async function fetchSingularSimilarGame(genres, themes) {
         "; sort rating desc; limit 1;"; // Changed limit to 1
 
     try {
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
+        const response = await fetch(apiUrl, {
             method: "POST",
             headers: {
                 Accept: "application/json",

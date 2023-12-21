@@ -22,7 +22,7 @@ export default function HomeUpcoming() {
 
     const getGames = async (userId) => {
       try {
-        const corsAnywhereUrl = "http://localhost:8080/";
+        // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
         const apiUrl = "https://api.igdb.com/v4/release_dates";
 
         let arr = new Array(6);
@@ -33,7 +33,7 @@ export default function HomeUpcoming() {
         console.log("currentTime:  " + currentTime);
         console.log("futureTime:  " + futureTime);
 
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
+        const response = await fetch(apiUrl, {
           method: "POST",
           headers: {
             Accept: "application/json",

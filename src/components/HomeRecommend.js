@@ -47,7 +47,7 @@ function App() {
 
     const getGenres = async (userId) => {
       try {
-        const corsAnywhereUrl = "http://localhost:8080/";
+        // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
         const apiUrl = "https://api.igdb.com/v4/games";
         const docRef = doc(db, "profileData", userId);
         const docSnapshot = await getDoc(docRef);
@@ -58,7 +58,7 @@ function App() {
         const genrePromises = genres.map(async (genre) => {
           if (genre !== "") {
             const genreNumber = genreMapping[genre];
-            const response = await fetch(corsAnywhereUrl + apiUrl, {
+            const response = await fetch(apiUrl, {
               method: "POST",
               headers: {
                 Accept: "application/json",
