@@ -15,23 +15,23 @@ export default function EditCurrentlyPlayingGame({
   const uid = auth.currentUser.uid;
 
   const search = (e) => {
-    e.preventDefault();
-    // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
-    const apiUrl = "https://api.igdb.com/v4/games";
-
-    fetch(apiUrl, {
+    //e.preventDefault();
+    const ob = {
+      body: `search "${searchQuery}";fields name,cover.url, id; limit:5; where category = (0,8,9);`,
+    };
+    const functionUrl =
+      "https://us-central1-gamequill-3bab8.cloudfunctions.net/fetchIGDBGames";
+    fetch(functionUrl, {
       method: "POST",
       headers: {
-        Accept: "application/json",
-        "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-        Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+        "Content-Type": "application/json",
       },
-      body: `search "${searchQuery}";fields name,cover.url, id; limit:5; where category = (0,8,9);`,
+      body: JSON.stringify({ data: ob }),
     })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.length) {
-          const gamesData = data.map((game) => ({
+      .then((response) => {
+        console.log("Request successful", response);
+        if (response.length) {
+          const gamesData = response.map((game) => ({
             name: game.name,
             coverUrl: game.cover && game.cover.url ? game.cover.url : null,
             id: game.id,
@@ -39,10 +39,37 @@ export default function EditCurrentlyPlayingGame({
           setGameData(gamesData);
         }
       })
-      .catch((err) => {
-        console.error(err);
+      .catch((error) => {
+        console.error("Request failed", error);
       });
   };
+  // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
+  //   const apiUrl = "https://api.igdb.com/v4/games";
+
+  //   fetch(apiUrl, {
+  //     method: "POST",
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+  //       Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+  //     },
+  //     body: `search "${searchQuery}";fields name,cover.url, id; limit:5; where category = (0,8,9);`,
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       if (data.length) {
+  //         const gamesData = data.map((game) => ({
+  //           name: game.name,
+  //           coverUrl: game.cover && game.cover.url ? game.cover.url : null,
+  //           id: game.id,
+  //         }));
+  //         setGameData(gamesData);
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.error(err);
+  //     });
+  // };
 
   const handleSubmit = (e) => {
     search(e);
