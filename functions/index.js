@@ -10,12 +10,12 @@ const db = admin.firestore();
 
 exports.fetchIGDBGamess = functions.https.onRequest(async (data, context) => {
   try {
-    if (!data.query) {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        'The function must be called with one argument "body".'
-      );
-    }
+    // if (!data.igdbquery) {
+    //   throw new functions.https.HttpsError(
+    //     "invalid-argument",
+    //     'The function must be called with one argument "body".'
+    //   );
+    // }
     console.log("Data test: " + data.body);
     console.log("Fetching from Games API with body: " + data.igdbquery);
     const igdbHeaders = {
@@ -28,7 +28,7 @@ exports.fetchIGDBGamess = functions.https.onRequest(async (data, context) => {
       method: "post",
       url: "https://api.igdb.com/v4/games",
       headers: igdbHeaders,
-      data: data.query,
+      data: data.body,
     });
     return { data: igdbResponse.data };
   } catch (error) {

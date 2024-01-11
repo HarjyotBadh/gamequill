@@ -30,7 +30,7 @@ export default function EditCurrentlyPlayingGame({
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*", // Required for CORS support to work
       },
-      body: JSON.stringify({ data: ob }),
+      body: JSON.stringify(ob.igdbquery),
     })
       .then((response) => {
         console.log("Request successful", response);
