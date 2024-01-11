@@ -1,7 +1,7 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const axios = require("axios");
-const cheerio = require("cheerio");
+//const cheerio = require("cheerio");
 
 admin.initializeApp();
 
@@ -21,6 +21,7 @@ exports.fetchIGDBGames = functions.https.onCall(async (data, context) => {
       Accept: "application/json",
       "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6", // Replace with your IGDB Client ID
       Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo", // Replace with your IGDB access token
+      "Access-Control-Allow-Origin": "*", // Required for CORS support to work
     };
     const igdbResponse = await axios({
       method: "post",
@@ -28,7 +29,7 @@ exports.fetchIGDBGames = functions.https.onCall(async (data, context) => {
       headers: igdbHeaders,
       data: data.body,
     });
-    return igdbResponse.data;
+    return { data: igdbResponse.data };
   } catch (error) {
     console.error("Error updating game price:", error);
     throw new functions.https.HttpsError(

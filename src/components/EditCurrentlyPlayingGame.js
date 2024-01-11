@@ -5,6 +5,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { fetchGameData } from "../functions/GameFunctions";
 import "../styles/EditCurrentlyPlayingGame.css";
+import { data } from "cheerio/lib/api/attributes";
 export default function EditCurrentlyPlayingGame({
   currentlyPlayingGame,
   setCurrentlyPlayingGame,
@@ -22,6 +23,7 @@ export default function EditCurrentlyPlayingGame({
     const functionUrl =
       "https://us-central1-gamequill-3bab8.cloudfunctions.net/fetchIGDBGames";
     fetch(functionUrl, {
+      mode: "no-cors",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,15 +32,18 @@ export default function EditCurrentlyPlayingGame({
     })
       .then((response) => {
         console.log("Request successful", response);
-        if (response.length) {
-          const gamesData = response.map((game) => ({
-            name: game.name,
-            coverUrl: game.cover && game.cover.url ? game.cover.url : null,
-            id: game.id,
-          }));
-          setGameData(gamesData);
-        }
       })
+      // .then((data) => {
+      //   console.log("Data:", data.data);
+      //   if (data.length) {
+      //     const gamesData = data.data.map((game) => ({
+      //       name: game.name,
+      //       coverUrl: game.cover && game.cover.url ? game.cover.url : null,
+      //       id: game.id,
+      //     }));
+      //     setGameData(gamesData);
+      //   }
+      // })
       .catch((error) => {
         console.error("Request failed", error);
       });
