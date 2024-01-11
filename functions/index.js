@@ -1,22 +1,23 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
 const axios = require("axios");
-//const cheerio = require("cheerio");
+const cheerio = require("cheerio");
 
 admin.initializeApp();
 
 // Initialize Firestore
 const db = admin.firestore();
 
-exports.fetchIGDBGames = functions.https.onCall(async (data, context) => {
+exports.fetchIGDBGamess = functions.https.onRequest(async (data, context) => {
   try {
-    if (!data.body) {
+    if (!data.query) {
       throw new functions.https.HttpsError(
         "invalid-argument",
         'The function must be called with one argument "body".'
       );
     }
-    console.log("Fetching from Games API with body: " + data.body);
+    console.log("Data test: " + data.body);
+    console.log("Fetching from Games API with body: " + data.igdbquery);
     const igdbHeaders = {
       Accept: "application/json",
       "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6", // Replace with your IGDB Client ID
@@ -27,7 +28,7 @@ exports.fetchIGDBGames = functions.https.onCall(async (data, context) => {
       method: "post",
       url: "https://api.igdb.com/v4/games",
       headers: igdbHeaders,
-      data: data.body,
+      data: data.query,
     });
     return { data: igdbResponse.data };
   } catch (error) {

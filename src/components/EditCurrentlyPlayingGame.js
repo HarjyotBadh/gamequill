@@ -5,7 +5,8 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db, auth } from "../firebase";
 import { fetchGameData } from "../functions/GameFunctions";
 import "../styles/EditCurrentlyPlayingGame.css";
-import { data } from "cheerio/lib/api/attributes";
+import { functions } from "../firebase";
+// import { data } from "cheerio/lib/api/attributes";
 export default function EditCurrentlyPlayingGame({
   currentlyPlayingGame,
   setCurrentlyPlayingGame,
@@ -16,34 +17,36 @@ export default function EditCurrentlyPlayingGame({
   const uid = auth.currentUser.uid;
 
   const search = (e) => {
-    //e.preventDefault();
+    e.preventDefault();
     const ob = {
-      body: `search "${searchQuery}";fields name,cover.url, id; limit:5; where category = (0,8,9);`,
+      igdbquery: `search "${searchQuery}";fields name,cover.url, id; limit:5; where category = (0,8,9);`,
     };
     const functionUrl =
-      "https://us-central1-gamequill-3bab8.cloudfunctions.net/fetchIGDBGames";
+      "https://us-central1-gamequill-3bab8.cloudfunctions.net/fetchIGDBGamess";
     fetch(functionUrl, {
       mode: "no-cors",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*", // Required for CORS support to work
       },
       body: JSON.stringify({ data: ob }),
     })
       .then((response) => {
         console.log("Request successful", response);
       })
-      // .then((data) => {
-      //   console.log("Data:", data.data);
-      //   if (data.length) {
-      //     const gamesData = data.data.map((game) => ({
-      //       name: game.name,
-      //       coverUrl: game.cover && game.cover.url ? game.cover.url : null,
-      //       id: game.id,
-      //     }));
-      //     setGameData(gamesData);
-      //   }
-      // })
+      .then((data) => {
+        console.log("Data:", data);
+        const igdbResponse = data.data;
+        if (igdbResponse.length) {
+          const gamesData = igdbResponse.map((game) => ({
+            name: game.name,
+            coverUrl: game.cover && game.cover.url ? game.cover.url : null,
+            id: game.id,
+          }));
+          setGameData(gamesData);
+        }
+      })
       .catch((error) => {
         console.error("Request failed", error);
       });
