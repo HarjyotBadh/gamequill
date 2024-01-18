@@ -16,7 +16,7 @@ exports.fetchIGDBGamess = functions.https.onRequest(async (data, context) => {
     //     'The function must be called with one argument "body".'
     //   );
     // }
-    console.log("Data test: " + data.body);
+    console.log("Data test: " + data.body.slice(1, -1));
     console.log("Fetching from Games API with body: " + data.igdbquery);
     const igdbHeaders = {
       Accept: "application/json",
@@ -28,7 +28,7 @@ exports.fetchIGDBGamess = functions.https.onRequest(async (data, context) => {
       method: "post",
       url: "https://api.igdb.com/v4/games",
       headers: igdbHeaders,
-      data: data.body,
+      data: data.body.slice(1, -1),
     });
     return { data: igdbResponse.data };
   } catch (error) {

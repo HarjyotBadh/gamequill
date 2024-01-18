@@ -19,7 +19,7 @@ export default function EditCurrentlyPlayingGame({
   const search = (e) => {
     e.preventDefault();
     const ob = {
-      igdbquery: `search "${searchQuery}";fields name,cover.url, id; limit:5; where category = (0,8,9);`,
+      igdbquery: `search '${searchQuery}';fields name,cover.url, id; limit:5; where category = (0,8,9);`,
     };
     const functionUrl =
       "https://us-central1-gamequill-3bab8.cloudfunctions.net/fetchIGDBGamess";
