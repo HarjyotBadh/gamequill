@@ -28,7 +28,7 @@ exports.getIGDBGames = functions.https.onRequest((request, response) => {
               console.log("Request Body: " + request.body);
               const igdbQuery = request.body.igdbquery;
               // Remove first and last character and replace ' with "
-              var modifiedBody = request.body.igdbyquery.slice(1, -1).replace(/'/g, '"');
+              var modifiedBody = request.body.igdbquery.slice(0).replace(/'/g, '"');
 
               // Log the received data
               console.log("The data received: " + modifiedBody);
