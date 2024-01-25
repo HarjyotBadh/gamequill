@@ -30,6 +30,7 @@ export const fetchGameData = async (game_id) => {
     } else {
         // Game data not found in Firestore, fetch from IGDB
         const gameDataFromIGDBB = await fetchGameDataFromIGDB(game_id);
+        console.log("gameDataFromIGDBB:", gameDataFromIGDBB);
         const gameDataFromIGDB = gameDataFromIGDBB[0];
 
         if (gameDataFromIGDB) {
@@ -109,6 +110,8 @@ export const fetchMultipleGameData = async (game_ids) => {
     return gamesData;
 };
 
+
+
 /**
  * Fetches game data from IGDB for an array of game IDs. It makes a single API call
  * to IGDB to get the data for all game IDs provided in the array.
@@ -128,31 +131,66 @@ export const fetchGameDataFromIGDB = async (game_ids) => {
 
     // Fetch game data from IGDB
     try {
-        const response = await fetch(apiUrl, {
+        const ob = {
+            igdbquery: `
+            fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*,themes.name;
+            where id = (${game_ids.join(",")});
+        `,
+        };
+        const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
+
+        fetch(functionUrl, {
             method: "POST",
             headers: {
-                Accept: "application/json",
-                "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
             },
-            body: `
-                fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*,themes.name;
-                where id = (${game_ids.join(",")});
-            `,
-        });
+            body: JSON.stringify(ob),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                // console.log("Data:", data);
+                const igdbResponse = data.data;
+                console.log("igdbResponse:", igdbResponse);
+                return igdbResponse.map((game) => ({
+                    game: game,
+                    screenshotUrls: game.screenshots
+                        ? game.screenshots.map((s) =>
+                              s.url.replace("t_thumb", "t_1080p")
+                          )
+                        : [],
+                    videoIds: game.videos ? game.videos.map((v) => v.video_id) : [],
+                }));
+            })
+            .catch((error) => {
+                console.error("Request failed", error);
+            });
+        // const response = await fetch(apiUrl, {
+        //     method: "POST",
+        //     headers: {
+        //         Accept: "application/json",
+        //         "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        //         Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+        //     },
+        //     body: `
+        //         fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*,themes.name;
+        //         where id = (${game_ids.join(",")});
+        //     `,
+        // });
 
-        const data = await response.json();
+        // const data = await response.json();
 
         // Return the game data
-        return data.map((game) => ({
-            game: game,
-            screenshotUrls: game.screenshots
-                ? game.screenshots.map((s) =>
-                      s.url.replace("t_thumb", "t_1080p")
-                  )
-                : [],
-            videoIds: game.videos ? game.videos.map((v) => v.video_id) : [],
-        }));
+        // return data.map((game) => ({
+        //     game: game,
+        //     screenshotUrls: game.screenshots
+        //         ? game.screenshots.map((s) =>
+        //               s.url.replace("t_thumb", "t_1080p")
+        //           )
+        //         : [],
+        //     videoIds: game.videos ? game.videos.map((v) => v.video_id) : [],
+        // }));
     } catch (err) {
         console.error(err);
         return [];
