@@ -3,6 +3,8 @@ const admin = require("firebase-admin");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const cors = require('cors')({origin: true});
+const app = require('express')();
+app.use(cors);
 
 
 admin.initializeApp();

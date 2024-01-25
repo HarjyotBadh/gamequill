@@ -7,8 +7,8 @@ import { BrowserRouter } from "react-router-dom";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-const cors = require("cors");
-App.use(cors())
+// const cors = require("cors");
+// App.use(cors());
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
