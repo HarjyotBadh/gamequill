@@ -15,7 +15,7 @@ const db = admin.firestore();
 exports.getIGDBGames = functions.https.onRequest((request, response) => {
   cors(request, response, async () => {
       // Print out the request body
-      console.log("Request Body: " + request.body);
+      console.log("Request Body: " + request.body.igdbquery);
       if (request.method === 'OPTIONS') {
           // Send response to OPTIONS requests
           response.set('Access-Control-Allow-Methods', 'POST');
@@ -26,8 +26,9 @@ exports.getIGDBGames = functions.https.onRequest((request, response) => {
           try {
               console.log("In the Else Statement");
               console.log("Request Body: " + request.body);
+              const igdbQuery = request.body.igdbquery;
               // Remove first and last character and replace ' with "
-              var modifiedBody = request.body.slice(1, -1).replace(/'/g, '"');
+              var modifiedBody = request.body.igdbyquery.slice(1, -1).replace(/'/g, '"');
 
               // Log the received data
               console.log("The data received: " + modifiedBody);
