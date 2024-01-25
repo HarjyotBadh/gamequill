@@ -26,7 +26,6 @@ export default function EditCurrentlyPlayingGame({
 
         fetch(functionUrl, {
             method: "POST",
-            mode: "no-cors",
             headers: {
                 "Content-Type": "application/json",
                 "Access-Control-Allow-Origin": "*",
