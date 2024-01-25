@@ -12,6 +12,104 @@ admin.initializeApp();
 // Initialize Firestore
 const db = admin.firestore();
 
+exports.getIGDBCovers = functions.https.onRequest((request, response) => {
+    cors(request, response, async () => {
+        // Print out the request body
+        console.log("Request Body: " + request.body.igdbquery);
+        if (request.method === 'OPTIONS') {
+            // Send response to OPTIONS requests
+            response.set('Access-Control-Allow-Methods', 'POST');
+            response.set('Access-Control-Allow-Headers', 'Content-Type');
+            response.set('Access-Control-Max-Age', '3600');
+            response.status(204).send('');
+        } else {
+            try {
+                console.log("In the Else Statement");
+                console.log("Request Body: " + request.body);
+                const igdbQuery = request.body.igdbquery;
+                // Remove first and last character and replace ' with "
+                var modifiedBody = request.body.igdbquery.slice(0).replace(/'/g, '"');
+  
+                // Log the received data
+                console.log("The data received: " + modifiedBody);
+  
+                // Set up IGDB headers
+                const igdbHeaders = {
+                    Accept: "application/json",
+                    "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6", // Replace with your Client ID
+                    Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo", // Replace with your Access Token
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                };
+  
+                // Make the request to IGDB
+                const igdbResponse = await axios({
+                    method: "post",
+                    url: "https://api.igdb.com/v4/covers",
+                    headers: igdbHeaders,
+                    data: modifiedBody,
+                });
+  
+                // Log and send the response
+                console.log("Response body:", igdbResponse.data);
+                response.status(200).send({ data: igdbResponse.data });
+            } catch (error) {
+                console.error("Error fetching release dates from IGDB:", error);
+                response.status(500).send({ error: "Failed to fetch release dates from IGDB" });
+            }
+        }
+    });
+});
+
+exports.getIGDBDates = functions.https.onRequest((request, response) => {
+    cors(request, response, async () => {
+        // Print out the request body
+        console.log("Request Body: " + request.body.igdbquery);
+        if (request.method === 'OPTIONS') {
+            // Send response to OPTIONS requests
+            response.set('Access-Control-Allow-Methods', 'POST');
+            response.set('Access-Control-Allow-Headers', 'Content-Type');
+            response.set('Access-Control-Max-Age', '3600');
+            response.status(204).send('');
+        } else {
+            try {
+                console.log("In the Else Statement");
+                console.log("Request Body: " + request.body);
+                const igdbQuery = request.body.igdbquery;
+                // Remove first and last character and replace ' with "
+                var modifiedBody = request.body.igdbquery.slice(0).replace(/'/g, '"');
+  
+                // Log the received data
+                console.log("The data received: " + modifiedBody);
+  
+                // Set up IGDB headers
+                const igdbHeaders = {
+                    Accept: "application/json",
+                    "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6", // Replace with your Client ID
+                    Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo", // Replace with your Access Token
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                };
+  
+                // Make the request to IGDB
+                const igdbResponse = await axios({
+                    method: "post",
+                    url: "https://api.igdb.com/v4/release_dates",
+                    headers: igdbHeaders,
+                    data: modifiedBody,
+                });
+  
+                // Log and send the response
+                console.log("Response body:", igdbResponse.data);
+                response.status(200).send({ data: igdbResponse.data });
+            } catch (error) {
+                console.error("Error fetching release dates from IGDB:", error);
+                response.status(500).send({ error: "Failed to fetch release dates from IGDB" });
+            }
+        }
+    });
+});
+
 exports.getIGDBGames = functions.https.onRequest((request, response) => {
   cors(request, response, async () => {
       // Print out the request body

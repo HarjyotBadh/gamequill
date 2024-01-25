@@ -139,7 +139,7 @@ export const fetchGameDataFromIGDB = async (game_ids) => {
         };
         const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
 
-        fetch(functionUrl, {
+        const response = await fetch(functionUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -147,25 +147,19 @@ export const fetchGameDataFromIGDB = async (game_ids) => {
                 "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
             },
             body: JSON.stringify(ob),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                // console.log("Data:", data);
-                const igdbResponse = data.data;
-                console.log("igdbResponse:", igdbResponse);
-                return igdbResponse.map((game) => ({
-                    game: game,
-                    screenshotUrls: game.screenshots
-                        ? game.screenshots.map((s) =>
-                              s.url.replace("t_thumb", "t_1080p")
-                          )
-                        : [],
-                    videoIds: game.videos ? game.videos.map((v) => v.video_id) : [],
-                }));
-            })
-            .catch((error) => {
-                console.error("Request failed", error);
-            });
+        });
+        const data = await response.json();
+        const igdbResponse = data.data;
+        console.log("igdbResponse:", igdbResponse);
+        return igdbResponse.map((game) => ({
+            game: game,
+            screenshotUrls: game.screenshots
+                ? game.screenshots.map((s) =>
+                      s.url.replace("t_thumb", "t_1080p")
+                  )
+                : [],
+            videoIds: game.videos ? game.videos.map((v) => v.video_id) : [],
+        }));
         // const response = await fetch(apiUrl, {
         //     method: "POST",
         //     headers: {
@@ -230,21 +224,37 @@ export async function fetchSimilarGames(genres, themes) {
         "; sort rating desc; limit 100;";
 
     try {
-        const response = await fetch(apiUrl, {
+        const ob = {
+            igdbquery: requestBody,
+        };
+        const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
+
+        const response = await fetch(functionUrl, {
             method: "POST",
             headers: {
-                Accept: "application/json",
-                "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
             },
-            body: requestBody,
+            body: JSON.stringify(ob),
         });
+        const data = await response.json();
+        const igdbResponse = data.data;
+        // const response = await fetch(apiUrl, {
+        //     method: "POST",
+        //     headers: {
+        //         Accept: "application/json",
+        //         "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        //         Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+        //     },
+        //     body: requestBody,
+        // });
 
         // Parse the response to JSON
-        const data = await response.json();
+        // const data = await response.json();
 
         // Format the screenshot URLs
-        const formattedData = data.map((game) => {
+        const formattedData = igdbResponse.map((game) => {
             return {
                 ...game,
                 screenshotUrls: game.screenshots
@@ -295,22 +305,38 @@ export async function fetchSingularSimilarGame(genres, themes) {
         "; sort rating desc; limit 1;"; // Changed limit to 1
 
     try {
-        const response = await fetch(apiUrl, {
+        const ob = {
+            igdbquery: requestBody,
+        };
+        const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
+
+        const response = await fetch(functionUrl, {
             method: "POST",
             headers: {
-                Accept: "application/json",
-                "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
             },
-            body: requestBody,
+            body: JSON.stringify(ob),
         });
+        const data = await response.json();
+        const igdbResponse = data.data;
+        // const response = await fetch(apiUrl, {
+        //     method: "POST",
+        //     headers: {
+        //         Accept: "application/json",
+        //         "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        //         Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+        //     },
+        //     body: requestBody,
+        // });
 
         // Parse the response to JSON
-        const data = await response.json();
+        // const data = await response.json();
 
         // Check if any game is returned
-        if (data.length > 0) {
-            const game = data[0];
+        if (igdbResponse.length > 0) {
+            const game = igdbResponse[0];
 
             // Format the screenshot URLs
             const formattedGame = {

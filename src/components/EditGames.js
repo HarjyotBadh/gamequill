@@ -51,34 +51,59 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
   };
 
   // Define a function to handle the search functionality
-  const search = (e) => {
+  const search = async (e) => {
     e.preventDefault();
     // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
-    const apiUrl = "https://api.igdb.com/v4/games";
+    const ob = {
+      igdbquery: `search "${searchQuery}";fields name,cover.url, id; limit:5; where category = (0,8,9);`,
+  };
+  const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
 
-    fetch(apiUrl, {
+  const response = await fetch(functionUrl, {
       method: "POST",
       headers: {
-        Accept: "application/json",
-        "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-        Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       },
-      body: `search "${searchQuery}";fields name,cover.url, id; limit:5; where category = (0,8,9);`,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.length) {
-          const gamesData = data.map((game) => ({
-            name: game.name,
-            coverUrl: game.cover && game.cover.url ? game.cover.url : null,
-            id: game.id,
-          }));
-          setGameData(gamesData);
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+      body: JSON.stringify(ob),
+  });
+  const data = await response.json();
+  const igdbResponse = data.data;
+  console.log("igdbResponse:", igdbResponse);
+  if (igdbResponse.length) {
+  const gamesData = igdbResponse.map((game) => ({
+    name: game.name,
+    coverUrl: game.cover && game.cover.url ? game.cover.url : null,
+    id: game.id,
+  }));
+  setGameData(gamesData);
+}
+    // const apiUrl = "https://api.igdb.com/v4/games";
+
+    // fetch(apiUrl, {
+    //   method: "POST",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+    //     Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+    //   },
+    //   body: `search "${searchQuery}";fields name,cover.url, id; limit:5; where category = (0,8,9);`,
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     if (data.length) {
+    //       const gamesData = data.map((game) => ({
+    //         name: game.name,
+    //         coverUrl: game.cover && game.cover.url ? game.cover.url : null,
+    //         id: game.id,
+    //       }));
+    //       setGameData(gamesData);
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
   };
 
   // Define a function to handle the form submission

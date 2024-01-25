@@ -56,26 +56,42 @@ function TopGames() {
           limit 500;
         `;
     
-        const response = await fetch(apiUrl, {
+        const ob = {
+          igdbquery: requestBody,
+      };
+      const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
+
+      const response = await fetch(functionUrl, {
           method: "POST",
           headers: {
-            Accept: "application/json",
-            "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-            Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
           },
-          body: requestBody,
-        });
+          body: JSON.stringify(ob),
+      });
+      const data = await response.json();
+      const igdbResponse = data.data;
+        // const response = await fetch(apiUrl, {
+        //   method: "POST",
+        //   headers: {
+        //     Accept: "application/json",
+        //     "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        //     Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+        //   },
+        //   body: requestBody,
+        // });
     
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}, ${response.statusText}`);
-        }
+        // if (!response.ok) {
+        //   throw new Error(`Error: ${response.status}, ${response.statusText}`);
+        // }
     
-        const responseData = await response.json();
+        // const responseData = await response.json();
     
         // Filter games based on the selected genre
         const filteredGames = selectedGenre && selectedGenre.value !== "select"
-          ? responseData.filter(game => game.genres && game.genres.some(g => g.name.toLowerCase() === selectedGenre.label.toLowerCase()))
-          : responseData.slice(0, 10); // Display the top 10 if no genre is selected
+          ? igdbResponse.filter(game => game.genres && game.genres.some(g => g.name.toLowerCase() === selectedGenre.label.toLowerCase()))
+          : igdbResponse.slice(0, 10); // Display the top 10 if no genre is selected
     
         // Process the response data
         setTopGamesData(filteredGames);
