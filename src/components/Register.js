@@ -108,7 +108,7 @@ function Register() {
       const user = userCredential.user;
 
       // Send email verification
-      // await sendEmailVerification(user);
+      await sendEmailVerification(user);
 
       const userData = {
         bio: "",
