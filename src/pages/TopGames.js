@@ -47,12 +47,12 @@ function TopGames() {
       try {
         // const corsAnywhereUrl = "http://localhost:8080/";
         const apiUrl = "https://api.igdb.com/v4/games";
-        const conditions = "rating > 70 & total_rating_count > 25";
+        const conditions = "rating > 70 & total_rating_count > 25 & category = (0,8,9)";
 
         const requestBody = `
           fields name, aggregated_rating, genres.name, cover.url;
           where ${conditions};
-          sort aggregated_rating desc;
+          sort rating desc;
           limit 500;
         `;
     
@@ -109,10 +109,10 @@ function TopGames() {
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div>
+    <div className="bg-white dark:bg-gray-500">
       <NavBar />
-      <div className="top-games">
-        <h2>Top Games</h2>
+      <div className="top-games bg-white dark:bg-gray-500">
+        <h2 className="bg-white dark:bg-gray-500 text-black dark:text-white">Top Games</h2>
         <div className="select-container">
           <Select
             className="select-genre"
