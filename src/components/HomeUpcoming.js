@@ -22,7 +22,7 @@ export default function HomeUpcoming() {
 
     const getGames = async (userId) => {
       try {
-        const corsAnywhereUrl = "http://localhost:8080/";
+        // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
         const apiUrl = "https://api.igdb.com/v4/release_dates";
 
         let arr = new Array(6);
@@ -32,19 +32,37 @@ export default function HomeUpcoming() {
         const futureTime = currentTime + timeRange;
         console.log("currentTime:  " + currentTime);
         console.log("futureTime:  " + futureTime);
+        const ob = {
+          igdbquery: `fields game.*, game.cover.url, date, platform; where date > ${currentTime}; sort date asc; limit 100;`,
+      };
+      const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBDates";
 
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
+      const response = await fetch(functionUrl, {
           method: "POST",
           headers: {
-            Accept: "application/json",
-            "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-            Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
           },
-          body: `fields game.*, game.cover.url, date, platform; where date > ${currentTime}; sort date asc; limit 100;`,
-        });
+          body: JSON.stringify(ob),
+      });
+      const data = await response.json();
+      const igdbResponse = data.data;
+
+        // const response = await fetch(apiUrl, {
+        //   method: "POST",
+        //   headers: {
+        //     Accept: "application/json",
+        //     "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        //     Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+        //   },
+        //   body: `fields game.*, game.cover.url, date, platform; where date > ${currentTime}; sort date asc; limit 100;`,
+        // });
 
 
-        const gameResults = await response.json();
+        // const gameResults = await response.json();
+        const gameResults = igdbResponse;
+        // console.log("gameResults " + igdbResponse);
 
         let gameRandom = gameResults.sort(() => Math.random() - 0.5);
         gameRandom = gameResults.slice(0, 6);

@@ -4,7 +4,6 @@ export default function GamePriceUpdate({ game_id, price_update }) {
     const callUpdatePriceFunction = () => {
         const ob = { game_id: game_id };
 
-        // const corsAnywhereUrl = "http://localhost:8080/";
         const functionUrl = 'https://us-central1-gamequill-3bab8.cloudfunctions.net/updateGamePrice';
 
         fetch(functionUrl, {

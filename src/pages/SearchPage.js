@@ -300,7 +300,7 @@ const SearchPage = ({ searchQuery }) => {
   useEffect(() => {
     const searchGames = async () => {
       try {
-        const corsAnywhereUrl = "http://localhost:8080/";
+        // const corsAnywhereUrl = "http://localhost:8080/";
         const apiUrl = "https://api.igdb.com/v4/games";
 
         var genreNumber = null;
@@ -311,21 +311,39 @@ const SearchPage = ({ searchQuery }) => {
         if (selectedPlatform !== "") {
           platformNumber = platformMapping[selectedPlatform];
         }
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-            Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
-          },
-          body: `search "${searchQuery}";fields name, cover.url, aggregated_rating, involved_companies.company.name; limit:50; where category = (0,8,9)${
+        const ob = {
+          igdbquery: `search "${searchQuery}";fields name, cover.url, aggregated_rating, involved_companies.company.name; limit:50; where category = (0,8,9)${
             genreNumber ? ` & genres = (${genreNumber})` : ""
           }${platformNumber ? ` & platforms = (${platformNumber})` : ""};`,
-        });
+      };
+      const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
 
-        const data = await response.json();
-        if (data.length) {
-          const gamesData = data.map((game) => ({
+      const response = await fetch(functionUrl, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+          },
+          body: JSON.stringify(ob),
+      });
+      const data = await response.json();
+      const igdbResponse = data.data;
+        // const response = await fetch(apiUrl, {
+        //   method: "POST",
+        //   headers: {
+        //     Accept: "application/json",
+        //     "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        //     Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+        //   },
+        //   body: `search "${searchQuery}";fields name, cover.url, aggregated_rating, involved_companies.company.name; limit:50; where category = (0,8,9)${
+        //     genreNumber ? ` & genres = (${genreNumber})` : ""
+        //   }${platformNumber ? ` & platforms = (${platformNumber})` : ""};`,
+        // });
+
+        // const data = await response.json();
+        if (igdbResponse.length) {
+          const gamesData = igdbResponse.map((game) => ({
             id: game.id,
             gameData: {
               ...game,

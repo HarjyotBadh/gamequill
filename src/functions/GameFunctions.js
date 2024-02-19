@@ -30,6 +30,7 @@ export const fetchGameData = async (game_id) => {
     } else {
         // Game data not found in Firestore, fetch from IGDB
         const gameDataFromIGDBB = await fetchGameDataFromIGDB(game_id);
+        console.log("gameDataFromIGDBB:", gameDataFromIGDBB);
         const gameDataFromIGDB = gameDataFromIGDBB[0];
 
         if (gameDataFromIGDB) {
@@ -109,6 +110,8 @@ export const fetchMultipleGameData = async (game_ids) => {
     return gamesData;
 };
 
+
+
 /**
  * Fetches game data from IGDB for an array of game IDs. It makes a single API call
  * to IGDB to get the data for all game IDs provided in the array.
@@ -118,7 +121,7 @@ export const fetchMultipleGameData = async (game_ids) => {
  */
 export const fetchGameDataFromIGDB = async (game_ids) => {
 
-    const corsAnywhereUrl = "http://localhost:8080/";
+    // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
     const apiUrl = "https://api.igdb.com/v4/games";
 
     // Ensure game_ids is always an array
@@ -128,23 +131,27 @@ export const fetchGameDataFromIGDB = async (game_ids) => {
 
     // Fetch game data from IGDB
     try {
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
+        const ob = {
+            igdbquery: `
+            fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*,themes.name;
+            where id = (${game_ids.join(",")});
+        `,
+        };
+        const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
+
+        const response = await fetch(functionUrl, {
             method: "POST",
             headers: {
-                Accept: "application/json",
-                "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
             },
-            body: `
-                fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*,themes.name;
-                where id = (${game_ids.join(",")});
-            `,
+            body: JSON.stringify(ob),
         });
-
         const data = await response.json();
-
-        // Return the game data
-        return data.map((game) => ({
+        const igdbResponse = data.data;
+        console.log("igdbResponse:", igdbResponse);
+        return igdbResponse.map((game) => ({
             game: game,
             screenshotUrls: game.screenshots
                 ? game.screenshots.map((s) =>
@@ -153,6 +160,31 @@ export const fetchGameDataFromIGDB = async (game_ids) => {
                 : [],
             videoIds: game.videos ? game.videos.map((v) => v.video_id) : [],
         }));
+        // const response = await fetch(apiUrl, {
+        //     method: "POST",
+        //     headers: {
+        //         Accept: "application/json",
+        //         "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        //         Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+        //     },
+        //     body: `
+        //         fields name,cover.url,involved_companies.company.name,rating,aggregated_rating,screenshots.url,videos.video_id,genres.name,summary,storyline,platforms.name,age_ratings.*,age_ratings.content_descriptions.*,themes.name;
+        //         where id = (${game_ids.join(",")});
+        //     `,
+        // });
+
+        // const data = await response.json();
+
+        // Return the game data
+        // return data.map((game) => ({
+        //     game: game,
+        //     screenshotUrls: game.screenshots
+        //         ? game.screenshots.map((s) =>
+        //               s.url.replace("t_thumb", "t_1080p")
+        //           )
+        //         : [],
+        //     videoIds: game.videos ? game.videos.map((v) => v.video_id) : [],
+        // }));
     } catch (err) {
         console.error(err);
         return [];
@@ -168,7 +200,7 @@ export const fetchGameDataFromIGDB = async (game_ids) => {
  * @returns {Object[]} An array of game objects with formatted screenshot URLs.
  */
 export async function fetchSimilarGames(genres, themes) {
-    const corsAnywhereUrl = "http://localhost:8080/";
+    // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
     const apiUrl = "https://api.igdb.com/v4/games";
 
     // Extracting ids from genres and themes
@@ -192,21 +224,37 @@ export async function fetchSimilarGames(genres, themes) {
         "; sort rating desc; limit 100;";
 
     try {
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
+        const ob = {
+            igdbquery: requestBody,
+        };
+        const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
+
+        const response = await fetch(functionUrl, {
             method: "POST",
             headers: {
-                Accept: "application/json",
-                "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
             },
-            body: requestBody,
+            body: JSON.stringify(ob),
         });
+        const data = await response.json();
+        const igdbResponse = data.data;
+        // const response = await fetch(apiUrl, {
+        //     method: "POST",
+        //     headers: {
+        //         Accept: "application/json",
+        //         "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        //         Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+        //     },
+        //     body: requestBody,
+        // });
 
         // Parse the response to JSON
-        const data = await response.json();
+        // const data = await response.json();
 
         // Format the screenshot URLs
-        const formattedData = data.map((game) => {
+        const formattedData = igdbResponse.map((game) => {
             return {
                 ...game,
                 screenshotUrls: game.screenshots
@@ -233,7 +281,7 @@ export async function fetchSimilarGames(genres, themes) {
  * @returns {Object} A game object with formatted screenshot URLs.
  */
 export async function fetchSingularSimilarGame(genres, themes) {
-    const corsAnywhereUrl = "http://localhost:8080/";
+    // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
     const apiUrl = "https://api.igdb.com/v4/games";
 
     // Extracting ids from genres and themes
@@ -257,22 +305,38 @@ export async function fetchSingularSimilarGame(genres, themes) {
         "; sort rating desc; limit 1;"; // Changed limit to 1
 
     try {
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
+        const ob = {
+            igdbquery: requestBody,
+        };
+        const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
+
+        const response = await fetch(functionUrl, {
             method: "POST",
             headers: {
-                Accept: "application/json",
-                "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
             },
-            body: requestBody,
+            body: JSON.stringify(ob),
         });
+        const data = await response.json();
+        const igdbResponse = data.data;
+        // const response = await fetch(apiUrl, {
+        //     method: "POST",
+        //     headers: {
+        //         Accept: "application/json",
+        //         "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        //         Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+        //     },
+        //     body: requestBody,
+        // });
 
         // Parse the response to JSON
-        const data = await response.json();
+        // const data = await response.json();
 
         // Check if any game is returned
-        if (data.length > 0) {
-            const game = data[0];
+        if (igdbResponse.length > 0) {
+            const game = igdbResponse[0];
 
             // Format the screenshot URLs
             const formattedGame = {

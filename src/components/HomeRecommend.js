@@ -47,7 +47,7 @@ function App() {
 
     const getGenres = async (userId) => {
       try {
-        const corsAnywhereUrl = "http://localhost:8080/";
+        // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
         const apiUrl = "https://api.igdb.com/v4/games";
         const docRef = doc(db, "profileData", userId);
         const docSnapshot = await getDoc(docRef);
@@ -58,18 +58,35 @@ function App() {
         const genrePromises = genres.map(async (genre) => {
           if (genre !== "") {
             const genreNumber = genreMapping[genre];
-            const response = await fetch(corsAnywhereUrl + apiUrl, {
+            const ob = {
+              igdbquery: `fields name, genres, cover.url, id; where rating>70 & total_rating_count>5 & category = (0,8,9) & genres = (${genreNumber}); sort rating desc; limit:100;`,
+          };
+          const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
+  
+          const response = await fetch(functionUrl, {
               method: "POST",
               headers: {
-                Accept: "application/json",
-                "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-                Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Origin": "*",
+                  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
               },
-              body: `fields name, genres, cover.url, id; where rating>70 & total_rating_count>5 & category = (0,8,9) & genres = (${genreNumber}); sort rating desc; limit:100;`,
-            });
+              body: JSON.stringify(ob),
+          });
+          const data = await response.json();
+          const igdbResponse = data.data;
+            // const response = await fetch(apiUrl, {
+            //   method: "POST",
+            //   headers: {
+            //     Accept: "application/json",
+            //     "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+            //     Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+            //   },
+            //   body: `fields name, genres, cover.url, id; where rating>70 & total_rating_count>5 & category = (0,8,9) & genres = (${genreNumber}); sort rating desc; limit:100;`,
+            // });
 
-            const data = await response.json();
-            return data;
+            // const data = await response.json();
+            // return data;
+            return igdbResponse;
           }
         });
 

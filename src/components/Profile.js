@@ -29,7 +29,7 @@ function Profile({ profileData, setProfileData, userId }) {
     isUser = true;
   }
   useEffect(() => {
-    const corsAnywhereUrl = "http://localhost:8080/";
+    // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
     const apiUrl = "https://api.igdb.com/v4/covers";
 
     const fetchCovers = async () => {
@@ -42,20 +42,40 @@ function Profile({ profileData, setProfileData, userId }) {
       setCurrentlyPlayingGame(docSnapshot.data().currentlyPlayingGame);
       setFeaturedList(docSnapshot.data().featuredList || null);
       const coverPromises = favoriteGames.map(async (id) => {
-        const response = await fetch(corsAnywhereUrl + apiUrl, {
+        const ob = {
+          igdbquery: `
+          fields url;
+          where game = ${id};
+        `,
+      };
+      const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBCovers";
+
+      const response = await fetch(functionUrl, {
           method: "POST",
           headers: {
-            Accept: "application/json",
-            "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-            Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
           },
-          body: `
-            fields url;
-            where game = ${id};
-          `,
-        });
-        const data = await response.json();
-        return data[0]?.url || null;
+          body: JSON.stringify(ob),
+      });
+      const data = await response.json();
+      const igdbResponse = data.data;
+        // const response = await fetch(apiUrl, {
+        //   method: "POST",
+        //   headers: {
+        //     Accept: "application/json",
+        //     "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
+        //     Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
+        //   },
+        //   body: `
+        //     fields url;
+        //     where game = ${id};
+        //   `,
+        // });
+        // const data = await response.json();
+        // return data[0]?.url || null;
+        return igdbResponse[0]?.url || null;
       });
 
       const covers = await Promise.all(coverPromises);
