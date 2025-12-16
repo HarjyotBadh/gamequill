@@ -1,5 +1,4 @@
 import React from "react";
-import "../styles/GenreIcon.css";
 import genpac from "../images/genres/gq-genre-pointandclick.png";
 import genfighting from "../images/genres/gq-genre-fighting.png";
 import genshooter from "../images/genres/gq-genre-shooter.png";
@@ -26,37 +25,49 @@ import genpinball from "../images/genres/gq-genre-pinball.png";
 
 const genreImages = {
   "real time strategy (rts)": genrts,
-  "puzzle": genpuzzle,
-  "indie": genindie,
-  "pinball": genpinball,
+  puzzle: genpuzzle,
+  indie: genindie,
+  pinball: genpinball,
   "point-and-click": genpac,
-  "fighting": genfighting,
-  "shooter": genshooter,
-  "music": genmusic,
-  "platform": genplatform,
-  "racing": genracing,
+  fighting: genfighting,
+  shooter: genshooter,
+  music: genmusic,
+  platform: genplatform,
+  racing: genracing,
   "role-playing (rpg)": genrpg,
-  "simulator": gensim,
-  "sport": gensport,
+  simulator: gensim,
+  sport: gensport,
   "visual novel": gennovel,
-  "moba": genmoba,
-  "strategy": genstrategy,
+  moba: genmoba,
+  strategy: genstrategy,
   "turn-based strategy (tbs)": gentbs,
-  "tactical": gentactical,
+  tactical: gentactical,
   "quiz/trivia": genquiz,
   "hack and slash/beat 'em up": genhas,
-  "adventure": genadventure,
-  "arcade": genarcade,
+  adventure: genadventure,
+  arcade: genarcade,
   "card & board game": gencards,
 };
 
-export default function GenreIcon({ g }) {
-  
+export default function GenreIcon({ g, className }) {
   const genreImage = genreImages[g.toLowerCase()];
 
   return (
-    <div>
-      {genreImage ? <img class="a b" src={genreImage} alt={`Genre: ${g}`} /> : <span>Genre not found</span>}
+    <div
+      className={`flex items-center justify-center ${
+        className || "w-full h-full"
+      }`}
+    >
+      {genreImage ? (
+        <img
+          src={genreImage}
+          alt={`Genre: ${g}`}
+          className="w-full h-full object-contain"
+          style={{ filter: "var(--icon-filter)" }}
+        />
+      ) : (
+        <span className="text-xs">?</span>
+      )}
     </div>
   );
 }

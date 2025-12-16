@@ -3,7 +3,6 @@ import NavBar from "../components/NavBar";
 import { Link } from "react-router-dom";
 import GenreIcon from "../components/GenreIcon";
 import Footer from "../components/Footer";
-import "../styles/TopGames.css";
 
 const genres = [
   { id: null, name: "All", label: "All Genres" },
@@ -179,103 +178,158 @@ function TopGames() {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-500 min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <NavBar />
 
-      <div className="top-games-container px-8 py-6">
-        <h1 className="text-3xl font-bold dark:text-white text-black mb-6">
-          Top Games
-        </h1>
-
-        {/* Sort options */}
-        <div className="sort-options flex flex-wrap gap-2 mb-4">
-          <span className="dark:text-white text-black font-medium mr-2 self-center">
-            Sort by:
-          </span>
-          {sortOptions.map((option) => (
-            <button
-              key={option.id}
-              onClick={() => setSelectedSort(option)}
-              className={`px-3 py-1 rounded-full text-sm transition-all ${
-                selectedSort.id === option.id
-                  ? "bg-green-600 text-white"
-                  : "dark:bg-gray-600 bg-gray-200 dark:text-gray-300 text-gray-700 hover:bg-green-500 hover:text-white"
-              }`}
+      <div className="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8 flex-grow">
+        {/* Left Sidebar - Genres */}
+        <div className="w-full lg:w-64 flex-shrink-0">
+          <div className="card-global p-4 sticky top-4">
+            <h2
+              className="text-xl font-bold mb-4 px-2"
+              style={{ color: "var(--text-color)" }}
             >
-              {option.label}
-            </button>
-          ))}
+              Genres
+            </h2>
+            <div className="flex flex-col gap-1 max-h-[calc(100vh-200px)] overflow-y-auto pr-2 custom-scrollbar">
+              {genres.map((genre) => (
+                <button
+                  key={genre.name}
+                  onClick={() => setSelectedGenre(genre)}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                    selectedGenre.name === genre.name
+                      ? "shadow-md translate-x-1"
+                      : "hover:bg-black/5 hover:dark:bg-white/5 hover:translate-x-1"
+                  }`}
+                  style={{
+                    background:
+                      selectedGenre.name === genre.name
+                        ? "var(--accent-gradient)"
+                        : "transparent",
+                    color:
+                      selectedGenre.name === genre.name
+                        ? "white"
+                        : "var(--text-color)",
+                  }}
+                >
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    {genre.id && <GenreIcon g={genre.name} />}
+                  </div>
+                  <span>{genre.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Genre tabs */}
-        <div className="genre-tabs flex flex-wrap gap-2 mb-8">
-          {genres.map((genre) => (
-            <button
-              key={genre.name}
-              onClick={() => setSelectedGenre(genre)}
-              className={`genre-tab flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-all ${
-                selectedGenre.name === genre.name
-                  ? "bg-blue-600 border-blue-600 text-white"
-                  : "dark:bg-gray-600 bg-gray-100 dark:border-gray-500 border-gray-300 dark:text-white text-black hover:border-blue-400"
-              }`}
+        {/* Right Content - Header, Sort, and Grid */}
+        <div className="flex-grow">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <h1 className="text-4xl font-bold text-gradient">Top Games</h1>
+
+            {/* Sort options */}
+            <div className="flex flex-wrap gap-2 items-center">
+              <span
+                className="font-semibold mr-2"
+                style={{ color: "var(--text-color)" }}
+              >
+                Sort by:
+              </span>
+              {sortOptions.map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => setSelectedSort(option)}
+                  className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                    selectedSort.id === option.id
+                      ? "text-white shadow-md"
+                      : "hover:scale-105"
+                  }`}
+                  style={{
+                    background:
+                      selectedSort.id === option.id
+                        ? "var(--accent-gradient)"
+                        : "var(--wrapper)",
+                    color:
+                      selectedSort.id === option.id
+                        ? "white"
+                        : "var(--text-color)",
+                    border: "1px solid var(--glass-border)",
+                  }}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Selected genre header */}
+          <div className="mb-6">
+            <h2
+              className="text-2xl font-bold"
+              style={{ color: "var(--text-color)" }}
             >
-              {genre.id && <GenreIcon g={genre.name} />}
-              <span className="text-sm font-medium">{genre.label}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Selected genre header */}
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold dark:text-white text-black">
-            {selectedGenre.label === "All Genres"
-              ? `${selectedSort.label} Games`
-              : `${selectedSort.label} ${selectedGenre.label} Games`}
-          </h2>
-        </div>
-
-        {/* Games grid */}
-        {loading ? (
-          <div className="flex items-center justify-center h-64 dark:text-white text-black">
-            <span className="text-xl">Loading top games...</span>
+              {selectedGenre.label === "All Genres"
+                ? `${selectedSort.label} Games`
+                : `${selectedSort.label} ${selectedGenre.label} Games`}
+            </h2>
           </div>
-        ) : topGamesData.length === 0 ? (
-          <div className="flex items-center justify-center h-64 dark:text-white text-black">
-            <span className="text-xl">No games found for this selection</span>
-          </div>
-        ) : (
-          <div className="games-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {topGamesData.map((game) => (
-              <div key={game.id} className="game-card">
-                <Link to={`/game?game_id=${game.id}`} className="block">
-                  <div className="aspect-[3/4] rounded-lg overflow-hidden border-2 dark:border-gray-600 border-gray-300 hover:border-blue-500 transition-all bg-gray-800">
-                    {getCoverUrl(game) ? (
-                      <img
-                        src={getCoverUrl(game)}
-                        alt={game.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm p-2 text-center">
+
+          {/* Games grid */}
+          {loading ? (
+            <div className="flex items-center justify-center h-64">
+              <span className="text-xl" style={{ color: "var(--text-color)" }}>
+                Loading top games...
+              </span>
+            </div>
+          ) : topGamesData.length === 0 ? (
+            <div className="flex items-center justify-center h-64">
+              <span className="text-xl" style={{ color: "var(--text-color)" }}>
+                No games found for this selection
+              </span>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {topGamesData.map((game) => (
+                <div
+                  key={game.id}
+                  className="card-global p-3 transition-transform hover:scale-105 hover:shadow-xl group"
+                >
+                  <Link
+                    to={`/game?game_id=${game.id}`}
+                    className="block h-full flex flex-col"
+                  >
+                    <div className="aspect-[3/4] rounded-lg overflow-hidden relative">
+                      {getCoverUrl(game) ? (
+                        <img
+                          src={getCoverUrl(game)}
+                          alt={game.name}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-sm p-2 text-center bg-gray-800 text-gray-400">
+                          {game.name}
+                        </div>
+                      )}
+                      {game.rating && (
+                        <div className="absolute top-2 right-2 px-2 py-1 rounded-md text-xs font-bold text-white shadow-md bg-black/70 backdrop-blur-sm">
+                          {Math.round(game.rating)}%
+                        </div>
+                      )}
+                    </div>
+                    <div className="mt-3 flex-grow flex items-center justify-center text-center">
+                      <p
+                        className="text-sm font-bold line-clamp-2"
+                        style={{ color: "var(--text-color)" }}
+                      >
                         {game.name}
-                      </div>
-                    )}
-                  </div>
-                  <div className="mt-2">
-                    <p className="text-sm font-medium dark:text-white text-black truncate">
-                      {game.name}
-                    </p>
-                    {game.rating && (
-                      <p className="text-xs dark:text-gray-300 text-gray-600">
-                        Rating: {Math.round(game.rating)}%
                       </p>
-                    )}
-                  </div>
-                </Link>
-              </div>
-            ))}
-          </div>
-        )}
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <Footer />

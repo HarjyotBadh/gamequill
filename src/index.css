@@ -21,6 +21,7 @@
   }
 
 /* Define only the values for the light theme */
+/* Define only the values for the light theme */
 :root {
     --primary: #57cac9;
     --primary-light: #a6eeb0; /* Lighter tint for gradients */
@@ -88,9 +89,23 @@ body {
     --wrapper: var(--wrapper-light);
     --nav-bg: var(--nav-bg-light);
     --nav-border: var(--nav-border-light);
+    --icon-filter: none;
 }
 
-/* If the user prefers dark mode, override the variables */
+/* Helper mixin for dark variables */
+.dark-theme-variables {
+    --background: var(--background-dark);
+    --text-color: var(--text-color-dark);
+    --secondary-text-color: var(--secondary-text-color-dark);
+    --rating-color: var(--rating-color-dark);
+    --star-color: var(--star-color-dark);
+    --wrapper: var(--wrapper-dark);
+    --nav-bg: var(--nav-bg-dark);
+    --nav-border: var(--nav-border-dark);
+    --icon-filter: brightness(0) invert(1);
+}
+
+/* Apply if user prefers dark mode */
 @media (prefers-color-scheme: dark) {
     :root {
         --background: var(--background-dark);
@@ -101,7 +116,21 @@ body {
         --wrapper: var(--wrapper-dark);
         --nav-bg: var(--nav-bg-dark);
         --nav-border: var(--nav-border-dark);
+        --icon-filter: brightness(0) invert(1);
     }
+}
+
+/* Apply if .dark class is present (manual override) */
+.dark {
+    --background: var(--background-dark);
+    --text-color: var(--text-color-dark);
+    --secondary-text-color: var(--secondary-text-color-dark);
+    --rating-color: var(--rating-color-dark);
+    --star-color: var(--star-color-dark);
+    --wrapper: var(--wrapper-dark);
+    --nav-bg: var(--nav-bg-dark);
+    --nav-border: var(--nav-border-dark);
+    --icon-filter: brightness(0) invert(1);
 }
 
 /* Global Component Classes */
@@ -166,27 +195,4 @@ body {
     background-clip: text;
     display: inline-block;
     font-weight: 800; /* Extra bold for headings */
-}
-
-.text-gradient {
-    background: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    display: inline-block;
-}
-
-.btn-primary {
-    background: var(--accent-gradient);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: transform 0.2s;
-}
-
-.btn-primary:hover {
-    transform: scale(1.05);
 }
