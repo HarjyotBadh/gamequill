@@ -10,6 +10,7 @@ import Footer from "../components/Footer";
 const SearchPage = ({ searchQuery }) => {
   const [games, setGames] = useState([]);
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState("");
   const [selectedPlatform, setSelectedPlatform] = useState("");
   const genreMapping = {
@@ -312,23 +313,24 @@ const SearchPage = ({ searchQuery }) => {
           platformNumber = platformMapping[selectedPlatform];
         }
         const ob = {
-          igdbquery: `search "${searchQuery}";fields name, cover.url, aggregated_rating, involved_companies.company.name; limit:50; where category = (0,8,9)${
+          igdbquery: `search "${searchQuery}";fields name, cover.url, aggregated_rating, involved_companies.company.name; limit:50; where game_type = (0,8,9)${
             genreNumber ? ` & genres = (${genreNumber})` : ""
           }${platformNumber ? ` & platforms = (${platformNumber})` : ""};`,
-      };
-      const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
+        };
+        const functionUrl =
+          "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
 
-      const response = await fetch(functionUrl, {
+        const response = await fetch(functionUrl, {
           method: "POST",
           headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
           },
           body: JSON.stringify(ob),
-      });
-      const data = await response.json();
-      const igdbResponse = data.data;
+        });
+        const data = await response.json();
+        const igdbResponse = data.data;
         // const response = await fetch(apiUrl, {
         //   method: "POST",
         //   headers: {
@@ -394,8 +396,10 @@ const SearchPage = ({ searchQuery }) => {
       }
     };
     if (searchQuery) {
-      searchGames();
-      searchUsers();
+      setLoading(true);
+      Promise.all([searchGames(), searchUsers()]).finally(() => {
+        setLoading(false);
+      });
     }
   }, [searchQuery, selectedGenre, selectedPlatform]);
 
@@ -466,10 +470,16 @@ const SearchPage = ({ searchQuery }) => {
         className="searchContainer bg-white dark:bg-gray-500"
         style={{ minHeight: "400px" }}
       >
-        <div className="resultsContainer bg-white dark:bg-gray-500">
-          <GameColumn games={games} />
-          <UserColumn users={users} />
-        </div>
+        {loading ? (
+          <div className="flex items-center justify-center h-64 dark:text-white text-black">
+            <span className="text-xl">Loading results...</span>
+          </div>
+        ) : (
+          <div className="resultsContainer bg-white dark:bg-gray-500">
+            <GameColumn games={games} />
+            <UserColumn users={users} />
+          </div>
+        )}
       </div>
       <Footer />
     </div>

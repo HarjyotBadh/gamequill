@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import NavBar from "../components/NavBar";
-import { Link } from 'react-router-dom';
-import TitleCard from "../components/TitleCard"; 
-
+import { Link } from "react-router-dom";
+import TitleCard from "../components/TitleCard";
 
 const genreMapping = {
   4: "fighting",
@@ -47,7 +46,8 @@ function TopGames() {
       try {
         // const corsAnywhereUrl = "http://localhost:8080/";
         const apiUrl = "https://api.igdb.com/v4/games";
-        const conditions = "rating > 70 & total_rating_count > 25 & category = (0,8,9)";
+        const conditions =
+          "rating > 70 & total_rating_count > 25 & game_type = (0,8,9)";
 
         const requestBody = `
           fields name, aggregated_rating, genres.name, cover.url;
@@ -55,23 +55,24 @@ function TopGames() {
           sort rating desc;
           limit 500;
         `;
-    
+
         const ob = {
           igdbquery: requestBody,
-      };
-      const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
+        };
+        const functionUrl =
+          "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
 
-      const response = await fetch(functionUrl, {
+        const response = await fetch(functionUrl, {
           method: "POST",
           headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
           },
           body: JSON.stringify(ob),
-      });
-      const data = await response.json();
-      const igdbResponse = data.data;
+        });
+        const data = await response.json();
+        const igdbResponse = data.data;
         // const response = await fetch(apiUrl, {
         //   method: "POST",
         //   headers: {
@@ -81,18 +82,26 @@ function TopGames() {
         //   },
         //   body: requestBody,
         // });
-    
+
         // if (!response.ok) {
         //   throw new Error(`Error: ${response.status}, ${response.statusText}`);
         // }
-    
+
         // const responseData = await response.json();
-    
+
         // Filter games based on the selected genre
-        const filteredGames = selectedGenre && selectedGenre.value !== "select"
-          ? igdbResponse.filter(game => game.genres && game.genres.some(g => g.name.toLowerCase() === selectedGenre.label.toLowerCase()))
-          : igdbResponse.slice(0, 10); // Display the top 10 if no genre is selected
-    
+        const filteredGames =
+          selectedGenre && selectedGenre.value !== "select"
+            ? igdbResponse.filter(
+                (game) =>
+                  game.genres &&
+                  game.genres.some(
+                    (g) =>
+                      g.name.toLowerCase() === selectedGenre.label.toLowerCase()
+                  )
+              )
+            : igdbResponse.slice(0, 10); // Display the top 10 if no genre is selected
+
         // Process the response data
         setTopGamesData(filteredGames);
       } catch (error) {
@@ -101,7 +110,6 @@ function TopGames() {
         setLoading(false);
       }
     };
-    
 
     fetchData();
   }, [selectedGenre]);
@@ -112,26 +120,29 @@ function TopGames() {
     <div className="bg-white dark:bg-gray-500">
       <NavBar />
       <div className="top-games bg-white dark:bg-gray-500">
-        <h2 className="bg-white dark:bg-gray-500 text-black dark:text-white">Top Games</h2>
+        <h2 className="bg-white dark:bg-gray-500 text-black dark:text-white">
+          Top Games
+        </h2>
         <div className="select-container">
           <Select
             className="select-genre"
             options={genreOptions}
             value={selectedGenre}
             onChange={(selectedOption) => setSelectedGenre(selectedOption)}
-            placeholder="Select a genre" />
+            placeholder="Select a genre"
+          />
         </div>
         <div className="title-cards-container">
-        {topGamesData.map((game) => (
-    <div key={game.id} className="title-card-box">
-      <Link to={`/game?game_id=${game.id}`}>
-      <TitleCard gameData={game} />
-</Link> 
-      <div className="title-card-info">
-        <span className="title-card-title">{game.name}</span>
-      </div>
-    </div>
-  ))}
+          {topGamesData.map((game) => (
+            <div key={game.id} className="title-card-box">
+              <Link to={`/game?game_id=${game.id}`}>
+                <TitleCard gameData={game} />
+              </Link>
+              <div className="title-card-info">
+                <span className="title-card-title">{game.name}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
