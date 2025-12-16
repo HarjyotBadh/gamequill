@@ -68,7 +68,7 @@ function App() {
           }
 
           const ob = {
-            igdbquery: `fields name, genres, cover.url, id; where rating>70 & total_rating_count>5 & game_type = (0,8,9) & genres = (${genreNumber}); sort rating desc; limit:100;`,
+            igdbquery: `fields name, genres, cover.url, id; where rating>75 & total_rating_count>50 & game_type = (0,8,9) & genres = (${genreNumber}); sort total_rating_count desc; limit:100;`,
           };
           const functionUrl =
             "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";

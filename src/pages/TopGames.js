@@ -55,9 +55,9 @@ function TopGames() {
             ? ` & genres = (${selectedGenre.id})`
             : "";
           const requestBody = `
-            fields name, aggregated_rating, rating, genres.name, cover.url;
-            where rating > 70 & total_rating_count > 25 & game_type = (0,8,9)${genreFilter};
-            sort rating desc;
+            fields name, aggregated_rating, rating, total_rating_count, genres.name, cover.url;
+            where aggregated_rating > 80 & total_rating_count > 100 & game_type = (0,8,9)${genreFilter};
+            sort total_rating_count desc;
             limit 20;
           `;
 

@@ -23,7 +23,7 @@ export default function HomeUpcoming() {
         console.log("currentTime:  " + currentTime);
         console.log("futureTime:  " + futureTime);
         const ob = {
-          igdbquery: `fields game.*, game.cover.url, date, platform; where date > ${currentTime}; sort date asc; limit 100;`,
+          igdbquery: `fields game.*, game.cover.url, game.hypes, date, platform; where date > ${currentTime} & game.hypes > 5; sort game.hypes desc; limit 50;`,
         };
         const functionUrl =
           "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBDates";

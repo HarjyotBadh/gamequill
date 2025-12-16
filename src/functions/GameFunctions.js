@@ -204,7 +204,7 @@ export async function fetchSimilarGames(genres, themes) {
   const themeIds = themes.map((theme) => theme.id);
 
   // Constructing genres and themes conditions for the API request
-  let conditions = "rating > 70 & total_rating_count > 5";
+  let conditions = "rating > 75 & total_rating_count > 50";
 
   if (genreIds && genreIds.length > 0) {
     conditions += " & genres = (" + genreIds.join(",") + ")";
@@ -217,7 +217,7 @@ export async function fetchSimilarGames(genres, themes) {
   const requestBody =
     "fields name, id, rating, involved_companies.company.name, total_rating_count, screenshots.url; where " +
     conditions +
-    "; sort rating desc; limit 100;";
+    "; sort total_rating_count desc; limit 100;";
 
   try {
     const ob = {
