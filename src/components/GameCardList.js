@@ -11,9 +11,7 @@ import GameInteractionButtons from "./GameInterationButtons";
 import AddToList from "./AddToList";
 import { doc, updateDoc, arrayRemove } from "firebase/firestore";
 import { db, auth } from "../firebase";
-import {
-  calculateAverageRating,
-} from "../functions/RatingFunctions";
+import { calculateAverageRating } from "../functions/RatingFunctions";
 
 export default function GameCardList({
   gameDataArray,
@@ -27,22 +25,6 @@ export default function GameCardList({
   onDrop,
 }) {
   const [averageRating, setAverageRating] = React.useState(0);
-  const [darkMode, setDarkMode] = React.useState(
-    () =>
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-  );
-
-  React.useEffect(() => {
-    const matcher = window.matchMedia("(prefers-color-scheme: dark)");
-    const onChange = (e) => setDarkMode(e.matches);
-
-    matcher.addListener(onChange);
-
-    return () => {
-      matcher.removeListener(onChange);
-    };
-  }, []);
 
   React.useEffect(() => {
     if (gameData.id) {
@@ -107,79 +89,112 @@ export default function GameCardList({
 
   return (
     <Card
-      className={`game-card-list ${darkMode ? "dark" : "light"} ${viewMode}`}
+      className={`card-global overflow-hidden ${
+        viewMode === "list" ? "flex-row w-full max-w-4xl p-2" : "flex-col w-64"
+      }`}
       sx={{
-        bgcolor: "var(--background)",
+        bgcolor: "transparent", // Use our global card bg
         display: "flex",
-        flexDirection: "column",
         alignItems: "center",
-        borderRadius: "20px",
+        borderRadius: "16px",
+        boxShadow: "none", // Let card-global handle shadow
+        transition: "transform 0.2s",
+        "&:hover": {
+          transform: "translateY(-3px)",
+        },
       }}
-      data-theme={darkMode ? "dark" : "light"}
       draggable={isListOwner ? "true" : "false"}
       onDragStart={isListOwner ? handleDragStart : null}
       onDragOver={isListOwner ? handleDragOver : null}
       onDrop={isListOwner ? handleDrop : null}
     >
       {bigCoverUrl && (
-        <Link to={`/game?game_id=${gameData.id}`}>
+        <Link
+          to={`/game?game_id=${gameData.id}`}
+          className={
+            viewMode === "list" ? "w-32 h-44 flex-shrink-0" : "w-full h-80"
+          }
+        >
           <CardMedia
             component="img"
-            height="140"
             image={bigCoverUrl}
             alt={gameData.name}
+            sx={{
+              height: "100%",
+              width: "100%",
+              objectFit: "cover",
+              borderRadius: viewMode === "list" ? "8px" : "0",
+            }}
           />
         </Link>
       )}
-      <CardContent>
+      <CardContent className="w-full flex flex-col items-center text-center">
         <Typography
           gutterBottom
-          variant="h5"
+          variant="h6"
           component="div"
-          sx={{ color: "var(--text-color)" }}
+          className="line-clamp-2"
+          sx={{
+            color: "var(--text-color)",
+            fontWeight: "bold",
+            fontSize: "1.1rem",
+            lineHeight: 1.2,
+            mb: 0.5,
+          }}
         >
           {gameData.name}
         </Typography>
         <Typography
           variant="body2"
-          color="text.secondary"
-          sx={{ color: "var(--secondary-text-color)" }}
+          sx={{
+            color: "var(--secondary-text-color)",
+            fontSize: "0.85rem",
+            mb: 1,
+          }}
         >
           {gameData.involved_companies?.[0]?.company?.name || "N/A"}
         </Typography>
-        <Typography
-          variant="h6"
-          sx={{
-            color: "var(--rating-color)",
-            fontSize: 25,
-            fontWeight: "bold",
-          }}
-        >
-          {averageRating}
-        </Typography>
-        <Rating
-          name="read-only"
-          value={averageRating}
-          readOnly
-          sx={{
-            "& .MuiRating-iconFilled": {
+
+        <div className="flex items-center gap-1 mb-2">
+          <Typography
+            variant="h6"
+            sx={{
               color: "var(--rating-color)",
-            },
-            "& .MuiRating-iconEmpty": {
-              color: "var(--star-color)",
-            },
-          }}
-        />
-        <div className="play-buttons-container">
+              fontSize: 18,
+              fontWeight: "bold",
+            }}
+          >
+            {averageRating}
+          </Typography>
+          <Rating
+            name="read-only"
+            value={averageRating}
+            readOnly
+            size="small"
+            sx={{
+              "& .MuiRating-iconFilled": {
+                color: "var(--rating-color)",
+              },
+              "& .MuiRating-iconEmpty": {
+                color: "var(--star-color)",
+              },
+            }}
+          />
+        </div>
+
+        <div className="play-buttons-container scale-90 origin-center mb-2">
           <GameInteractionButtons gameID={gameData.id} />
         </div>
-        <AddToList gameID={gameData.id} />
+        <div className="scale-90 origin-center">
+          <AddToList gameID={gameData.id} />
+        </div>
+
         {isListOwner ? (
           <button
-            className="removeFromListButton"
+            className="mt-2 text-red-500 hover:text-red-700 text-xs font-bold uppercase tracking-wider border border-red-500 hover:bg-red-500/10 px-3 py-1 rounded-full transition-colors"
             onClick={() => handleRemoveFromList(gameData.id)}
           >
-            Remove from List
+            Remove
           </button>
         ) : null}
       </CardContent>
