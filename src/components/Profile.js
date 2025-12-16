@@ -104,25 +104,31 @@ function Profile({ profileData, setProfileData, userId }) {
   }, [userId, profileData]);
 
   return (
-    <div className="bg-white dark:bg-gray-500 min-h-screen">
-      <div className="h-16 dark:bg-gray-500 bg-white"></div>
+    <div className="min-h-screen">
+      <div className="h-16"></div>
 
       {/* Main content container - uses grid for two-column layout */}
       <div className="w-full px-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left column - Profile info, favorites, and recent reviews */}
         <div className="lg:col-span-2 flex flex-col gap-6">
           {/* Profile header section */}
-          <div className="flex flex-row gap-6">
+          <div className="flex flex-row gap-6 card-global p-6">
             <div className="flex flex-col items-center">
               <img
-                className="rounded-full w-32 h-32 border-2 dark:border-white border-black object-cover"
+                className="rounded-full w-32 h-32 border-2 border-[var(--primary)] object-cover"
                 src={profileData.profilePicture}
                 alt="Profile"
               />
-              <div className="name dark:text-white text-black font-bold mt-2">
+              <div
+                className="name font-bold mt-2 text-xl"
+                style={{ color: "var(--text-color)" }}
+              >
                 {profileData.name}
               </div>
-              <div className="dark:text-white text-black text-sm">
+              <div
+                className="text-sm"
+                style={{ color: "var(--secondary-text-color)" }}
+              >
                 {profileData.pronouns}
               </div>
               <div className="mt-2">
@@ -136,15 +142,18 @@ function Profile({ profileData, setProfileData, userId }) {
                 )}
               </div>
             </div>
-            <div className="flex-1 border-2 dark:border-white border-black rounded-xl p-4 dark:text-white text-black min-h-[150px]">
+            <div
+              className="flex-1 rounded-xl p-4 min-h-[150px]"
+              style={{ color: "var(--text-color)" }}
+            >
               {profileData.bio}
             </div>
           </div>
 
           {/* Favorite Games section */}
-          <div className="flex flex-col gap-2">
-            <div className="dark:text-white text-black flex gap-4 items-center font-semibold">
-              Favorite Games
+          <div className="flex flex-col gap-2 card-global p-6">
+            <div className="flex gap-4 items-center font-semibold text-lg">
+              <span className="text-gradient">Favorite Games</span>
               {isUser && (
                 <EditGames
                   gameCovers={gameCovers}
@@ -153,17 +162,20 @@ function Profile({ profileData, setProfileData, userId }) {
                 />
               )}
             </div>
-            <div className="border-2 dark:border-white border-black rounded-xl p-4 flex justify-center">
+            <div className="flex justify-center mt-4">
               {loadingCovers ? (
-                <div className="flex items-center justify-center h-32 dark:text-white text-black">
+                <div
+                  className="flex items-center justify-center h-32"
+                  style={{ color: "var(--text-color)" }}
+                >
                   Loading favorite games...
                 </div>
               ) : (
-                <div className="grid grid-cols-4 gap-3 max-w-xl">
+                <div className="grid grid-cols-4 gap-4 w-full">
                   {[0, 1, 2, 3].map((idx) => (
                     <div
                       key={idx}
-                      className="aspect-[3/4] border dark:border-white border-black rounded-lg overflow-hidden"
+                      className="aspect-[3/4] rounded-lg overflow-hidden border border-[var(--glass-border)] transition-transform hover:scale-105"
                     >
                       <Link
                         to={`/game?game_id=${gameIds[idx]}`}
@@ -179,17 +191,18 @@ function Profile({ profileData, setProfileData, userId }) {
           </div>
 
           {/* Favorite Genres section */}
-          <div className="flex flex-col gap-2">
-            <div className="dark:text-white text-black flex gap-4 items-center font-semibold">
-              Favorite Genres
+          <div className="flex flex-col gap-2 card-global p-6">
+            <div className="flex gap-4 items-center font-semibold text-lg">
+              <span className="text-gradient">Favorite Genres</span>
               {isUser && <EditGenre genres={genres} setGenres={setGenres} />}
             </div>
-            <div className="border-2 dark:border-white border-black rounded-xl p-4">
+            <div className="mt-4">
               <div className="flex flex-wrap gap-4 justify-center">
                 {profileData.favoriteGenres.map((genre, index) => (
                   <div
                     key={index}
-                    className="flex flex-col items-center p-3 border dark:border-white border-black rounded-lg dark:text-white text-black"
+                    className="flex flex-col items-center p-3 rounded-lg border border-[var(--glass-border)]"
+                    style={{ color: "var(--text-color)" }}
                   >
                     <GenreIcon g={genre} />
                     <span className="text-sm mt-1">
@@ -208,11 +221,11 @@ function Profile({ profileData, setProfileData, userId }) {
         </div>
 
         {/* Right column - Currently Playing and Featured List */}
-        <div className="flex flex-col gap-6 dark:text-white text-black">
+        <div className="flex flex-col gap-6">
           {/* Currently Playing section */}
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-4 items-center font-semibold">
-              Currently Playing
+          <div className="flex flex-col gap-2 card-global p-6">
+            <div className="flex gap-4 items-center font-semibold text-lg">
+              <span className="text-gradient">Currently Playing</span>
               {isUser && (
                 <EditCurrentlyPlayingGame
                   currentlyPlayingGame={currentlyPlayingGame}
@@ -221,7 +234,7 @@ function Profile({ profileData, setProfileData, userId }) {
               )}
             </div>
             {currentlyPlayingGame ? (
-              <div className="w-[140px] aspect-[3/4] border-2 dark:border-white border-black rounded-xl overflow-hidden">
+              <div className="w-[140px] aspect-[3/4] rounded-xl overflow-hidden self-center mt-4 border border-[var(--glass-border)] transition-transform hover:scale-105">
                 <Link
                   to={`/game?game_id=${currentlyPlayingGame.id}`}
                   className="block w-full h-full"
@@ -230,22 +243,22 @@ function Profile({ profileData, setProfileData, userId }) {
                 </Link>
               </div>
             ) : (
-              <span className="text-gray-400">None</span>
+              <span className="text-gray-400 mt-2">None</span>
             )}
           </div>
 
           {/* Featured List section */}
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-4 items-center font-semibold">
-              Featured List
+          <div className="flex flex-col gap-2 card-global p-6">
+            <div className="flex gap-4 items-center font-semibold text-lg">
+              <span className="text-gradient">Featured List</span>
               {isUser && <EditFeaturedList setFeaturedList={setFeaturedList} />}
             </div>
             {featuredList ? (
-              <div className="w-full">
+              <div className="w-full mt-4">
                 <ListPreview list={featuredList} />
               </div>
             ) : (
-              <span className="text-gray-400">None</span>
+              <span className="text-gray-400 mt-2">None</span>
             )}
           </div>
         </div>

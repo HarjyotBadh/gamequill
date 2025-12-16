@@ -4,7 +4,7 @@ import Profile from "../components/Profile";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import "../styles/ProfilePage.css";
+
 import LoadingScreen from "../components/LoadingScreen";
 export default function ProfilePage({ userId }) {
   const [loading, setLoading] = useState(true);
@@ -31,6 +31,10 @@ export default function ProfilePage({ userId }) {
           notificationPreferences:
             docData.notificationPreferences ||
             defaultProfileData.notificationPreferences,
+          currentlyPlayingGame:
+            docData.currentlyPlayingGame ||
+            defaultProfileData.currentlyPlayingGame,
+          featuredList: docData.featuredList || defaultProfileData.featuredList,
         };
         setProfileData(data);
       } else {
@@ -76,10 +80,11 @@ export default function ProfilePage({ userId }) {
     name: "",
     username: "",
     notificationPreferences: {
-      steam: true,
       xbox: true,
       playstation: true,
     },
+    currentlyPlayingGame: null,
+    featuredList: null,
   };
 
   const [profileData, setProfileData] = useState(defaultProfileData);
