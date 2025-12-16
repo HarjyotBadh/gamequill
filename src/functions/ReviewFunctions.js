@@ -47,6 +47,41 @@ export async function fetchReviewsByGameId(game_id) {
 }
 
 /**
+ * Fetches only the ratings for a given game ID and calculates the average.
+ * This is a lightweight version of fetchReviewsByGameId that avoids fetching user profile data.
+ * @param {string} game_id - The ID of the game to fetch ratings for.
+ * @returns {number|null} The average rating, or null if no reviews.
+ */
+export async function fetchAverageRating(game_id) {
+  // Query the reviews collection based on game ID
+  const reviewsQuery = query(
+    collection(db, "reviews"),
+    where("gameID", "==", game_id)
+  );
+  const querySnapshot = await getDocs(reviewsQuery);
+
+  if (querySnapshot.empty) {
+    return null;
+  }
+
+  let totalRating = 0;
+  let count = 0;
+
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    if (data.rating) {
+      totalRating += data.rating;
+      count++;
+    }
+  });
+
+  if (count === 0) return null;
+
+  // Round to 1 decimal place
+  return Math.round((totalRating / count) * 10) / 10;
+}
+
+/**
  * Fetches a single review from the Firestore database based on its ID.
  * @param {string} review_id - The ID of the review to fetch.
  * @returns {Object} A review object that includes both the review data and the associated user data.

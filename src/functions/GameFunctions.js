@@ -70,10 +70,11 @@ export const fetchMultipleGameData = async (game_ids) => {
   let idsToFetchFromIGDB = [];
 
   // First, try to get the game data from Firestore
-  for (let game_id of game_ids) {
-    const gameRef = doc(db, "games", game_id.toString());
-    const docSnap = await getDoc(gameRef);
+  const docSnaps = await Promise.all(
+    game_ids.map((id) => getDoc(doc(db, "games", id.toString())))
+  );
 
+  docSnaps.forEach((docSnap, index) => {
     // If game data found in Firestore, add it to the array of game data
     if (docSnap.exists()) {
       const gameData = docSnap.data();
@@ -84,9 +85,9 @@ export const fetchMultipleGameData = async (game_ids) => {
       });
     } else {
       // Game data not found in Firestore, add the game ID to the array of IDs to fetch from IGDB
-      idsToFetchFromIGDB.push(game_id);
+      idsToFetchFromIGDB.push(game_ids[index]);
     }
-  }
+  });
 
   // Fetch the game data for all missing IDs from IGDB
   if (idsToFetchFromIGDB.length) {

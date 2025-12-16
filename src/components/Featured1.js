@@ -8,6 +8,12 @@ export default function Featured1({ gameData, screenshots }) {
   const [averageRating, setAverageRating] = useState(null);
 
   React.useEffect(() => {
+    // If rating is passed as a prop, don't fetch it again
+    if (gameData.rating !== undefined) {
+      setAverageRating(gameData.rating);
+      return;
+    }
+
     if (gameData.id) {
       fetchReviewsByGameId(gameData.id).then((reviews) => {
         setAverageRating(calculateAverageRating(reviews));

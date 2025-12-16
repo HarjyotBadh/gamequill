@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import "../styles/HomeTrending.css";
 import Featured1 from "./Featured1";
 import Featured2 from "./Featured2";
+import LoadingScreen from "./LoadingScreen";
 import { fetchMultipleGameData } from "../functions/GameFunctions";
+import { fetchAverageRating } from "../functions/ReviewFunctions";
 
 function App() {
   const [gamesData, setGamesData] = useState([]);
@@ -38,17 +40,14 @@ function App() {
           // Get more game IDs to filter, since some may be older games
           gameIds = popData.data.slice(0, 30).map((p) => p.game_id);
 
-          // Now filter to only include games released in the last 3 years
-          const threeYearsAgo =
-            Math.floor(Date.now() / 1000) - 3 * 365 * 24 * 60 * 60;
-          const functionUrl =
-            "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
-
+          // Now filter to only include games released in the last year
+          const oneYearAgo =
+            Math.floor(Date.now() / 1000) - 1 * 365 * 24 * 60 * 60;
           const gamesQuery = `
-            fields id, name, first_release_date, cover.url;
+            fields id, first_release_date;
             where id = (${gameIds.join(
               ","
-            )}) & first_release_date > ${threeYearsAgo};
+            )}) & first_release_date > ${oneYearAgo};
             sort first_release_date desc;
             limit 10;
           `;
@@ -58,10 +57,10 @@ function App() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ igdbquery: gamesQuery }),
           });
-          const gamesData = await gamesResponse.json();
+          const gamesDataRes = await gamesResponse.json();
 
-          if (gamesData.data && gamesData.data.length >= 5) {
-            gameIds = gamesData.data.slice(0, 5).map((g) => g.id);
+          if (gamesDataRes.data && gamesDataRes.data.length >= 5) {
+            gameIds = gamesDataRes.data.slice(0, 5).map((g) => g.id);
           } else {
             // If not enough recent games, use the top popular ones
             gameIds = popData.data.slice(0, 5).map((p) => p.game_id);
@@ -71,12 +70,23 @@ function App() {
           gameIds = [96437, 254339, 148241, 127044, 78511];
         }
 
-        const fetchedGamesData = await fetchMultipleGameData(gameIds);
-        setGamesData(fetchedGamesData);
-        sessionStorage.setItem(
-          "trendingGamesData",
-          JSON.stringify(fetchedGamesData)
-        );
+        // Parallelize fetching game data and ratings
+        const [fetchedGamesData, ratings] = await Promise.all([
+          fetchMultipleGameData(gameIds),
+          Promise.all(gameIds.map((id) => fetchAverageRating(id))),
+        ]);
+
+        // Merge ratings into game data
+        const mergedData = fetchedGamesData.map((data, index) => ({
+          ...data,
+          game: {
+            ...data.game,
+            rating: ratings[index],
+          },
+        }));
+
+        setGamesData(mergedData);
+        sessionStorage.setItem("trendingGamesData", JSON.stringify(mergedData));
       } catch (error) {
         console.error("Error fetching trending games:", error);
         // Fallback to hardcoded IDs
@@ -97,14 +107,7 @@ function App() {
   );
 
   if (loading || validGamesData.length === 0) {
-    return (
-      <div className="trending-container">
-        <h1 className="trending-head">TRENDING GAMES</h1>
-        <div className="flex items-center justify-center h-64 text-white">
-          Loading trending games...
-        </div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (
