@@ -38,7 +38,7 @@ export default function Featured1({ gameData, screenshots, limitSize }) {
     company = gameData.involved_companies[0].company.name;
   }
 
-  var rating = averageRating;
+  var rating = averageRating ? Math.round(averageRating) : averageRating;
 
   return (
     <div className="image-cont rounded-corners card-gradient-border">

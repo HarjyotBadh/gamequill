@@ -47,6 +47,7 @@ function Profile({ profileData, setProfileData, userId }) {
           // If profileData isn't fully loaded yet, we can wait or return.
           // Since parent manages loading, we assume it's mostly ready,
           // but good to be safe.
+          setLoadingCovers(false);
           return;
         }
 
@@ -170,21 +171,34 @@ function Profile({ profileData, setProfileData, userId }) {
                 >
                   Loading favorite games...
                 </div>
-              ) : (
+              ) : gameIds && gameIds.filter((id) => id).length > 0 ? (
                 <div className="grid grid-cols-4 gap-4 w-full">
                   {[0, 1, 2, 3].map((idx) => (
                     <div
                       key={idx}
                       className="aspect-[3/4] rounded-lg overflow-hidden border border-[var(--glass-border)] transition-transform hover:scale-105"
                     >
-                      <Link
-                        to={`/game?game_id=${gameIds[idx]}`}
-                        className="block w-full h-full"
-                      >
-                        <ProfileTitleCard gameData={gameCovers[idx]} />
-                      </Link>
+                      {gameIds[idx] ? (
+                        <Link
+                          to={`/game?game_id=${gameIds[idx]}`}
+                          className="block w-full h-full"
+                        >
+                          <ProfileTitleCard gameData={gameCovers[idx]} />
+                        </Link>
+                      ) : (
+                        <div className="w-full h-full bg-black/20 flex items-center justify-center">
+                          <span className="text-xs text-white/30">Empty</span>
+                        </div>
+                      )}
                     </div>
                   ))}
+                </div>
+              ) : (
+                <div
+                  className="flex items-center justify-center h-32 w-full text-center"
+                  style={{ color: "var(--secondary-text-color)" }}
+                >
+                  User has not selected favorite games
                 </div>
               )}
             </div>
@@ -198,18 +212,31 @@ function Profile({ profileData, setProfileData, userId }) {
             </div>
             <div className="mt-4">
               <div className="flex flex-wrap gap-4 justify-center">
-                {profileData.favoriteGenres.map((genre, index) => (
+                {profileData.favoriteGenres &&
+                profileData.favoriteGenres.filter((g) => g).length > 0 ? (
+                  profileData.favoriteGenres.map((genre, index) => {
+                    if (!genre) return null;
+                    return (
+                      <div
+                        key={index}
+                        className="flex flex-col items-center p-3 rounded-lg border border-[var(--glass-border)]"
+                        style={{ color: "var(--text-color)" }}
+                      >
+                        <GenreIcon g={genre} className="w-20 h-20" />
+                        <span className="text-sm mt-1">
+                          {genre.charAt(0).toUpperCase() + genre.slice(1)}
+                        </span>
+                      </div>
+                    );
+                  })
+                ) : (
                   <div
-                    key={index}
-                    className="flex flex-col items-center p-3 rounded-lg border border-[var(--glass-border)]"
-                    style={{ color: "var(--text-color)" }}
+                    className="flex items-center justify-center p-4 w-full text-center"
+                    style={{ color: "var(--secondary-text-color)" }}
                   >
-                    <GenreIcon g={genre} />
-                    <span className="text-sm mt-1">
-                      {genre.charAt(0).toUpperCase() + genre.slice(1)}
-                    </span>
+                    User has not selected favorite genres
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>

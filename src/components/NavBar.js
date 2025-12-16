@@ -167,80 +167,76 @@ function App() {
                         >
                           View Profile
                         </Link>
-                        {isOnProfilePage && (
-                          <>
-                            <Link
-                              to="/recent-reviews"
-                              className="block px-4 py-2"
-                              style={{ color: "var(--text-color)" }}
-                              onMouseOver={(e) =>
-                                (e.currentTarget.style.backgroundColor =
-                                  "var(--rating-color)")
-                              }
-                              onMouseOut={(e) =>
-                                (e.currentTarget.style.backgroundColor = "")
-                              }
-                            >
-                              Recent Activity
-                            </Link>
-                            <Link
-                              to="/wishlist"
-                              className="block px-4 py-2"
-                              style={{ color: "var(--text-color)" }}
-                              onMouseOver={(e) =>
-                                (e.currentTarget.style.backgroundColor =
-                                  "var(--rating-color)")
-                              }
-                              onMouseOut={(e) =>
-                                (e.currentTarget.style.backgroundColor = "")
-                              }
-                            >
-                              Wishlist
-                            </Link>
-                            <Link
-                              to="/likes"
-                              className="block px-4 py-2"
-                              style={{ color: "var(--text-color)" }}
-                              onMouseOver={(e) =>
-                                (e.currentTarget.style.backgroundColor =
-                                  "var(--rating-color)")
-                              }
-                              onMouseOut={(e) =>
-                                (e.currentTarget.style.backgroundColor = "")
-                              }
-                            >
-                              Liked Games
-                            </Link>
-                            <Link
-                              to="/played"
-                              className="block px-4 py-2"
-                              style={{ color: "var(--text-color)" }}
-                              onMouseOver={(e) =>
-                                (e.currentTarget.style.backgroundColor =
-                                  "var(--rating-color)")
-                              }
-                              onMouseOut={(e) =>
-                                (e.currentTarget.style.backgroundColor = "")
-                              }
-                            >
-                              Played Games
-                            </Link>
-                            <Link
-                              to="/lists"
-                              className="block px-4 py-2"
-                              style={{ color: "var(--text-color)" }}
-                              onMouseOver={(e) =>
-                                (e.currentTarget.style.backgroundColor =
-                                  "var(--rating-color)")
-                              }
-                              onMouseOut={(e) =>
-                                (e.currentTarget.style.backgroundColor = "")
-                              }
-                            >
-                              My Lists
-                            </Link>
-                          </>
-                        )}
+                        <Link
+                          to="/recent-reviews"
+                          className="block px-4 py-2"
+                          style={{ color: "var(--text-color)" }}
+                          onMouseOver={(e) =>
+                            (e.currentTarget.style.backgroundColor =
+                              "var(--rating-color)")
+                          }
+                          onMouseOut={(e) =>
+                            (e.currentTarget.style.backgroundColor = "")
+                          }
+                        >
+                          Recent Activity
+                        </Link>
+                        <Link
+                          to="/wishlist"
+                          className="block px-4 py-2"
+                          style={{ color: "var(--text-color)" }}
+                          onMouseOver={(e) =>
+                            (e.currentTarget.style.backgroundColor =
+                              "var(--rating-color)")
+                          }
+                          onMouseOut={(e) =>
+                            (e.currentTarget.style.backgroundColor = "")
+                          }
+                        >
+                          Wishlist
+                        </Link>
+                        <Link
+                          to="/likes"
+                          className="block px-4 py-2"
+                          style={{ color: "var(--text-color)" }}
+                          onMouseOver={(e) =>
+                            (e.currentTarget.style.backgroundColor =
+                              "var(--rating-color)")
+                          }
+                          onMouseOut={(e) =>
+                            (e.currentTarget.style.backgroundColor = "")
+                          }
+                        >
+                          Liked Games
+                        </Link>
+                        <Link
+                          to="/played"
+                          className="block px-4 py-2"
+                          style={{ color: "var(--text-color)" }}
+                          onMouseOver={(e) =>
+                            (e.currentTarget.style.backgroundColor =
+                              "var(--rating-color)")
+                          }
+                          onMouseOut={(e) =>
+                            (e.currentTarget.style.backgroundColor = "")
+                          }
+                        >
+                          Played Games
+                        </Link>
+                        <Link
+                          to="/lists"
+                          className="block px-4 py-2"
+                          style={{ color: "var(--text-color)" }}
+                          onMouseOver={(e) =>
+                            (e.currentTarget.style.backgroundColor =
+                              "var(--rating-color)")
+                          }
+                          onMouseOut={(e) =>
+                            (e.currentTarget.style.backgroundColor = "")
+                          }
+                        >
+                          My Lists
+                        </Link>
                         <button
                           onClick={confirmLogout}
                           className="block w-full text-left px-4 py-2"

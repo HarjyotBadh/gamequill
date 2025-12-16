@@ -14,13 +14,16 @@ function App() {
 
         fetchFriendsRecentReviews(3, theUserId)
           .then((data) => {
-            setReviews(data);
+            if (data) {
+              setReviews(data);
+            }
           })
           .catch((err) => {
-            console.error(err);
+            console.error("Error fetching friends reviews:", err);
           });
       } else {
         // Handle the case when the user is not logged in if needed
+        setReviews([]);
       }
 
       // Clean up the listener
