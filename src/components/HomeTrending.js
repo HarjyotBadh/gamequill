@@ -112,7 +112,7 @@ function App() {
 
   return (
     <div className="trending-container">
-      <h1 className="trending-head">TRENDING GAMES</h1>
+      <h1 className="trending-head text-gradient">TRENDING GAMES</h1>
       <div className="trending-featured1">
         <Link to={`/game?game_id=${validGamesData[0].game.id}`}>
           <Featured1

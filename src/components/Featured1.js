@@ -41,7 +41,7 @@ export default function Featured1({ gameData, screenshots }) {
   // Rating logic ends
 
   return (
-    <div class="image-cont rounded-corners">
+    <div className="image-cont rounded-corners card-gradient-border">
       <div class="image-container2">
         <img src={imageUrl} alt="Pikmin Test" className="Featured1-image" />
       </div>

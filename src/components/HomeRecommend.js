@@ -147,7 +147,9 @@ function App() {
 
   return (
     <div className="recommend-container">
-      <h1 className="trending-head">BASED ON YOUR FAVORITE GENRES</h1>
+      <h1 className="trending-head text-gradient">
+        BASED ON YOUR FAVORITE GENRES
+      </h1>
       <div className="recommend-grid">
         {genreRecommendations.map((genreData, index) => (
           <div key={favoriteGenres[index] || index}>

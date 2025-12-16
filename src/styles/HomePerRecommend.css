@@ -8,7 +8,7 @@
     display: block;
     height: 200px;
     overflow: hidden;
-    border-radius: 25px;
+    /* border-radius: 25px; Removed to allow card-global to style */
 }
 
 .home-recommend-grid a:hover {

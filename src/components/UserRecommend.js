@@ -20,7 +20,7 @@ export default function UserRecommend({ genre, c1, c2, c3, i1, i2, i3 }) {
   }
 
   return (
-    <div className="user-recommend-container">
+    <div className="user-recommend-container card-gradient-border">
       <h4 className="recommend-genre">
         <GenreIcon g={genre} />
         <span>{genre.charAt(0).toUpperCase() + genre.slice(1)}</span>

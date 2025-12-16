@@ -61,9 +61,8 @@ body {
 }
 
 .rounded-corners {
-  border-radius: 25px; /* You can adjust the value to control the roundness */
-  background-color: red; /* Optional background color */
-  /* Other CSS properties for styling */
+  /* Styles handled by .card-global */
+  overflow: hidden;
 }
 
 .limited-height {

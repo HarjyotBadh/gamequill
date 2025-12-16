@@ -112,14 +112,14 @@ export default function UpcomingItem({ name, cover, gameid, ti, platform }) {
   return (
     <div>
       <Link to={`/game?game_id=${gameid}`}>
-        <div className="upcoming-item">
+        <div className="upcoming-item card-gradient-border">
           {cover ? (
             <img className="upcoming-cover-rounded" src={cover} alt="Game" />
           ) : (
             <p className="no-image-text">No image available</p>
           )}
           <UpcomingCountdown time={ti} />
-          <div className="upcoming-platform text-black dark:text-white">
+          <div className="upcoming-platform text-black dark:text-white text-center w-full mt-2 font-medium">
             {platformMapping[platform]}
           </div>
         </div>

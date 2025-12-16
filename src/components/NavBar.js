@@ -5,6 +5,7 @@ import { auth, db } from "../firebase";
 import { Avatar } from "@material-tailwind/react";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+// function App() is below. We need to update the Nav in return.
 import NotificationBell from "./NotificationBell";
 import SalesNotifications from "./SalesNotifications";
 import { TrophyIcon } from "@heroicons/react/24/outline";
@@ -81,7 +82,13 @@ function App() {
   };
 
   return (
-    <nav className="border-gray-200 bg-gray-600">
+    <nav
+      className="mb-4 pt-4 pb-4"
+      style={{
+        background: "var(--nav-bg)",
+        borderBottom: "1px solid var(--nav-border)",
+      }}
+    >
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link to="/Home" className="flex items-center">
           <img src={logo} className="h-20 mr-10" alt="GameQuill Logo" />
@@ -93,18 +100,19 @@ function App() {
             onChange={handleSearchInputChange}
             onKeyDown={handleEnterKey}
             placeholder="Search for games or users"
-            className="bg-gray-200 p-2 rounded mr-2 w-96"
+            className="card-global p-2 rounded mr-2 w-96 text-black dark:text-white"
+            style={{
+              background: "rgba(255,255,255,0.1)",
+              border: "1px solid var(--glass-border)",
+            }}
           />
 
-          <button
-            onClick={handleSearch}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
+          <button onClick={handleSearch} className="btn-primary">
             Search
           </button>
         </div>
         <div className="hidden w-full md:block md:w-auto" id="navbar-default">
-          <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0 bg-gray-600 md:bg-gray-600 border-gray-700">
+          <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg md:flex-row md:space-x-8 md:mt-0 md:border-0">
             <Tooltip title="Top Games" placement="bottom">
               <Link
                 to="/top-games"

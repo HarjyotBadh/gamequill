@@ -41,7 +41,7 @@ export default function Featured1({ gameData, screenshots, limitSize }) {
   var rating = averageRating;
 
   return (
-    <div className="image-cont rounded-corners">
+    <div className="image-cont rounded-corners card-gradient-border">
       <div className="image-container2">
         <img
           src={imageUrl}

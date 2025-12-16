@@ -79,7 +79,7 @@ export default function HomeUpcoming() {
 
   return (
     <div className="upcoming-container">
-      <h1 className="trending-head">UPCOMING GAMES</h1>
+      <h1 className="trending-head text-gradient">UPCOMING GAMES</h1>
       <div className="upcoming-grid">
         {upcomingGames.map((gameData, index) => (
           <div key={gameData.game?.id || index}>
