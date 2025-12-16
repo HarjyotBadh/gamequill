@@ -1,11 +1,10 @@
-import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import logo from "../images/gamequill.png";
 import { signOut } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { Avatar } from "@material-tailwind/react";
 import { doc, getDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import NotificationBell from "./NotificationBell";
 import SalesNotifications from "./SalesNotifications";
 import { TrophyIcon } from "@heroicons/react/24/outline";
@@ -16,8 +15,11 @@ function App() {
   const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
   const [profilePic, setProfilePic] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const [isSalesNotificationOpen, setIsSalesNotificationOpen] = useState(false);
   const [isNotificationBellOpen, setIsNotificationBellOpen] = useState(false);
+
+  const isOnProfilePage = location.pathname.toLowerCase().includes("/profile");
 
   const toggleSalesNotificationPanel = () => {
     setIsSalesNotificationOpen(!isSalesNotificationOpen);
@@ -126,9 +128,10 @@ function App() {
                     onToggle={toggleNotificationBellPanel}
                   />
                   <div className="relative">
-                    <Avatar
+                    <img
                       src={profilePic || "path_to_default_avatar.png"}
-                      className="rounded-full w-12 h-12"
+                      alt="Profile"
+                      className="rounded-full w-12 h-12 object-cover cursor-pointer"
                       onClick={() =>
                         setShowLogoutConfirmation(!showLogoutConfirmation)
                       }
@@ -145,10 +148,7 @@ function App() {
                         <Link
                           to={`/Profile?user_id=${user.uid}`}
                           className="block px-4 py-2"
-                          style={{
-                            color: "var(--text-color)",
-                            hover: "var(--rating-color)",
-                          }}
+                          style={{ color: "var(--text-color)" }}
                           onMouseOver={(e) =>
                             (e.currentTarget.style.backgroundColor =
                               "var(--rating-color)")
@@ -159,13 +159,84 @@ function App() {
                         >
                           View Profile
                         </Link>
+                        {isOnProfilePage && (
+                          <>
+                            <Link
+                              to="/recent-reviews"
+                              className="block px-4 py-2"
+                              style={{ color: "var(--text-color)" }}
+                              onMouseOver={(e) =>
+                                (e.currentTarget.style.backgroundColor =
+                                  "var(--rating-color)")
+                              }
+                              onMouseOut={(e) =>
+                                (e.currentTarget.style.backgroundColor = "")
+                              }
+                            >
+                              Recent Activity
+                            </Link>
+                            <Link
+                              to="/wishlist"
+                              className="block px-4 py-2"
+                              style={{ color: "var(--text-color)" }}
+                              onMouseOver={(e) =>
+                                (e.currentTarget.style.backgroundColor =
+                                  "var(--rating-color)")
+                              }
+                              onMouseOut={(e) =>
+                                (e.currentTarget.style.backgroundColor = "")
+                              }
+                            >
+                              Wishlist
+                            </Link>
+                            <Link
+                              to="/likes"
+                              className="block px-4 py-2"
+                              style={{ color: "var(--text-color)" }}
+                              onMouseOver={(e) =>
+                                (e.currentTarget.style.backgroundColor =
+                                  "var(--rating-color)")
+                              }
+                              onMouseOut={(e) =>
+                                (e.currentTarget.style.backgroundColor = "")
+                              }
+                            >
+                              Liked Games
+                            </Link>
+                            <Link
+                              to="/played"
+                              className="block px-4 py-2"
+                              style={{ color: "var(--text-color)" }}
+                              onMouseOver={(e) =>
+                                (e.currentTarget.style.backgroundColor =
+                                  "var(--rating-color)")
+                              }
+                              onMouseOut={(e) =>
+                                (e.currentTarget.style.backgroundColor = "")
+                              }
+                            >
+                              Played Games
+                            </Link>
+                            <Link
+                              to="/lists"
+                              className="block px-4 py-2"
+                              style={{ color: "var(--text-color)" }}
+                              onMouseOver={(e) =>
+                                (e.currentTarget.style.backgroundColor =
+                                  "var(--rating-color)")
+                              }
+                              onMouseOut={(e) =>
+                                (e.currentTarget.style.backgroundColor = "")
+                              }
+                            >
+                              My Lists
+                            </Link>
+                          </>
+                        )}
                         <button
                           onClick={confirmLogout}
                           className="block w-full text-left px-4 py-2"
-                          style={{
-                            color: "var(--text-color)",
-                            hover: "var(--rating-color)",
-                          }}
+                          style={{ color: "var(--text-color)" }}
                           onMouseOver={(e) =>
                             (e.currentTarget.style.backgroundColor =
                               "var(--rating-color)")

@@ -22,6 +22,7 @@ function Profile({ profileData, setProfileData, userId }) {
   const [gameIds, setGameIds] = useState([]);
   const [currentlyPlayingGame, setCurrentlyPlayingGame] = useState(null);
   const [featuredList, setFeaturedList] = useState(null);
+  const [loadingCovers, setLoadingCovers] = useState(true);
 
   const auth = getAuth();
   var isUser = false;
@@ -91,6 +92,8 @@ function Profile({ profileData, setProfileData, userId }) {
         setGameIds(favoriteGames);
       } catch (error) {
         console.error("Error fetching profile covers:", error);
+      } finally {
+        setLoadingCovers(false);
       }
     };
 
@@ -98,89 +101,115 @@ function Profile({ profileData, setProfileData, userId }) {
   }, [userId]);
 
   return (
-    <div className="bg-white dark:bg-gray-500">
-      <div className="formattingBox h-16 dark:bg-gray-500 bg-white"></div>
-      <div className="profileScreen bg-white dark:bg-gray-500 flex flex-row">
-        <div className="profileAndFavorites dark:bg-gray-500 bg-white flex flex-col">
-          <div className="ProfileBox flex ml-20">
+    <div className="bg-white dark:bg-gray-500 min-h-screen">
+      <div className="h-16 dark:bg-gray-500 bg-white"></div>
+
+      {/* Main content container - uses grid for two-column layout */}
+      <div className="w-full px-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left column - Profile info, favorites, and recent reviews */}
+        <div className="lg:col-span-2 flex flex-col gap-6">
+          {/* Profile header section */}
+          <div className="flex flex-row gap-6">
             <div className="flex flex-col items-center">
-              <div className="Profile Picture">
-                <img
-                  className="rounded-full w-32 h-32 border-2 dark:border-white border-black"
-                  src={profileData.profilePicture}
-                  alt="Profile Picture"
-                />
-              </div>
-              <div className="name dark:text-white text-black">
+              <img
+                className="rounded-full w-32 h-32 border-2 dark:border-white border-black object-cover"
+                src={profileData.profilePicture}
+                alt="Profile"
+              />
+              <div className="name dark:text-white text-black font-bold mt-2">
                 {profileData.name}
               </div>
-              <div className="Pronouns dark:text-white text-black">
+              <div className="dark:text-white text-black text-sm">
                 {profileData.pronouns}
               </div>
-              <div className="follow-button">
-                {!isUser && <FollowUser target_uid={userId} />}
+              <div className="mt-2">
+                {isUser ? (
+                  <EditProfile
+                    profileData={profileData}
+                    setProfileData={setProfileData}
+                  />
+                ) : (
+                  <FollowUser target_uid={userId} />
+                )}
               </div>
             </div>
-            <div className="Bio border-2 dark:border-white border-black w-96 h-48 mx-4 p-2 dark:text-white text-black">
+            <div className="flex-1 border-2 dark:border-white border-black rounded-xl p-4 dark:text-white text-black min-h-[150px]">
               {profileData.bio}
             </div>
           </div>
-          <div className="formattingBox h-16 dark:bg-gray-500 bg-white"></div>
-          <div className="ml-20 dark:text-white text-black flex gap-4">
-            Favorite Games
-            {isUser && (
-              <EditGames
-                gameCovers={gameCovers}
-                setGameCovers={setGameCovers}
-                gameIds={profileData.favoriteGames}
-              />
-            )}
+
+          {/* Favorite Games section */}
+          <div className="flex flex-col gap-2">
+            <div className="dark:text-white text-black flex gap-4 items-center font-semibold">
+              Favorite Games
+              {isUser && (
+                <EditGames
+                  gameCovers={gameCovers}
+                  setGameCovers={setGameCovers}
+                  gameIds={profileData.favoriteGames}
+                />
+              )}
+            </div>
+            <div className="border-2 dark:border-white border-black rounded-xl p-4 flex justify-center">
+              {loadingCovers ? (
+                <div className="flex items-center justify-center h-32 dark:text-white text-black">
+                  Loading favorite games...
+                </div>
+              ) : (
+                <div className="grid grid-cols-4 gap-3 max-w-xl">
+                  {[0, 1, 2, 3].map((idx) => (
+                    <div
+                      key={idx}
+                      className="aspect-[3/4] border dark:border-white border-black rounded-lg overflow-hidden"
+                    >
+                      <Link
+                        to={`/game?game_id=${gameIds[idx]}`}
+                        className="block w-full h-full"
+                      >
+                        <ProfileTitleCard gameData={gameCovers[idx]} />
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-          <div className="FavoriteGames flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-white text-black">
-            <div className="GameCover1 w-30 h-32 text-center border dark:border-white border-black">
-              <Link to={`/game?game_id=${gameIds[0]}`}>
-                <ProfileTitleCard gameData={gameCovers[0]} />
-              </Link>
+
+          {/* Favorite Genres section */}
+          <div className="flex flex-col gap-2">
+            <div className="dark:text-white text-black flex gap-4 items-center font-semibold">
+              Favorite Genres
+              {isUser && <EditGenre genres={genres} setGenres={setGenres} />}
             </div>
-            <div className="GameCover2 w-30 h-32 text-center border dark:border-white border-black">
-              <Link to={`/game?game_id=${gameIds[1]}`}>
-                <ProfileTitleCard gameData={gameCovers[1]} />
-              </Link>
-            </div>
-            <div className="GameCover3 w-30 h-32 text-center border dark:border-white border-black">
-              <Link to={`/game?game_id=${gameIds[2]}`}>
-                <ProfileTitleCard gameData={gameCovers[2]} />
-              </Link>
-            </div>
-            <div className="GameCover4 w-30 h-32 text-center border dark:border-white border-black">
-              <Link to={`/game?game_id=${gameIds[3]}`}>
-                <ProfileTitleCard gameData={gameCovers[3]} />
-              </Link>
-            </div>
-          </div>
-          <div className="ml-20 dark:text-white text-black flex gap-4">
-            Favorite Genres
-            {isUser && <EditGenre genres={genres} setGenres={setGenres} />}
-          </div>
-          <div className="FavoriteGenres flex justify-start ml-20 border-2 dark:border-white border-black w-96 p-2 gap-4 dark:text-whitetext-black">
-            {profileData.favoriteGenres.map((genre, index) => (
-              <div
-                key={index}
-                className="w-24 text-center border dark:border-white border-black"
-              >
-                <GenreIcon g={genre} />
-                {genre.charAt(0).toUpperCase() + genre.slice(1)}
+            <div className="border-2 dark:border-white border-black rounded-xl p-4">
+              <div className="flex flex-wrap gap-4 justify-center">
+                {profileData.favoriteGenres.map((genre, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col items-center p-3 border dark:border-white border-black rounded-lg dark:text-white text-black"
+                  >
+                    <GenreIcon g={genre} />
+                    <span className="text-sm mt-1">
+                      {genre.charAt(0).toUpperCase() + genre.slice(1)}
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
-          <div className="five-recent">
+
+          {/* Recent Reviews section */}
+          <div className="mt-4">
             <FiveRecentReviews user_id={userId} />
           </div>
         </div>
-        <div className="currentlyPlayingAndFeaturedList dark:text-white text-black flex flex-col">
-          <div className="currentlyPlaying dark:text-white text-black flex flex-col">
-            <div className="dark:text-white text-black flex gap-4">
-              Currently Playing:
+
+        {/* Right column - Currently Playing and Featured List */}
+        <div className="flex flex-col gap-6 dark:text-white text-black">
+          {/* Currently Playing section */}
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-4 items-center font-semibold">
+              Currently Playing
               {isUser && (
                 <EditCurrentlyPlayingGame
                   currentlyPlayingGame={currentlyPlayingGame}
@@ -189,83 +218,36 @@ function Profile({ profileData, setProfileData, userId }) {
               )}
             </div>
             {currentlyPlayingGame ? (
-              <div className="currentlyPlayingFormat dark:text-white text-black flex flex-col w-50">
-                <div
-                  style={{
-                    width: "150px",
-                    height: "200px",
-                    border: "2px solid white",
-                    borderRadius: "20px",
-                  }}
+              <div className="w-[140px] aspect-[3/4] border-2 dark:border-white border-black rounded-xl overflow-hidden">
+                <Link
+                  to={`/game?game_id=${currentlyPlayingGame.id}`}
+                  className="block w-full h-full"
                 >
-                  <Link to={`/game?game_id=${currentlyPlayingGame.id}`}>
-                    <ProfileTitleCard
-                      className="currentlyPlayingGame"
-                      gameData={currentlyPlayingGame.cover.url}
-                    />
-                  </Link>
-                </div>
+                  <ProfileTitleCard gameData={currentlyPlayingGame.cover.url} />
+                </Link>
               </div>
             ) : (
-              "None"
+              <span className="text-gray-400">None</span>
             )}
           </div>
-          <div className="featuredList dark:text-white text-black flex flex-col">
-            <div className="dark:text-white text-black flex gap-4">
-              Featured List:
+
+          {/* Featured List section */}
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-4 items-center font-semibold">
+              Featured List
               {isUser && <EditFeaturedList setFeaturedList={setFeaturedList} />}
             </div>
             {featuredList ? (
-              <div className="featuredListFormat dark:text-white text-black flex flex-col w-50">
-                <div
-                  style={{
-                    width: "300px",
-                    height: "200px",
-                  }}
-                >
-                  <ListPreview list={featuredList} />
-                </div>
+              <div className="w-full">
+                <ListPreview list={featuredList} />
               </div>
             ) : (
-              "None"
+              <span className="text-gray-400">None</span>
             )}
           </div>
         </div>
-
-        {isUser && (
-          <div className="menuButtons border-2 dark:border-white border-black w-72 h-100 ml-10 p-2 dark:text-white text-black flex flex-col mh">
-            <EditProfile
-              profileData={profileData}
-              setProfileData={setProfileData}
-            />
-            <p>
-              <Link to="/recent-reviews" className="button">
-                Recent Activity
-              </Link>
-            </p>
-            <p>
-              <Link to="/wishlist" className="button">
-                Wishlist
-              </Link>
-            </p>
-            <p>
-              <Link to="/likes" className="button">
-                Liked Games
-              </Link>
-            </p>
-            <p>
-              <Link to="/played" className="button">
-                Played Games
-              </Link>
-            </p>
-            <p>
-              <Link to="/lists" className="button">
-                My Lists
-              </Link>
-            </p>
-          </div>
-        )}
       </div>
+
       <Footer />
     </div>
   );
