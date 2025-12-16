@@ -35,8 +35,18 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
                 setSelectedImageIndex(index);
                 setOpen(true);
               }}
+              style={{
+                border: "none",
+                background: "none",
+                cursor: "pointer",
+                width: "100%",
+              }}
             >
-              <img src={screenshotURL} alt={`screenshot-${index}`} />
+              <img
+                src={screenshotURL}
+                alt={`screenshot-${index}`}
+                style={{ borderRadius: "8px", width: "100%" }}
+              />
             </button>
           </div>
         ))}
@@ -53,6 +63,7 @@ const MediaPlayer = ({ screenshots, youtubeLinks }) => {
                       playerVars: { autoplay: 0 },
                     },
                   }}
+                  width="100%"
                 />
               </div>
             )

@@ -3,114 +3,107 @@ import { Link } from "react-router-dom";
 import "../styles/ReviewBar.css";
 import { generateStars } from "../functions/RatingFunctions";
 import {
-    fetchReviewsByGameId,
-    fetchFriendsRecentReviews,
+  fetchReviewsByGameId,
+  fetchFriendsRecentReviews,
 } from "../functions/ReviewFunctions";
 import { calculateAverageRating } from "../functions/RatingFunctions";
 import Switch from "@mui/material/Switch";
 
 export default function ReviewBar({
-    gameID,
-    userHasReview,
-    gameData,
-    showFriendReviews,
-    setShowFriendReviews,
-    showSpoilers,
-    setShowSpoilers,
-    currentUserId,
+  gameID,
+  userHasReview,
+  gameData,
+  showFriendReviews,
+  setShowFriendReviews,
+  showSpoilers,
+  setShowSpoilers,
+  currentUserId,
 }) {
-    const [numberOfReviews, setNumberOfReviews] = useState(0);
-    const [averageRating, setAverageRating] = useState(0);
-    const [numberOfFriendReviews, setNumberOfFriendReviews] = useState(0);
-    const [friendAverageRating, setFriendAverageRating] = useState(0);
-    // const currentUserId = auth.currentUser.uid;
+  const [numberOfReviews, setNumberOfReviews] = useState(0);
+  const [averageRating, setAverageRating] = useState(0);
+  const [numberOfFriendReviews, setNumberOfFriendReviews] = useState(0);
+  const [friendAverageRating, setFriendAverageRating] = useState(0);
+  // const currentUserId = auth.currentUser.uid;
 
-    useEffect(() => {
-        fetchReviewsByGameId(gameID).then((reviews) => {
-            setNumberOfReviews(reviews.length);
-            const reviewRating = calculateAverageRating(reviews);
-            setAverageRating(reviewRating === "NaN" ? "0.0" : reviewRating);
-        });
+  useEffect(() => {
+    fetchReviewsByGameId(gameID).then((reviews) => {
+      setNumberOfReviews(reviews.length);
+      const reviewRating = calculateAverageRating(reviews);
+      setAverageRating(reviewRating === "NaN" ? "0.0" : reviewRating);
+    });
 
-        // Fetch friend reviews and update the state values
-        fetchFriendsRecentReviews(-1, currentUserId).then(
-            (allFriendReviews) => {
-                // Filter out reviews to match the current gameID
-                const relevantFriendReviews = allFriendReviews.filter(
-                    (review) => review.gameID === gameID
-                );
+    // Fetch friend reviews and update the state values
+    fetchFriendsRecentReviews(-1, currentUserId).then((allFriendReviews) => {
+      // Filter out reviews to match the current gameID
+      const relevantFriendReviews = allFriendReviews.filter(
+        (review) => review.gameID === gameID
+      );
 
-                setNumberOfFriendReviews(relevantFriendReviews.length);
-                const friendReviewRating = calculateAverageRating(
-                    relevantFriendReviews
-                );
-                setFriendAverageRating(
-                    friendReviewRating === "NaN" ? "0.0" : friendReviewRating
-                );
-            }
-        );
-    }, [gameID, currentUserId]);
+      setNumberOfFriendReviews(relevantFriendReviews.length);
+      const friendReviewRating = calculateAverageRating(relevantFriendReviews);
+      setFriendAverageRating(
+        friendReviewRating === "NaN" ? "0.0" : friendReviewRating
+      );
+    });
+  }, [gameID, currentUserId]);
 
-    return (
-        <div className="review-bar">
-            <div className="review-header-header">
-                <h1 className="review-title">Reviews</h1>
-                <div className="toggle-container">
-                    <label className="toggle-label">
-                        Show Spoilers
-                        <Switch
-                            checked={showSpoilers}
-                            onChange={() => setShowSpoilers((prev) => !prev)}
-                            name="showSpoilers"
-                            color="primary"
-                        />
-                    </label>
-                    <label className="toggle-label">
-                        Friend Reviews Only
-                        <Switch
-                            checked={showFriendReviews}
-                            onChange={() =>
-                                setShowFriendReviews((prev) => !prev)
-                            }
-                            name="showFriendReviews"
-                            color="primary"
-                        />
-                    </label>
-                </div>
-
-                {!userHasReview && (
-                    <Link
-                        to="/reviewcreation"
-                        state={{ gameData }}
-                        className="review-bar-button"
-                    >
-                        Create Review
-                    </Link>
-                )}
-            </div>
-            <div className="review-stats-container">
-                <div className="review-stat">
-                    <span className="stat-title">Total Reviews:</span>
-                    <span className="stat-value">{numberOfReviews}</span>
-                </div>
-                <div className="review-stat">
-                    <span className="stat-title">Average Rating:</span>
-                    <div className="stat-value">
-                        {generateStars(averageRating)}
-                        <span className="numericRating">{averageRating}</span>
-                    </div>
-                </div>
-                <div className="review-stat">
-                    <span className="stat-title">Friends' Reviews:</span>
-                    <div className="stat-value">
-                        {generateStars(friendAverageRating)}
-                        <span className="numericRating">
-                            {friendAverageRating}
-                        </span>
-                        <span>({numberOfFriendReviews} Reviews)</span>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className="review-bar card-global" style={{ padding: "24px" }}>
+      <div className="review-header-header">
+        <h1 className="review-title text-gradient">Reviews</h1>
+        <div className="toggle-container">
+          <label className="toggle-label">
+            Show Spoilers
+            <Switch
+              checked={showSpoilers}
+              onChange={() => setShowSpoilers((prev) => !prev)}
+              name="showSpoilers"
+              color="primary"
+            />
+          </label>
+          <label className="toggle-label">
+            Friend Reviews Only
+            <Switch
+              checked={showFriendReviews}
+              onChange={() => setShowFriendReviews((prev) => !prev)}
+              name="showFriendReviews"
+              color="primary"
+            />
+          </label>
         </div>
-    );
+
+        {!userHasReview && (
+          <Link
+            to="/reviewcreation"
+            state={{ gameData }}
+            className="btn-primary"
+            style={{ textDecoration: "none" }}
+          >
+            Create Review
+          </Link>
+        )}
+      </div>
+      <div className="review-stats-container">
+        <div className="review-stat">
+          <span className="stat-title">Total Reviews:</span>
+          <span className="stat-value">{numberOfReviews}</span>
+        </div>
+        <div className="review-stat">
+          <span className="stat-title">Average Rating:</span>
+          <div className="stat-value">
+            {generateStars(averageRating)}
+            <span className="numericRating">{averageRating}</span>
+          </div>
+        </div>
+        <div className="review-stat">
+          <span className="stat-title">Friends' Reviews:</span>
+          <div className="stat-value">
+            {generateStars(friendAverageRating)}
+            <span className="numericRating">{friendAverageRating}</span>
+            <span>({numberOfFriendReviews} Reviews)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
