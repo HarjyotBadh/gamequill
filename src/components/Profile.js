@@ -40,18 +40,21 @@ function Profile({ profileData, setProfileData, userId }) {
       }
 
       try {
-        const docRef = doc(db, "profileData", userId);
-        const docSnapshot = await getDoc(docRef);
-        const data = docSnapshot.data();
+        // Use the passed profileData prop instead of fetching again
+        const data = profileData;
 
-        if (!data) {
-          console.error("No profile data found");
+        if (!data || !data.favoriteGames) {
+          // If profileData isn't fully loaded yet, we can wait or return.
+          // Since parent manages loading, we assume it's mostly ready,
+          // but good to be safe.
           return;
         }
 
         const favoriteGames = data.favoriteGames || [];
         setCurrentlyPlayingGame(data.currentlyPlayingGame);
         setFeaturedList(data.featuredList || null);
+        setGenres(data.favoriteGenres || []);
+        setGameIds(favoriteGames);
 
         const coverPromises = favoriteGames.map(async (id) => {
           if (!id) return null;
@@ -88,8 +91,6 @@ function Profile({ profileData, setProfileData, userId }) {
 
         const covers = await Promise.all(coverPromises);
         setGameCovers(covers);
-        setGenres(data.favoriteGenres || []);
-        setGameIds(favoriteGames);
       } catch (error) {
         console.error("Error fetching profile covers:", error);
       } finally {
@@ -97,8 +98,10 @@ function Profile({ profileData, setProfileData, userId }) {
       }
     };
 
-    fetchCovers();
-  }, [userId]);
+    if (profileData && profileData.name) {
+      fetchCovers();
+    }
+  }, [userId, profileData]);
 
   return (
     <div className="bg-white dark:bg-gray-500 min-h-screen">

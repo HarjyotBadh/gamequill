@@ -6,6 +6,7 @@ import UserColumn from "../components/UserColumn";
 import { db } from "../firebase";
 import { collection, query, where, getDocs, limit } from "firebase/firestore";
 import Footer from "../components/Footer";
+import LoadingScreen from "../components/LoadingScreen";
 
 const SearchPage = ({ searchQuery }) => {
   const [games, setGames] = useState([]);
@@ -471,9 +472,7 @@ const SearchPage = ({ searchQuery }) => {
         style={{ minHeight: "400px" }}
       >
         {loading ? (
-          <div className="flex items-center justify-center h-64 dark:text-white text-black">
-            <span className="text-xl">Loading results...</span>
-          </div>
+          <LoadingScreen />
         ) : (
           <div className="resultsContainer bg-white dark:bg-gray-500">
             <GameColumn games={games} />
