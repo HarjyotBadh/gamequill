@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
 import { getDoc, doc } from "firebase/firestore";
 import { Avatar } from "@material-tailwind/react";
-import "../styles/ProfileCard.css";
-
 const ProfileCard = ({ userId }) => {
   const [userData, setUserData] = useState(null);
   const fetchData = async () => {
@@ -21,19 +19,22 @@ const ProfileCard = ({ userId }) => {
   }, [userId]);
 
   return (
-    <div className="profile-card">
+    <div className="card-global p-4 flex items-center gap-4 transition-transform hover:scale-105 h-full">
       {userData && (
         <>
-          <div className="profile-info">
-            <div className="profile-picture">
-              <Avatar
-                src={userData.profilePicture}
-                alt="Profile"
-                className="custom-avatar medium-avatar"
-              />
-            </div>
-            <h2 className="dark:text-white text-black">{userData.username}</h2>
+          <div className="flex-shrink-0">
+            <Avatar
+              src={userData.profilePicture}
+              alt="Profile"
+              className="w-12 h-12 rounded-full border border-[var(--glass-border)]"
+            />
           </div>
+          <h2
+            className="font-semibold text-lg"
+            style={{ color: "var(--text-color)" }}
+          >
+            {userData.username}
+          </h2>
         </>
       )}
     </div>
