@@ -47,60 +47,64 @@ function App() {
 
     const getGenres = async (userId) => {
       try {
-        // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
-        const apiUrl = "https://api.igdb.com/v4/games";
         const docRef = doc(db, "profileData", userId);
         const docSnapshot = await getDoc(docRef);
-        const genres = docSnapshot.data().favoriteGenres;
+        const data = docSnapshot.data();
+
+        if (!data || !data.favoriteGenres) {
+          console.log("No favorite genres found for user");
+          return;
+        }
+
+        const genres = data.favoriteGenres.filter((g) => g && g !== "");
+
+        if (genres.length === 0) {
+          console.log("User has no valid favorite genres");
+          return;
+        }
 
         setFavoriteGenres(genres);
 
         const genrePromises = genres.map(async (genre) => {
-          if (genre !== "") {
-            const genreNumber = genreMapping[genre];
-            const ob = {
-              igdbquery: `fields name, genres, cover.url, id; where rating>70 & total_rating_count>5 & category = (0,8,9) & genres = (${genreNumber}); sort rating desc; limit:100;`,
+          const genreNumber = genreMapping[genre];
+          if (!genreNumber) {
+            console.log(`Unknown genre: ${genre}`);
+            return [];
+          }
+
+          const ob = {
+            igdbquery: `fields name, genres, cover.url, id; where rating>70 & total_rating_count>5 & category = (0,8,9) & genres = (${genreNumber}); sort rating desc; limit:100;`,
           };
-          const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
-  
-          const response = await fetch(functionUrl, {
+          const functionUrl =
+            "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
+
+          try {
+            const response = await fetch(functionUrl, {
               method: "POST",
               headers: {
-                  "Content-Type": "application/json",
-                  "Access-Control-Allow-Origin": "*",
-                  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                "Content-Type": "application/json",
               },
               body: JSON.stringify(ob),
-          });
-          const data = await response.json();
-          const igdbResponse = data.data;
-            // const response = await fetch(apiUrl, {
-            //   method: "POST",
-            //   headers: {
-            //     Accept: "application/json",
-            //     "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-            //     Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
-            //   },
-            //   body: `fields name, genres, cover.url, id; where rating>70 & total_rating_count>5 & category = (0,8,9) & genres = (${genreNumber}); sort rating desc; limit:100;`,
-            // });
-
-            // const data = await response.json();
-            // return data;
-            return igdbResponse;
+            });
+            const data = await response.json();
+            return data.data || [];
+          } catch (err) {
+            console.error(`Error fetching games for genre ${genre}:`, err);
+            return [];
           }
         });
 
         const genreResults = await Promise.all(genrePromises);
 
         const randomGenreRecommendations = genreResults.map((genreData) => {
-          let genreRandom = genreData.sort(() => Math.random() - 0.5);
-          genreRandom = genreData.slice(0, 3);
-          return genreRandom;
+          if (!genreData || genreData.length === 0) return [];
+          let genreRandom = [...genreData].sort(() => Math.random() - 0.5);
+          return genreRandom.slice(0, 3);
         });
 
         setGenreRecommendations(randomGenreRecommendations);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching genre recommendations:", error);
       }
     };
   }, []);

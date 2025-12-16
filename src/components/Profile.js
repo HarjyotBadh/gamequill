@@ -33,57 +33,65 @@ function Profile({ profileData, setProfileData, userId }) {
     const apiUrl = "https://api.igdb.com/v4/covers";
 
     const fetchCovers = async () => {
-      if (auth.currentUser === null && userId === auth.currentUser.uid) {
+      if (auth.currentUser === null && userId === auth.currentUser?.uid) {
         window.location.href = "/login";
+        return;
       }
-      const docRef = doc(db, "profileData", userId);
-      const docSnapshot = await getDoc(docRef);
-      const favoriteGames = docSnapshot.data().favoriteGames || [];
-      setCurrentlyPlayingGame(docSnapshot.data().currentlyPlayingGame);
-      setFeaturedList(docSnapshot.data().featuredList || null);
-      const coverPromises = favoriteGames.map(async (id) => {
-        const ob = {
-          igdbquery: `
-          fields url;
-          where game = ${id};
-        `,
-      };
-      const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBCovers";
 
-      const response = await fetch(functionUrl, {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-          },
-          body: JSON.stringify(ob),
-      });
-      const data = await response.json();
-      const igdbResponse = data.data;
-        // const response = await fetch(apiUrl, {
-        //   method: "POST",
-        //   headers: {
-        //     Accept: "application/json",
-        //     "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-        //     Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
-        //   },
-        //   body: `
-        //     fields url;
-        //     where game = ${id};
-        //   `,
-        // });
-        // const data = await response.json();
-        // return data[0]?.url || null;
-        return igdbResponse[0]?.url || null;
-      });
+      try {
+        const docRef = doc(db, "profileData", userId);
+        const docSnapshot = await getDoc(docRef);
+        const data = docSnapshot.data();
 
-      const covers = await Promise.all(coverPromises);
-      setGameCovers(covers);
+        if (!data) {
+          console.error("No profile data found");
+          return;
+        }
 
-      setGenres(profileData.favoriteGenres);
+        const favoriteGames = data.favoriteGames || [];
+        setCurrentlyPlayingGame(data.currentlyPlayingGame);
+        setFeaturedList(data.featuredList || null);
 
-      setGameIds(favoriteGames);
+        const coverPromises = favoriteGames.map(async (id) => {
+          if (!id) return null;
+
+          const ob = {
+            igdbquery: `fields url; where game = ${id};`,
+          };
+          const functionUrl =
+            "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBCovers";
+
+          try {
+            const response = await fetch(functionUrl, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(ob),
+            });
+
+            if (!response.ok) {
+              console.error(
+                `Error fetching cover for game ${id}: ${response.status}`
+              );
+              return null;
+            }
+
+            const data = await response.json();
+            return data.data?.[0]?.url || null;
+          } catch (err) {
+            console.error(`Error fetching cover for game ${id}:`, err);
+            return null;
+          }
+        });
+
+        const covers = await Promise.all(coverPromises);
+        setGameCovers(covers);
+        setGenres(data.favoriteGenres || []);
+        setGameIds(favoriteGames);
+      } catch (error) {
+        console.error("Error fetching profile covers:", error);
+      }
     };
 
     fetchCovers();
@@ -165,7 +173,7 @@ function Profile({ profileData, setProfileData, userId }) {
               </div>
             ))}
           </div>
-          <div class="five-recent">
+          <div className="five-recent">
             <FiveRecentReviews user_id={userId} />
           </div>
         </div>
