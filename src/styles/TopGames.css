@@ -1,61 +1,39 @@
 /* TopGames.css */
 
-.top-games {
-  background-color: #e3f2fd; /* Slightly different shade for differentiation */
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.top-games-container {
+  min-height: calc(100vh - 200px);
 }
 
-.title-cards-container {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr)); /* Updated to display 3 games per row */
-  gap: 20px;
-  justify-content: center;
-}
-
-.title-card-box {
-  width: 100%; /* Ensure each box takes up the full width of its container */
-}
-
-.title-card {
-  background-color: #ffe5b4; /* Slightly different shade for differentiation */
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-}
-
-.title-card:hover {
-  transform: translateY(-5px);
-}
-
-.game-info {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.game-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-right: 10px;
-  color: #333;
-}
-
-.game-rating {
-  font-size: 18px;
-  text-align: right;
-  color: #007bff;
-}
-
-.game-cover {
+.genre-tabs {
   max-width: 100%;
-  height: auto;
-  margin-top: 10px;
+  overflow-x: auto;
+}
+
+.genre-tab {
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.genre-tab img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.games-grid {
+  width: 100%;
+}
+
+.game-card {
+  transition: transform 0.2s ease;
+}
+
+.game-card:hover {
+  transform: translateY(-4px);
+}
+
+.game-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

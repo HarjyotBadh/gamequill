@@ -166,8 +166,20 @@ exports.getIGDBGames = functions.https.onRequest((request, response) => {
         // Remove first and last character and replace ' with "
         var modifiedBody = request.body.igdbquery.slice(0).replace(/'/g, '"');
 
+        // Support custom endpoint (default to "games")
+        const endpoint = request.body.endpoint || "games";
+        const validEndpoints = [
+          "games",
+          "popularity_primitives",
+          "popularity_types",
+        ];
+        const finalEndpoint = validEndpoints.includes(endpoint)
+          ? endpoint
+          : "games";
+
         // Log the received data
         console.log("The data received: " + modifiedBody);
+        console.log("Using endpoint: " + finalEndpoint);
 
         const accessToken = await getAccessToken();
         const igdbHeaders = {
@@ -181,7 +193,7 @@ exports.getIGDBGames = functions.https.onRequest((request, response) => {
         // Make the request to IGDB
         const igdbResponse = await axios({
           method: "post",
-          url: "https://api.igdb.com/v4/games",
+          url: `https://api.igdb.com/v4/${finalEndpoint}`,
           headers: igdbHeaders,
           data: modifiedBody,
         });
@@ -190,8 +202,8 @@ exports.getIGDBGames = functions.https.onRequest((request, response) => {
         console.log("Response body:", igdbResponse.data);
         response.status(200).send({ data: igdbResponse.data });
       } catch (error) {
-        console.error("Error fetching games from IGDB:", error);
-        response.status(500).send({ error: "Failed to fetch games from IGDB" });
+        console.error("Error fetching from IGDB:", error);
+        response.status(500).send({ error: "Failed to fetch from IGDB" });
       }
     }
   });
