@@ -302,9 +302,6 @@ const SearchPage = ({ searchQuery }) => {
   useEffect(() => {
     const searchGames = async () => {
       try {
-        // const corsAnywhereUrl = "http://localhost:8080/";
-        const apiUrl = "https://api.igdb.com/v4/games";
-
         var genreNumber = null;
         if (selectedGenre !== "") {
           genreNumber = genreMapping[selectedGenre];
@@ -402,6 +399,7 @@ const SearchPage = ({ searchQuery }) => {
         setLoading(false);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, selectedGenre, selectedPlatform]);
 
   const handleGenreChange = (event) => {

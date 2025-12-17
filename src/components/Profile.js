@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getDoc, doc } from "firebase/firestore";
 import EditProfile from "./EditProfile";
 import ProfileTitleCard from "./ProfileTitleCard";
 import EditGames from "./EditGames";
 import "../styles/Profile.css";
-import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
 import EditGenre from "./EditGenre";
 import { Link } from "react-router-dom";
@@ -109,6 +107,7 @@ function Profile({ profileData, setProfileData, userId }) {
     if (profileData && profileData.name) {
       fetchCovers();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, profileData]);
 
   return (

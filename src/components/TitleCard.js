@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Card from "@mui/material/Card";
-import CardMedia from "@mui/material/CardMedia";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import { Spinner } from "@material-tailwind/react";
 import GameInteractionButtons from "./GameInterationButtons";

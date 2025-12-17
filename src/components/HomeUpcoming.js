@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import UpcomingItem from "./UpcomingItem";
 import NoCover from "../images/temp_images/Default_No_Image_Available_Vertical.jpg";
 import "../styles/HomeUpcoming.css";
-import { db, auth } from "../firebase";
-import { getDoc, doc } from "firebase/firestore";
+import { auth } from "../firebase";
 
 export default function HomeUpcoming() {
   const [upcomingGames, setUpcomingGames] = useState([]);
@@ -13,8 +12,6 @@ export default function HomeUpcoming() {
 
     const getGames = async (userId) => {
       try {
-        const apiUrl = "https://api.igdb.com/v4/release_dates";
-
         let arr = new Array(6);
         console.log("arr size:  " + arr.length);
         const currentTime = Math.floor(Date.now() / 1000);

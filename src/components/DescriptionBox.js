@@ -17,7 +17,6 @@ import T_Image from "../images/esrb_logos/esrb_t.png";
 import M_Image from "../images/esrb_logos/esrb_m.png";
 import AO_Image from "../images/esrb_logos/esrb_ao.png";
 import GenreIcon from "./GenreIcon";
-import { Tooltip } from "@mui/material";
 
 export default function DescriptionBox({ gameData }) {
   if (!gameData) return <Spinner color="blue" />;

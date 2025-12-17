@@ -9,7 +9,8 @@ import LoadingScreen from "../components/LoadingScreen";
 export default function ProfilePage({ userId }) {
   const [loading, setLoading] = useState(true);
 
-  var uid;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  let uid;
   useEffect(() => {
     const fetchData = async (uid) => {
       const docRef = doc(db, "profileData", uid);

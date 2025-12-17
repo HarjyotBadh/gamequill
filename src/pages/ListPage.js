@@ -78,16 +78,16 @@ const ListPage = () => {
       setListData(snapshot.data());
       setGameIds(snapshot.data().games);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     fetchGameDatas();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameIds]);
   //fetchListData();
 
   const handleSearch = async (e) => {
     //e.preventDefault();
-    // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
-    const apiUrl = "https://api.igdb.com/v4/games";
     const ob = {
       igdbquery: `search "${searchQuery}";fields name,cover.url, id, aggregated_rating; limit:10; where game_type = (0,8,9);`,
     };

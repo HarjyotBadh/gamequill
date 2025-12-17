@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import logo from "../images/gamequill.png";
 import { signOut } from "firebase/auth";
 import { auth, db } from "../firebase";
-import { Avatar } from "@material-tailwind/react";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 // function App() is below. We need to update the Nav in return.
@@ -19,8 +18,6 @@ function App() {
   const location = useLocation();
   const [isSalesNotificationOpen, setIsSalesNotificationOpen] = useState(false);
   const [isNotificationBellOpen, setIsNotificationBellOpen] = useState(false);
-
-  const isOnProfilePage = location.pathname.toLowerCase().includes("/profile");
 
   const toggleSalesNotificationPanel = () => {
     setIsSalesNotificationOpen(!isSalesNotificationOpen);

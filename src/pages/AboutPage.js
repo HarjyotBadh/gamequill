@@ -13,6 +13,7 @@ export default function AboutPage() {
       const fetchedGamesData = await fetchMultipleGameData(game_ids);
       setGamesData(fetchedGamesData);
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Wait until gamesData is populated to render the page.

@@ -29,8 +29,6 @@ const UpcomingCountdown = ({ time }) => {
   });
 
   const countdownDisplay = (timeLeft) => {
-    const formatNumber = (number) => number.toString().padStart(2, "0"); // Format numbers to have at least two digits
-
     return (
       <div
         className="countdown-text text-center font-bold"

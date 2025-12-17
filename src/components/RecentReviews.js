@@ -7,7 +7,7 @@ import NavBar from "../components/NavBar";
 import RepostedReviews from "../components/RepostedReviews";
 import LikedReviews from "../components/LikedReviews";
 import "../styles/RecentReviews.css";
-import Footer from '../components/Footer';
+import Footer from "../components/Footer";
 
 const RecentReviews = () => {
   const [userReviews, setUserReviews] = useState([]);
@@ -19,7 +19,6 @@ const RecentReviews = () => {
 
   // Load sorting preferences from browser cookies on component mount
   useEffect(() => {
-
     const unsub = auth.onAuthStateChanged((authObj) => {
       unsub();
       if (authObj) {
@@ -32,10 +31,12 @@ const RecentReviews = () => {
       }
     });
 
-
     const fetchReviews = async () => {
       try {
-        const reviewsQuery = query(collection(db, "reviews"), where("uid", "==", userId));
+        const reviewsQuery = query(
+          collection(db, "reviews"),
+          where("uid", "==", userId)
+        );
         const querySnapshot = await getDocs(reviewsQuery);
         const reviews = [];
         querySnapshot.forEach((doc) => {
@@ -58,10 +59,12 @@ const RecentReviews = () => {
       }
     };
 
-    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortByRating, sortLowestToHighest, userReviews]);
 
-  const userCreatedReviews = userReviews.filter((review) => review.uid === userId);
+  const userCreatedReviews = userReviews.filter(
+    (review) => review.uid === userId
+  );
 
   const handleShowAllReviews = () => {
     setShowAllReviews(true);
@@ -106,7 +109,10 @@ const RecentReviews = () => {
         </div>
         <div className="review-list">
           {userCreatedReviews
-            .slice(0, showAllReviews ? userCreatedReviews.length : reviewsToShow)
+            .slice(
+              0,
+              showAllReviews ? userCreatedReviews.length : reviewsToShow
+            )
             .map((review) => (
               <ReviewCard
                 key={review.id}
@@ -117,7 +123,9 @@ const RecentReviews = () => {
             ))}
         </div>
         {!showAllReviews && userCreatedReviews.length > 8 && (
-          <button onClick={handleShowAllReviews}>Show All Created Reviews</button>
+          <button onClick={handleShowAllReviews}>
+            Show All Created Reviews
+          </button>
         )}
         {showAllReviews && (
           <button onClick={handleHideReviews}>Hide Reviews</button>
