@@ -10,50 +10,83 @@ import {
   limit,
 } from "firebase/firestore";
 
-/**
- * Fetches all reviews for a given game ID from the Firestore database.
- * @param {string} game_id - The ID of the game to fetch reviews for.
- * @returns {Array} An array of review objects, sorted by timestamp (most recent first).
- */
+const userCache = new Map();
+const USER_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+async function getCachedUser(uid) {
+  const cacheKey = uid.toString();
+  const cached = userCache.get(cacheKey);
+
+  if (cached && Date.now() - cached.timestamp < USER_CACHE_TTL) {
+    return cached.data;
+  }
+
+  const userRef = doc(db, "profileData", cacheKey);
+  const userDoc = await getDoc(userRef);
+
+  if (userDoc.exists()) {
+    const userData = userDoc.data();
+    userCache.set(cacheKey, { data: userData, timestamp: Date.now() });
+    return userData;
+  }
+
+  return null;
+}
+
+async function batchGetUsers(uids) {
+  const uniqueUids = [...new Set(uids.filter(Boolean))];
+  const results = {};
+  const toFetch = [];
+
+  for (const uid of uniqueUids) {
+    const cached = userCache.get(uid.toString());
+    if (cached && Date.now() - cached.timestamp < USER_CACHE_TTL) {
+      results[uid] = cached.data;
+    } else {
+      toFetch.push(uid);
+    }
+  }
+
+  const fetchPromises = toFetch.map(async (uid) => {
+    const userRef = doc(db, "profileData", uid.toString());
+    const userDoc = await getDoc(userRef);
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      userCache.set(uid.toString(), { data: userData, timestamp: Date.now() });
+      results[uid] = userData;
+    }
+  });
+
+  await Promise.all(fetchPromises);
+  return results;
+}
+
 export async function fetchReviewsByGameId(game_id) {
-  // Query the reviews collection based on game ID
   const reviewsQuery = query(
     collection(db, "reviews"),
     where("gameID", "==", game_id)
   );
   const querySnapshot = await getDocs(reviewsQuery);
 
-  // Fetch the user data for each review
-  const fetchedReviews = [];
-  for (let document of querySnapshot.docs) {
-    const userRef = doc(db, "profileData", document.data().uid.toString());
-    const userDoc = await getDoc(userRef);
-    const userData = userDoc.exists() ? userDoc.data() : null;
+  const uids = querySnapshot.docs.map((doc) => doc.data().uid?.toString());
+  const usersData = await batchGetUsers(uids);
 
-    fetchedReviews.push({
+  const fetchedReviews = querySnapshot.docs.map((document) => {
+    const data = document.data();
+    const userData = usersData[data.uid] || {};
+    return {
       id: document.id,
-      username: userData?.username || "Unknown User",
-      profilePicture: userData?.profilePicture || null,
-      ...document.data(),
-    });
-  }
-
-  // Sort reviews by timestamp (most recent first)
-  fetchedReviews.sort((a, b) => {
-    return b.timestamp.seconds - a.timestamp.seconds;
+      username: userData.username || "Unknown User",
+      profilePicture: userData.profilePicture || null,
+      ...data,
+    };
   });
 
+  fetchedReviews.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
   return fetchedReviews;
 }
 
-/**
- * Fetches only the ratings for a given game ID and calculates the average.
- * This is a lightweight version of fetchReviewsByGameId that avoids fetching user profile data.
- * @param {string} game_id - The ID of the game to fetch ratings for.
- * @returns {number|null} The average rating, or null if no reviews.
- */
 export async function fetchAverageRating(game_id) {
-  // Query the reviews collection based on game ID
   const reviewsQuery = query(
     collection(db, "reviews"),
     where("gameID", "==", game_id)
@@ -76,19 +109,10 @@ export async function fetchAverageRating(game_id) {
   });
 
   if (count === 0) return null;
-
-  // Round to 1 decimal place
   return Math.round((totalRating / count) * 10) / 10;
 }
 
-/**
- * Fetches a single review from the Firestore database based on its ID.
- * @param {string} review_id - The ID of the review to fetch.
- * @returns {Object} A review object that includes both the review data and the associated user data.
- * @throws {Error} If no review is found for the given ID or if no user is found for the associated UID.
- */
 export async function fetchReviewById(review_id) {
-  // Query the reviews collection based on review ID
   const reviewRef = doc(db, "reviews", review_id);
   const reviewDoc = await getDoc(reviewRef);
   if (!reviewDoc.exists()) {
@@ -96,15 +120,11 @@ export async function fetchReviewById(review_id) {
   }
   const reviewData = reviewDoc.data();
 
-  // Retrieve related user data using the uid from the review document
-  const userRef = doc(db, "profileData", reviewData.uid.toString());
-  const userDoc = await getDoc(userRef);
-  if (!userDoc.exists()) {
+  const userData = await getCachedUser(reviewData.uid);
+  if (!userData) {
     throw new Error(`No user found for UID: ${reviewData.uid}`);
   }
-  const userData = userDoc.data();
 
-  // Construct and return the review object
   return {
     id: reviewDoc.id,
     username: userData.username,
@@ -113,147 +133,117 @@ export async function fetchReviewById(review_id) {
   };
 }
 
-/**
- * Fetches the most recent reviews from friends based on the specified number.
- * @param {number} numReviews - The number of reviews to fetch (use -1 for all reviews).
- * @param {string} currentUserId - The UID of the  user to fetch the friends' reviews.
- * @returns {Array} A list of review objects from friends.
- */
 export async function fetchFriendsRecentReviews(numReviews, currentUserId) {
   if (!currentUserId) {
     console.error("No current user ID provided");
     return [];
   }
 
-  // Retrieve the current user's friends list
-  const userRef = doc(db, "profileData", currentUserId);
-  const userDoc = await getDoc(userRef);
-  if (!userDoc.exists()) {
+  const userData = await getCachedUser(currentUserId);
+  if (!userData) {
     throw new Error(`No user found for UID: ${currentUserId}`);
   }
-  const followersList = userDoc.data().follows;
+  const followersList = userData.follows;
 
   if (!followersList || followersList.length === 0 || followersList[0] === "") {
     return [];
   }
 
-  let allReviews = [];
-
-  // Loop through each friend's UID and fetch their reviews
-  for (let uid of followersList) {
-    // Start with base query
+  const reviewPromises = followersList.map(async (uid) => {
     let reviewsQuery = query(
       collection(db, "reviews"),
       where("uid", "==", uid),
       orderBy("timestamp", "desc")
     );
 
-    // Add limit if numReviews isn't -1
     if (numReviews !== -1) {
       reviewsQuery = query(reviewsQuery, limit(numReviews));
     }
 
     const reviewDocs = await getDocs(reviewsQuery);
+    return reviewDocs.docs.map((doc) => ({ uid, ...doc.data(), id: doc.id }));
+  });
 
-    for (let reviewDoc of reviewDocs.docs) {
-      const reviewData = reviewDoc.data();
-      const userDataRef = doc(db, "profileData", uid);
-      const userDataDoc = await getDoc(userDataRef);
-      const userData = userDataDoc.data();
+  const reviewsByUser = await Promise.all(reviewPromises);
+  const allReviewsRaw = reviewsByUser.flat();
 
-      // Construct the review object
-      allReviews.push({
-        id: reviewDoc.id,
-        username: userData.username,
-        profilePicture: userData.profilePicture,
-        ...reviewData,
-      });
-    }
-  }
+  const uids = [...new Set(allReviewsRaw.map((r) => r.uid))];
+  const usersData = await batchGetUsers(uids);
 
-  // Sort the reviews by timestamp and limit the number of reviews
+  const allReviews = allReviewsRaw.map((review) => {
+    const user = usersData[review.uid] || {};
+    return {
+      ...review,
+      username: user.username,
+      profilePicture: user.profilePicture,
+    };
+  });
+
+  allReviews.sort((a, b) => b.timestamp - a.timestamp);
+
   if (numReviews !== -1) {
-    allReviews.sort((a, b) => b.timestamp - a.timestamp);
-    allReviews = allReviews.slice(0, numReviews);
+    return allReviews.slice(0, numReviews);
   }
-
   return allReviews;
 }
 
-/**
- * Fetches an array of recent reviews from the specified user.
- * @param {number} num - The number of reviews you want to retrieve.
- * @param {string} uid - The UID of the user you want to retrieve reviews from.
- * @returns {Array} - The {num} most recent reviews from {uid}.
- */
 export async function fetchUserRecentReviews(num, uid) {
   let review_list = [];
-  let reviewIds = new Set(); // Set to track unique review IDs
+  let reviewIds = new Set();
 
-  // Base query for user's own reviews
   let reviewsQuery = query(
     collection(db, "reviews"),
     where("uid", "==", uid),
     orderBy("timestamp", "desc")
   );
 
-  // Add limit if num isn't -1
   if (num !== -1) {
     reviewsQuery = query(reviewsQuery, limit(num));
   }
 
-  // Fetch and process user's own reviews
   const reviewDocs = await getDocs(reviewsQuery);
+  const userData = await getCachedUser(uid);
+
   for (let reviewDoc of reviewDocs.docs) {
     if (!reviewIds.has(reviewDoc.id)) {
       const reviewData = reviewDoc.data();
-      const userDataRef = doc(db, "profileData", uid);
-      const userDataDoc = await getDoc(userDataRef);
-      const userData = userDataDoc.data();
-
-      // Construct the review object
       review_list.push({
         id: reviewDoc.id,
-        username: userData.username,
-        profilePicture: userData.profilePicture,
+        username: userData?.username,
+        profilePicture: userData?.profilePicture,
         ...reviewData,
       });
       reviewIds.add(reviewDoc.id);
     }
   }
 
-  // Query for reviews reposted by the user
   let repostedReviewsQuery = query(
     collection(db, "reviews"),
     where("userReposts", "array-contains", uid)
   );
 
-  // Fetch and process reposted reviews
   const repostedReviewDocs = await getDocs(repostedReviewsQuery);
+  const repostUids = repostedReviewDocs.docs.map((doc) => doc.data().uid);
+  const repostUsersData = await batchGetUsers(repostUids);
+
   for (let repostedReviewDoc of repostedReviewDocs.docs) {
     if (!reviewIds.has(repostedReviewDoc.id)) {
       const repostedReviewData = repostedReviewDoc.data();
-      const originalPosterUid = repostedReviewData.uid;
-      const originalPosterDataRef = doc(db, "profileData", originalPosterUid);
-      const originalPosterDataDoc = await getDoc(originalPosterDataRef);
-      const originalPosterData = originalPosterDataDoc.data();
+      const originalPosterData = repostUsersData[repostedReviewData.uid] || {};
 
-      // Construct the reposted review object
       review_list.push({
         id: repostedReviewDoc.id,
         username: originalPosterData.username,
         profilePicture: originalPosterData.profilePicture,
         ...repostedReviewData,
-        repostedBy: uid, // Indicate this review is reposted by the user
+        repostedBy: uid,
       });
       reviewIds.add(repostedReviewDoc.id);
     }
   }
 
-  // You might want to sort review_list by timestamp if needed
   review_list.sort((a, b) => b.timestamp - a.timestamp);
 
-  // Only return the first {num} reviews if num isn't -1
   if (num !== -1) {
     review_list = review_list.slice(0, num);
   }
@@ -261,21 +251,14 @@ export async function fetchUserRecentReviews(num, uid) {
   return review_list;
 }
 
-/**
- * Parses a review text with spoiler tags and returns an HTML string with spoiler text hidden until clicked.
- * @param {string} reviewText - The review text to parse.
- * @returns {string} An HTML string with spoiler text hidden until clicked.
- */
 export function parseReviewWithSpoilersToHTML(reviewText) {
   const splitText = reviewText.split(/\[spoiler\]|\[\/spoiler\]/);
   let htmlString = "";
 
   splitText.forEach((text, index) => {
     if (index % 2 === 0) {
-      // Regular text
       htmlString += text;
     } else {
-      // Spoiler text
       htmlString += `<span class="spoiler" onclick="this.style.backgroundColor = 'transparent'; this.style.color = 'inherit';">${text}</span>`;
     }
   });
@@ -283,15 +266,8 @@ export function parseReviewWithSpoilersToHTML(reviewText) {
   return htmlString;
 }
 
-/**
- * Fetches the most recent reposted reviews for the specified user.
- * @param {number} numReposts - The number of reposted reviews to fetch (use -1 for all reposts).
- * @param {string} userId - The UID of the user to fetch reposted reviews.
- * @returns {Array} A list of reposted review objects.
- */
 export async function fetchUserRepostedReviews(numReposts, userId) {
   try {
-    // Query the "Reviews" collection to get documents where userReposts array contains userId
     const reviewsQuery = query(
       collection(db, "reviews"),
       where("userReposts", "array-contains", userId),
@@ -299,25 +275,21 @@ export async function fetchUserRepostedReviews(numReposts, userId) {
     );
 
     const reviewsSnapshot = await getDocs(reviewsQuery);
+    const uids = reviewsSnapshot.docs.map((doc) => doc.data().uid);
+    const usersData = await batchGetUsers(uids);
 
-    // Fetch the corresponding review data for each repost
-    const repostedReviewsData = [];
-    for (const reviewDoc of reviewsSnapshot.docs) {
+    const repostedReviewsData = reviewsSnapshot.docs.map((reviewDoc) => {
       const reviewData = reviewDoc.data();
-      const userDataRef = doc(db, "profileData", reviewData.uid);
-      const userDataDoc = await getDoc(userDataRef);
-      const userData = userDataDoc.data();
+      const userData = usersData[reviewData.uid] || {};
 
-      // Construct the reposted review object
-      repostedReviewsData.push({
+      return {
         id: reviewDoc.id,
         username: userData.username,
         profilePicture: userData.profilePicture,
         ...reviewData,
-      });
-    }
+      };
+    });
 
-    // Sort the reposted reviews by timestamp and limit the number of reviews
     if (numReposts !== -1) {
       repostedReviewsData.sort(
         (a, b) => b.timestamp.seconds - a.timestamp.seconds
@@ -332,40 +304,31 @@ export async function fetchUserRepostedReviews(numReposts, userId) {
   }
 }
 
-/**
- * Fetches comments for a specific review from the Firestore database.
- * @param {string} review_id - The ID of the review for which to fetch comments.
- * @returns {Array} An array of comment objects, each including the comment data and the associated user data.
- * @throws {Error} If an error occurs while fetching data.
- */
 export async function fetchCommentsByReviewId(review_id) {
   try {
     const q = query(collection(db, "reviews", review_id, "comments"));
     const querySnapshot = await getDocs(q);
-    const comments = [];
 
-    for (const docu of querySnapshot.docs) {
-      const commentData = docu.data();
+    const uids = querySnapshot.docs.map((doc) => doc.data().uid?.toString());
+    const usersData = await batchGetUsers(uids);
 
-      // Retrieve related user data using the uid from the comment document
-      const userRef = doc(db, "profileData", commentData.uid.toString());
-      const userDoc = await getDoc(userRef);
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        comments.push({
+    const comments = querySnapshot.docs
+      .map((docu) => {
+        const commentData = docu.data();
+        const userData = usersData[commentData.uid] || {};
+
+        if (Object.keys(userData).length === 0) return null;
+
+        return {
           id: docu.id,
           username: userData.username,
           profilePicture: userData.profilePicture,
           ...commentData,
-        });
-      }
-    }
+        };
+      })
+      .filter(Boolean);
 
-    // Sort comments by timestamp (most recent first)
-    comments.sort((a, b) => {
-      return b.timestamp.seconds - a.timestamp.seconds;
-    });
-
+    comments.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
     return comments;
   } catch (error) {
     console.error("Error fetching comments: ", error);
@@ -373,43 +336,33 @@ export async function fetchCommentsByReviewId(review_id) {
   }
 }
 
-/**
- * Fetches replies for a specific comment from the Firestore database.
- * @param {string} review_id - The ID of the review.
- * @param {string} comment_id - The ID of the comment for which to fetch replies.
- * @returns {Array} An array of reply objects, each including the reply data and the associated user data.
- * @throws {Error} If an error occurs while fetching data.
- */
 export async function fetchRepliesByCommentId(review_id, comment_id) {
   try {
     const q = query(
       collection(db, "reviews", review_id, "comments", comment_id, "replies")
     );
     const querySnapshot = await getDocs(q);
-    const replies = [];
 
-    for (const docu of querySnapshot.docs) {
-      const replyData = docu.data();
+    const uids = querySnapshot.docs.map((doc) => doc.data().uid?.toString());
+    const usersData = await batchGetUsers(uids);
 
-      // Retrieve related user data using the uid from the reply document
-      const userRef = doc(db, "profileData", replyData.uid.toString());
-      const userDoc = await getDoc(userRef);
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        replies.push({
+    const replies = querySnapshot.docs
+      .map((docu) => {
+        const replyData = docu.data();
+        const userData = usersData[replyData.uid] || {};
+
+        if (Object.keys(userData).length === 0) return null;
+
+        return {
           id: docu.id,
           username: userData.username,
           profilePicture: userData.profilePicture,
           ...replyData,
-        });
-      }
-    }
+        };
+      })
+      .filter(Boolean);
 
-    // Sort replies by timestamp (most recent first)
-    replies.sort((a, b) => {
-      return b.timestamp.seconds - a.timestamp.seconds;
-    });
-
+    replies.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
     return replies;
   } catch (error) {
     console.error("Error fetching replies: ", error);
