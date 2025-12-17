@@ -3,7 +3,7 @@ import logo from "../images/gamequill.png";
 import { signOut } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { doc, getDoc } from "firebase/firestore";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 // function App() is below. We need to update the Nav in return.
 import NotificationBell from "./NotificationBell";
 import SalesNotifications from "./SalesNotifications";
@@ -15,7 +15,6 @@ function App() {
   const [showLogoutConfirmation, setShowLogoutConfirmation] = useState(false);
   const [profilePic, setProfilePic] = useState(null);
   const navigate = useNavigate();
-  const location = useLocation();
   const [isSalesNotificationOpen, setIsSalesNotificationOpen] = useState(false);
   const [isNotificationBellOpen, setIsNotificationBellOpen] = useState(false);
 

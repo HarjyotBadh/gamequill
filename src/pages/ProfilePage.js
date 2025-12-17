@@ -9,11 +9,10 @@ import LoadingScreen from "../components/LoadingScreen";
 export default function ProfilePage({ userId }) {
   const [loading, setLoading] = useState(true);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  let uid;
   useEffect(() => {
-    const fetchData = async (uid) => {
-      const docRef = doc(db, "profileData", uid);
+    let uid;
+    const fetchData = async (uidParam) => {
+      const docRef = doc(db, "profileData", uidParam);
       const snapshot = await getDoc(docRef);
 
       if (snapshot.exists()) {
@@ -52,11 +51,11 @@ export default function ProfilePage({ userId }) {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        uid = user.uid; // use the uid from the auth state change
+        uid = user.uid;
         if (userId) {
           uid = userId;
         }
-        await fetchData(uid); // fetch data here with the uid
+        await fetchData(uid);
       } else {
         if (userId) {
           uid = userId;
@@ -65,11 +64,12 @@ export default function ProfilePage({ userId }) {
           window.location.href = "/login";
         }
       }
-      setLoading(false); // set loading to false after auth check
+      setLoading(false);
     });
 
     // Cleanup the subscription on unmount
     return () => unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const defaultProfileData = {
