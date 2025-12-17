@@ -30,9 +30,6 @@ function Profile({ profileData, setProfileData, userId }) {
     isUser = true;
   }
   useEffect(() => {
-    // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
-    const apiUrl = "https://api.igdb.com/v4/covers";
-
     const fetchCovers = async () => {
       if (auth.currentUser === null && userId === auth.currentUser?.uid) {
         window.location.href = "/login";
@@ -40,13 +37,9 @@ function Profile({ profileData, setProfileData, userId }) {
       }
 
       try {
-        // Use the passed profileData prop instead of fetching again
         const data = profileData;
 
         if (!data || !data.favoriteGames) {
-          // If profileData isn't fully loaded yet, we can wait or return.
-          // Since parent manages loading, we assume it's mostly ready,
-          // but good to be safe.
           setLoadingCovers(false);
           return;
         }
@@ -57,41 +50,55 @@ function Profile({ profileData, setProfileData, userId }) {
         setGenres(data.favoriteGenres || []);
         setGameIds(favoriteGames);
 
-        const coverPromises = favoriteGames.map(async (id) => {
-          if (!id) return null;
+        const validGameIds = favoriteGames.filter((id) => id);
 
-          const ob = {
-            igdbquery: `fields url; where game = ${id};`,
-          };
-          const functionUrl =
-            "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBCovers";
+        if (validGameIds.length === 0) {
+          setGameCovers([null, null, null, null]);
+          setLoadingCovers(false);
+          return;
+        }
 
-          try {
-            const response = await fetch(functionUrl, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(ob),
-            });
+        const functionUrl =
+          "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBCovers";
 
-            if (!response.ok) {
-              console.error(
-                `Error fetching cover for game ${id}: ${response.status}`
-              );
-              return null;
-            }
+        const ob = {
+          igdbquery: `fields game, url; where game = (${validGameIds.join(
+            ","
+          )});`,
+        };
 
-            const data = await response.json();
-            return data.data?.[0]?.url || null;
-          } catch (err) {
-            console.error(`Error fetching cover for game ${id}:`, err);
-            return null;
+        try {
+          const response = await fetch(functionUrl, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(ob),
+          });
+
+          if (!response.ok) {
+            console.error(`Error fetching covers: ${response.status}`);
+            setLoadingCovers(false);
+            return;
           }
-        });
 
-        const covers = await Promise.all(coverPromises);
-        setGameCovers(covers);
+          const responseData = await response.json();
+          const coversMap = {};
+
+          if (responseData.data) {
+            responseData.data.forEach((cover) => {
+              coversMap[cover.game] = cover.url;
+            });
+          }
+
+          const covers = favoriteGames.map((id) =>
+            id ? coversMap[id] || null : null
+          );
+
+          setGameCovers(covers);
+        } catch (err) {
+          console.error("Error fetching covers:", err);
+        }
       } catch (error) {
         console.error("Error fetching profile covers:", error);
       } finally {

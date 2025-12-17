@@ -1,51 +1,33 @@
-/* EditFeaturedList.css */
+.dialog-title {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
 
-.featured-list-popup {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-  
-  .featured-list-popup input {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
-    box-sizing: border-box;
-  }
-  
-  .featured-list-popup ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    overflow-y: auto;
-    max-height: 300px; /* Set a maximum height for scrollability */
-  }
-  
-  .featured-list-popup li {
-    margin-bottom: 10px;
-  }
-  
-  .featured-list-popup button {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    width: 100%;
-    box-sizing: border-box;
-    font-size: 16px;
-  }
-  
-  .featured-list-popup button:hover {
-    background-color: #45a049;
-  }
-  
-  .featured-list-popup button[type="close"] {
-    background-color: #f44336;
-  }
-  
-  .featured-list-popup button[type="close"]:hover {
-    background-color: #d32f2f;
-  }
-  
+.list-results {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0 0;
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.list-result-item {
+  padding: 12px;
+  margin-bottom: 12px;
+  background: var(--background);
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+}
+
+.edit-icon {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.edit-icon:hover {
+  color: var(--primary);
+}

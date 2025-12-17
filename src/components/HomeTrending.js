@@ -14,69 +14,84 @@ function App() {
   useEffect(() => {
     const fetchTrendingGames = async () => {
       try {
-        // First, get trending game IDs from PopScore (IGDB Visits = popularity_type 1)
-        const popQuery = `
-          fields game_id, value;
-          where popularity_type = 1;
-          sort value desc;
-          limit 10;
-        `;
-
         const functionUrl =
           "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
 
-        const popResponse = await fetch(functionUrl, {
+        const threeMonthsAgo =
+          Math.floor(Date.now() / 1000) - 3 * 30 * 24 * 60 * 60;
+
+        const gamesQuery = `
+          fields id, name, first_release_date, total_rating_count, hypes, follows;
+          where first_release_date > ${threeMonthsAgo} 
+            & total_rating_count > 50 
+            & category = (0, 8, 9, 10, 11)
+            & cover != null;
+          sort total_rating_count desc;
+          limit 20;
+        `;
+
+        const gamesResponse = await fetch(functionUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            igdbquery: popQuery,
-            endpoint: "popularity_primitives",
-          }),
+          body: JSON.stringify({ igdbquery: gamesQuery }),
         });
-        const popData = await popResponse.json();
+        const gamesDataRes = await gamesResponse.json();
 
         let gameIds;
-        if (popData.data && popData.data.length >= 5) {
-          // Get more game IDs to filter, since some may be older games
-          gameIds = popData.data.slice(0, 30).map((p) => p.game_id);
-
-          // Now filter to only include games released in the last year
-          const oneYearAgo =
-            Math.floor(Date.now() / 1000) - 1 * 365 * 24 * 60 * 60;
-          const gamesQuery = `
-            fields id, first_release_date;
-            where id = (${gameIds.join(
-              ","
-            )}) & first_release_date > ${oneYearAgo};
-            sort first_release_date desc;
-            limit 10;
+        if (gamesDataRes.data && gamesDataRes.data.length >= 5) {
+          gameIds = gamesDataRes.data.slice(0, 5).map((g) => g.id);
+        } else {
+          const popQuery = `
+            fields game_id, value;
+            where popularity_type = 1;
+            sort value desc;
+            limit 30;
           `;
 
-          const gamesResponse = await fetch(functionUrl, {
+          const popResponse = await fetch(functionUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ igdbquery: gamesQuery }),
+            body: JSON.stringify({
+              igdbquery: popQuery,
+              endpoint: "popularity_primitives",
+            }),
           });
-          const gamesDataRes = await gamesResponse.json();
+          const popData = await popResponse.json();
 
-          if (gamesDataRes.data && gamesDataRes.data.length >= 5) {
-            gameIds = gamesDataRes.data.slice(0, 5).map((g) => g.id);
+          if (popData.data && popData.data.length >= 5) {
+            const popularGameIds = popData.data.map((p) => p.game_id);
+
+            const filterQuery = `
+              fields id, name, first_release_date, total_rating_count;
+              where id = (${popularGameIds.join(",")}) 
+                & total_rating_count > 50 
+                & cover != null;
+              sort total_rating_count desc;
+              limit 5;
+            `;
+
+            const filterResponse = await fetch(functionUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ igdbquery: filterQuery }),
+            });
+            const filterData = await filterResponse.json();
+
+            if (filterData.data && filterData.data.length >= 5) {
+              gameIds = filterData.data.map((g) => g.id);
+            } else {
+              gameIds = getCuratedFallbackIds();
+            }
           } else {
-            // If not enough recent games, use the top popular ones
-            gameIds = popData.data.slice(0, 5).map((p) => p.game_id);
+            gameIds = getCuratedFallbackIds();
           }
-        } else {
-          // Fallback to hardcoded IDs if PopScore fails
-          gameIds = [96437, 254339, 148241, 127044, 78511];
         }
 
-        // Parallelize fetching game data and ratings
         const [fetchedGamesData, ratings] = await Promise.all([
           fetchMultipleGameData(gameIds),
           Promise.all(gameIds.map((id) => fetchAverageRating(id))),
         ]);
 
-        // Merge ratings into game data
         const mergedData = fetchedGamesData.map((data, index) => ({
           ...data,
           game: {
@@ -89,8 +104,7 @@ function App() {
         sessionStorage.setItem("trendingGamesData", JSON.stringify(mergedData));
       } catch (error) {
         console.error("Error fetching trending games:", error);
-        // Fallback to hardcoded IDs
-        const fallbackIds = [96437, 254339, 148241, 127044, 78511];
+        const fallbackIds = getCuratedFallbackIds();
         const fetchedGamesData = await fetchMultipleGameData(fallbackIds);
         setGamesData(fetchedGamesData);
       } finally {
@@ -101,7 +115,16 @@ function App() {
     fetchTrendingGames();
   }, []);
 
-  // Filter out any invalid game data entries
+  const getCuratedFallbackIds = () => {
+    return [
+      119388, // Marvel Rivals
+      217590, // Indiana Jones and the Great Circle
+      252639, // Black Myth: Wukong
+      26845, // Elden Ring
+      119171, // Warhammer 40,000: Space Marine 2
+    ];
+  };
+
   const validGamesData = gamesData.filter(
     (g) => g && g.game && g.game.id && g.screenshotUrls
   );

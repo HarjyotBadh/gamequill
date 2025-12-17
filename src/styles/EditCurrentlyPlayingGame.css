@@ -1,9 +1,61 @@
-.searchedGamesBox {
-    border-radius: 20px;
+.dialog-title {
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  font-size: 1.5rem;
 }
-.searchedGamesBox > div {
-    border-radius: 20px;
+
+.search-section {
+  margin-top: 12px;
 }
-.saveButton {
-    background-color: #007bff;
+
+.search-results-section {
+  margin-top: 24px;
+  padding: 16px;
+  background: var(--background);
+  border-radius: 12px;
+}
+
+.search-results-section p {
+  color: var(--text-color);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.search-results-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.game-card {
+  width: 100px;
+  height: 130px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--wrapper);
+}
+
+.game-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.game-card.selected {
+  border: 2px solid var(--primary);
+  box-shadow: 0 0 12px rgba(87, 202, 201, 0.4);
+}
+
+.edit-icon {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.edit-icon:hover {
+  color: var(--primary);
 }
