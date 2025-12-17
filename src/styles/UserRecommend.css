@@ -2,16 +2,19 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* Create a 12-column grid */
     gap: 6.5px; /* Adjust the gap between grid items as needed */
-    background-color: var(--background);
-    color: var(--text-color);
-    border-radius: 25px;
     padding: 12px;
 }
 
 .recommend-cover {
+    height: 200px;
+    width: 100%;
+    overflow: hidden;
 }
 
 .recommend-cover-rounded {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     border-radius: 15px;
 }
 

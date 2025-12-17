@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../styles/ReviewCard.css";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { parseReviewWithSpoilersToHTML } from "../functions/ReviewFunctions";
 import Rating from "@mui/material/Rating";
@@ -38,27 +38,6 @@ const ReviewCard = ({ review, gameName }) => {
     starArr.push(0);
   }
 
-  const stars = starArr.map((val, i) => {
-    if (val === 1)
-      return (
-        <span key={i} className="fullStar">
-          ★
-        </span>
-      );
-    else if (val > 0)
-      return (
-        <span key={i} className="halfStar">
-          ★
-        </span>
-      );
-    else
-      return (
-        <span key={i} className="emptyStar">
-          ★
-        </span>
-      );
-  });
-
   return (
     <Link
       to={`/review/${review.id}`}
@@ -72,24 +51,26 @@ const ReviewCard = ({ review, gameName }) => {
         </div>
       </div>
       <Rating
-                            name="read-only"
-                            value={review.starRating}
-                            precision={0.5}
-                            readOnly
-                            sx={{
-                                "& .MuiRating-iconFilled": {
-                                    color: "var(--rating-color)",
-                                },
-                                "& .MuiRating-iconEmpty": {
-                                    color: "var(--star-color)",
-                                },
-                            }}
-                        />
+        name="read-only"
+        value={review.starRating}
+        precision={0.5}
+        readOnly
+        sx={{
+          "& .MuiRating-iconFilled": {
+            color: "var(--rating-color)",
+          },
+          "& .MuiRating-iconEmpty": {
+            color: "var(--star-color)",
+          },
+        }}
+      />
       <div className="review-text">
         <p
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(
-              parseReviewWithSpoilersToHTML(showFullText ? reviewFullText : reviewPreview)
+              parseReviewWithSpoilersToHTML(
+                showFullText ? reviewFullText : reviewPreview
+              )
             ),
           }}
         >
@@ -105,7 +86,9 @@ const ReviewCard = ({ review, gameName }) => {
         )}
       </div>
 
-      <div className="timestamp">Posted on {timestamp.toDate().toDateString()}</div>
+      <div className="timestamp">
+        Posted on {timestamp.toDate().toDateString()}
+      </div>
     </Link>
   );
 };

@@ -1,12 +1,13 @@
 .upcoming-container {
-
+    padding: 0 20px;
+    margin-bottom: 20px;
 }
 
 .upcoming-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr); /* Create a 12-column grid */
-    gap: 6.5px; /* Adjust the gap between grid items as needed */
-    border-radius: 25px;
+    gap: 16px; /* Match global gap */
+    /* border-radius: 25px; Removed */
     margin-bottom: 50px;
 }
 
@@ -16,9 +17,16 @@
 }
 
 .upcoming-item {
+    position: relative;
+    /* height: 280px; Removed fixed height to let content determine size */
+    overflow: hidden;
+    padding-bottom: 12px; /* Add padding for content */
 }
 
 .upcoming-cover-rounded {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
 }

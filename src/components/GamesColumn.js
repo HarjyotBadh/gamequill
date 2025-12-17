@@ -2,10 +2,10 @@ import React from "react";
 import TitleCard from "../components/TitleCard";
 const GameColumn = ({ games }) => {
   return (
-    <div className="gamesColumn">
+    <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
       {games.map((game, index) => (
-        <div key={game.id} className="gameContainer">
-          <TitleCard gameData={game.gameData} className="searchedTitleCard" />
+        <div key={game.id} className="w-full">
+          <TitleCard gameData={game.gameData} className="w-full" />
         </div>
       ))}
     </div>

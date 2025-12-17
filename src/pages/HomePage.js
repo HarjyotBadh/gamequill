@@ -22,23 +22,23 @@ function App() {
   }, []);
 
   return (
-    <div class="shitty-background-fix">
+    <div className="shitty-background-fix">
       <NavBar />
-      <div class="grid-container">
-        {/* <div class="grid-pad"></div> */}
-        <div class="grid-featured">
+      <div className="grid-container">
+        {/* <div className="grid-pad"></div> */}
+        <div className="grid-featured">
           <HomeTrending />
         </div>
-        <div class="grid-activity">
+        <div className="grid-activity">
           <HomeActivity />
         </div>
-        {/* <div class="grid-pad"></div> */}
-        {/* <div class="grid-pad"></div> */}
-        <div class="grid-recommend">
+        {/* <div className="grid-pad"></div> */}
+        {/* <div className="grid-pad"></div> */}
+        <div className="grid-recommend">
           <HomePerRecommend />
           <HomeRecommend />
         </div>
-        <div class="grid-upcoming">
+        <div className="grid-upcoming">
           <HomeUpcoming />
         </div>
       </div>

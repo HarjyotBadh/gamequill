@@ -1,25 +1,38 @@
-// Import necessary dependencies and components
 import React, { useState } from "react";
-import Popup from "reactjs-popup";
 import ProfileTitleCard from "./ProfileTitleCard";
 import "../styles/EditGames.css";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import TextField from "@mui/material/TextField";
+import { styled } from "@mui/material/styles";
 
-// Define the functional component EditGames and pass it the props gameCovers and setGameCovers
+const CustomTextField = styled(TextField)({
+  "& label.Mui-focused": {
+    color: "var(--rating-color)",
+  },
+  "& .MuiOutlinedInput-root": {
+    "&.Mui-focused fieldset": {
+      borderColor: "var(--rating-color)",
+    },
+  },
+});
+
 export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
-  // Define state variables using the useState hook
+  const [open, setOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState(null);
   const [selectedGameId, setSelectedGameId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [gameData, setGameData] = useState([]);
   const [selectedSearchedGame, setSelectedSearchedGame] = useState(null);
   const auth = getAuth();
-  var uid;
-  uid = auth.currentUser.uid;
+  const uid = auth.currentUser.uid;
 
-  // Define a function to handle replacing a favorite game
   const handleReplaceFavorite = async () => {
     if (selectedSearchedGame) {
       const updatedFavorites = [...gameCovers];
@@ -27,7 +40,6 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
       if (selectedGame) {
         selectedCardIndex = gameCovers.indexOf(selectedGame);
       } else {
-        // If no game is selected, find the first empty slot
         selectedCardIndex = gameCovers.findIndex((card) => card === null);
       }
       updatedFavorites[selectedCardIndex] = selectedSearchedGame.coverUrl;
@@ -50,212 +62,202 @@ export default function EditGames({ gameCovers, setGameCovers, gameIds }) {
     }
   };
 
-  // Define a function to handle the search functionality
   const search = async (e) => {
     e.preventDefault();
-    // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
     const ob = {
-      igdbquery: `search "${searchQuery}";fields name,cover.url, id; limit:5; where category = (0,8,9);`,
-  };
-  const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
+      igdbquery: `search "${searchQuery}";fields name,cover.url, id; limit:5; where game_type = (0,8,9);`,
+    };
+    const functionUrl =
+      "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
 
-  const response = await fetch(functionUrl, {
+    const response = await fetch(functionUrl, {
       method: "POST",
       headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       },
       body: JSON.stringify(ob),
-  });
-  const data = await response.json();
-  const igdbResponse = data.data;
-  console.log("igdbResponse:", igdbResponse);
-  if (igdbResponse.length) {
-  const gamesData = igdbResponse.map((game) => ({
-    name: game.name,
-    coverUrl: game.cover && game.cover.url ? game.cover.url : null,
-    id: game.id,
-  }));
-  setGameData(gamesData);
-}
-    // const apiUrl = "https://api.igdb.com/v4/games";
-
-    // fetch(apiUrl, {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-    //     Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
-    //   },
-    //   body: `search "${searchQuery}";fields name,cover.url, id; limit:5; where category = (0,8,9);`,
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     if (data.length) {
-    //       const gamesData = data.map((game) => ({
-    //         name: game.name,
-    //         coverUrl: game.cover && game.cover.url ? game.cover.url : null,
-    //         id: game.id,
-    //       }));
-    //       setGameData(gamesData);
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //   });
+    });
+    const data = await response.json();
+    const igdbResponse = data.data;
+    if (igdbResponse.length) {
+      const gamesData = igdbResponse.map((game) => ({
+        name: game.name,
+        coverUrl: game.cover && game.cover.url ? game.cover.url : null,
+        id: game.id,
+      }));
+      setGameData(gamesData);
+    }
   };
 
-  // Define a function to handle the form submission
   const handleSubmit = (e) => {
     search(e);
   };
 
-  // Return the JSX for the component
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedGame(null);
+    setSelectedSearchedGame(null);
+    setSearchQuery("");
+    setGameData([]);
+  };
+
   return (
-    <Popup
-      trigger={
-        // Render a trigger element (SVG) for the Popup component
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-          cursor={"pointer"}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-          />
-        </svg>
-      }
-      modal
-      nested
-      contentStyle={{
-        border: "2px solid white",
-        //color: "white",
-        height: 800,
-        width: 800,
-        backgroundColor: "grey",
-      }}
-    >
-      {(close) => (
-        // Render the Popup component with a function as its child
-        <div className="modal">
-          <form onSubmit={handleSubmit}>
-            {/* Form to handle game replacement */}
-            Choose Game To Replace<br></br>
-            If no game is selected, the first empty slot will be replaced.
-            <div className="FavoriteGames">
-              {/* Map over gameCovers to display favorite games */}
+    <>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        className="w-6 h-6 edit-icon"
+        onClick={() => setOpen(true)}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+        />
+      </svg>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          style: {
+            backgroundColor: "var(--wrapper)",
+            color: "var(--text-color)",
+            borderRadius: "16px",
+            padding: "10px",
+          },
+        }}
+      >
+        <DialogTitle className="dialog-title">Edit Favorite Games</DialogTitle>
+        <form onSubmit={handleSubmit}>
+          <DialogContent>
+            <p className="dialog-subtitle">
+              Select a game to replace, or leave empty to fill the first
+              available slot.
+            </p>
+            <div className="favorite-games-grid">
               {gameCovers.map((game, index) => (
                 <div
                   key={index}
-                  className={`EditGameCard Game${index + 1}`}
+                  className={`game-card ${
+                    game === selectedGame ? "selected" : ""
+                  }`}
                   onClick={() => {
                     setSelectedGame(game);
                     setSelectedGameId(gameIds[index]);
                   }}
                 >
-                  {/* Display the ProfileTitleCard for the game */}
                   {game ? (
                     <ProfileTitleCard
                       gameData={game === selectedGame ? selectedGame : game}
                     />
                   ) : (
-                    <div className="EmptyGameCard">
+                    <div className="empty-game-card">
                       <span>Empty</span>
                     </div>
                   )}
                 </div>
               ))}
             </div>
-            <div>
-              {selectedGame ? (
-                <div>
-                  {/* Display the selected favorite game */}
-                  Selected Game:
-                  <div
-                    className="EditGameCard SelectedGame"
-                    style={{
-                      border: "1px solid white",
-                      width: 100,
-                      height: 125,
-                      textAlign: "center",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <ProfileTitleCard gameData={selectedGame} />
-                  </div>
+
+            {selectedGame && (
+              <div className="selected-game-section">
+                <p>Selected Game:</p>
+                <div className="game-card selected-preview">
+                  <ProfileTitleCard gameData={selectedGame} />
                 </div>
-              ) : null}
-            </div>
-            <div className="SearchBar">
-              {/* Input field for game search */}
-              <input
+              </div>
+            )}
+
+            <div className="search-section">
+              <CustomTextField
                 type="text"
                 name="gameSearch"
-                placeholder="Enter Game"
+                label="Search for a game"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ width: 300 }}
+                fullWidth
+                margin="normal"
+                InputLabelProps={{
+                  style: { color: "var(--text-color)" },
+                }}
+                InputProps={{
+                  style: {
+                    color: "var(--text-color)",
+                    backgroundColor: "var(--background)",
+                  },
+                }}
               />
+              <Button
+                type="submit"
+                variant="contained"
+                style={{
+                  background: "var(--accent-gradient)",
+                  color: "white",
+                  marginTop: "8px",
+                }}
+              >
+                Search
+              </Button>
             </div>
-            <button type="submit">Search</button>
-            {gameData[0] ? (
-              <div>
-                {/* Display searched games */}
-                Select Replacement Game
-                <div className="searchedGamesBox">
-                  {/* Map over gameData to display searched games */}
+
+            {gameData.length > 0 && (
+              <div className="search-results-section">
+                <p>Select Replacement Game:</p>
+                <div className="search-results-grid">
                   {gameData.map((game, index) => (
                     <div
                       key={index}
-                      className={`EditGameCard SearchedGames ${
+                      className={`game-card ${
                         game === selectedSearchedGame ? "selected" : ""
                       }`}
-                      style={{
-                        width: 100,
-                        height: 125,
-                        textAlign: "center",
-                        cursor: "pointer",
-                      }}
                       onClick={() => setSelectedSearchedGame(game)}
                     >
-                      {/* Display the ProfileTitleCard for the searched game */}
                       {game.coverUrl ? (
                         <ProfileTitleCard gameData={game.coverUrl} />
                       ) : (
-                        <div>No Cover Image Available</div>
+                        <div className="no-cover">No Cover</div>
                       )}
                     </div>
                   ))}
                 </div>
-                {/* Button to replace selected favorite */}
-                <button
-                  type="submit"
+                <Button
+                  variant="contained"
                   onClick={handleReplaceFavorite}
-                  // disabled={!selectedGame}
+                  disabled={!selectedSearchedGame}
+                  style={{
+                    background: selectedSearchedGame
+                      ? "var(--accent-gradient)"
+                      : "grey",
+                    color: "white",
+                    marginTop: "16px",
+                  }}
                 >
                   Replace Selected Favorite
-                </button>
+                </Button>
               </div>
-            ) : null}
-            {/* Button to close the modal */}
-            <button
-              type="close"
-              onClick={() => {
-                close();
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={handleClose}
+              style={{
+                backgroundColor: "var(--rating-color)",
+                color: "white",
+                borderRadius: "10px",
               }}
             >
               Close
-            </button>
-          </form>
-        </div>
-      )}
-    </Popup>
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
+    </>
   );
 }

@@ -3,17 +3,16 @@ import ProfileCard from "../components/ProfileCard";
 import "../styles/ProfileCard.css";
 const UserColumn = ({ users }) => {
   return (
-    <div className="usersColumn">
+    <div className="grid grid-cols-2 lg:grid-cols-2 gap-4">
       {users.map((user, index) => (
-        <div key={user.id} className="userContainer">
+        <div key={user.id} className="w-full">
           <div
-            className="username"
+            className="w-full"
             onClick={() =>
               (window.location.href = `/profile?user_id=${user.userId}`)
             }
             style={{ cursor: "pointer" }}
           >
-            {/* {user.username} */}
             <ProfileCard userId={user.userId} />
           </div>
         </div>

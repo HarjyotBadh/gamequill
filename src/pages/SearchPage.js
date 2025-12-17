@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
-import "../styles/SearchPage.css";
+
 import GameColumn from "../components/GamesColumn";
 import UserColumn from "../components/UserColumn";
 import { db } from "../firebase";
 import { collection, query, where, getDocs, limit } from "firebase/firestore";
 import Footer from "../components/Footer";
+import LoadingScreen from "../components/LoadingScreen";
 
 const SearchPage = ({ searchQuery }) => {
   const [games, setGames] = useState([]);
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState("");
   const [selectedPlatform, setSelectedPlatform] = useState("");
   const genreMapping = {
@@ -300,9 +302,6 @@ const SearchPage = ({ searchQuery }) => {
   useEffect(() => {
     const searchGames = async () => {
       try {
-        // const corsAnywhereUrl = "http://localhost:8080/";
-        const apiUrl = "https://api.igdb.com/v4/games";
-
         var genreNumber = null;
         if (selectedGenre !== "") {
           genreNumber = genreMapping[selectedGenre];
@@ -312,23 +311,24 @@ const SearchPage = ({ searchQuery }) => {
           platformNumber = platformMapping[selectedPlatform];
         }
         const ob = {
-          igdbquery: `search "${searchQuery}";fields name, cover.url, aggregated_rating, involved_companies.company.name; limit:50; where category = (0,8,9)${
+          igdbquery: `search "${searchQuery}";fields name, cover.url, aggregated_rating, involved_companies.company.name; limit:50; where game_type = (0,8,9)${
             genreNumber ? ` & genres = (${genreNumber})` : ""
           }${platformNumber ? ` & platforms = (${platformNumber})` : ""};`,
-      };
-      const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
+        };
+        const functionUrl =
+          "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
 
-      const response = await fetch(functionUrl, {
+        const response = await fetch(functionUrl, {
           method: "POST",
           headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
           },
           body: JSON.stringify(ob),
-      });
-      const data = await response.json();
-      const igdbResponse = data.data;
+        });
+        const data = await response.json();
+        const igdbResponse = data.data;
         // const response = await fetch(apiUrl, {
         //   method: "POST",
         //   headers: {
@@ -394,9 +394,12 @@ const SearchPage = ({ searchQuery }) => {
       }
     };
     if (searchQuery) {
-      searchGames();
-      searchUsers();
+      setLoading(true);
+      Promise.all([searchGames(), searchUsers()]).finally(() => {
+        setLoading(false);
+      });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, selectedGenre, selectedPlatform]);
 
   const handleGenreChange = (event) => {
@@ -413,64 +416,97 @@ const SearchPage = ({ searchQuery }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-500">
+    <div className="min-h-screen flex flex-col">
       <NavBar />
-      <div className="searchPageTitle" textAlign="center">
-        <h1 className="text-4xl dark:text-white text-black">
-          Search results for "{searchQuery}"
-        </h1>
-        <div className="headingsGameUser dark:text-white text-black">
-          <h2>Games</h2>
-          <h2>Users</h2>
+
+      <div className="container mx-auto px-4 py-8 flex-grow">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold mb-2 text-gradient">
+            Search results for "{searchQuery}"
+          </h1>
         </div>
-      </div>
-      <div className="filterContainer">
-        <div className="genreContainer flex flex-col">
-          <label className="genreLabel" htmlFor="genre">
-            Select Genre:
-          </label>
-          <select
-            id="genre"
-            value={selectedGenre}
-            onChange={handleGenreChange}
-            className="filterSelect"
-          >
-            <option value="">All Genres</option>
-            {gameGenres.map((genre) => (
-              <option key={genre.value} value={genre.value}>
-                {genre.label}
+
+        <div className="flex flex-wrap justify-center gap-6 mb-8">
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="genre"
+              className="font-medium"
+              style={{ color: "var(--text-color)" }}
+            >
+              Select Genre:
+            </label>
+            <select
+              id="genre"
+              value={selectedGenre}
+              onChange={handleGenreChange}
+              className="input-global p-2 rounded-lg outline-none cursor-pointer border-2 border-gray-400 dark:border-gray-600"
+              style={{ minWidth: "200px", backgroundColor: "var(--wrapper)" }}
+            >
+              <option
+                value=""
+                style={{ backgroundColor: "#1a1a1a", color: "white" }}
+              >
+                All Genres
               </option>
-            ))}
-          </select>
-        </div>
-        <div className="platformContainer flex flex-col">
-          <label className="platformLabel" htmlFor="platform">
-            Select Platform:
-          </label>
-          <select
-            id="platform"
-            value={selectedPlatform}
-            onChange={handlePlatformChange}
-            className="filterSelect"
-          >
-            <option value="">All Platforms</option>
-            {gamePlatforms.map((platform) => (
-              <option key={platform.value} value={platform.value}>
-                {platform.label}
+              {gameGenres.map((genre) => (
+                <option
+                  key={genre.value}
+                  value={genre.value}
+                  style={{ backgroundColor: "#1a1a1a", color: "white" }}
+                >
+                  {genre.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="platform"
+              className="font-medium"
+              style={{ color: "var(--text-color)" }}
+            >
+              Select Platform:
+            </label>
+            <select
+              id="platform"
+              value={selectedPlatform}
+              onChange={handlePlatformChange}
+              className="input-global p-2 rounded-lg outline-none cursor-pointer border-2 border-gray-400 dark:border-gray-600"
+              style={{ minWidth: "200px", backgroundColor: "var(--wrapper)" }}
+            >
+              <option
+                value=""
+                style={{ backgroundColor: "#1a1a1a", color: "white" }}
+              >
+                All Platforms
               </option>
-            ))}
-          </select>
+              {gamePlatforms.map((platform) => (
+                <option
+                  key={platform.value}
+                  value={platform.value}
+                  style={{ backgroundColor: "#1a1a1a", color: "white" }}
+                >
+                  {platform.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <div className="min-h-[400px]">
+          {loading ? (
+            <LoadingScreen />
+          ) : (
+            <div className="w-full">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <GameColumn games={games} />
+                <UserColumn users={users} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
-      <div
-        className="searchContainer bg-white dark:bg-gray-500"
-        style={{ minHeight: "400px" }}
-      >
-        <div className="resultsContainer bg-white dark:bg-gray-500">
-          <GameColumn games={games} />
-          <UserColumn users={users} />
-        </div>
-      </div>
+
       <Footer />
     </div>
   );

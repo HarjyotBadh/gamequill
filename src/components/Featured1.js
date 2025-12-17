@@ -8,6 +8,12 @@ export default function Featured1({ gameData, screenshots }) {
   const [averageRating, setAverageRating] = useState(null);
 
   React.useEffect(() => {
+    // If rating is passed as a prop, don't fetch it again
+    if (gameData.rating !== undefined) {
+      setAverageRating(gameData.rating);
+      return;
+    }
+
     if (gameData.id) {
       fetchReviewsByGameId(gameData.id).then((reviews) => {
         setAverageRating(calculateAverageRating(reviews));
@@ -24,14 +30,18 @@ export default function Featured1({ gameData, screenshots }) {
       </div>
     );
   }
-  var imageUrl = screenshots[0];
-  var company = gameData.involved_companies[0].company.name;
+  var imageUrl =
+    screenshots && screenshots.length > 0 ? screenshots[0] : tempscreenshot;
+  var company =
+    gameData.involved_companies && gameData.involved_companies.length > 0
+      ? gameData.involved_companies[0]?.company?.name
+      : "Unknown Developer";
   var rating = averageRating;
 
   // Rating logic ends
 
   return (
-    <div class="image-cont rounded-corners">
+    <div className="image-cont rounded-corners card-gradient-border">
       <div class="image-container2">
         <img src={imageUrl} alt="Pikmin Test" className="Featured1-image" />
       </div>

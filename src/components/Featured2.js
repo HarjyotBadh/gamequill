@@ -9,6 +9,12 @@ export default function Featured1({ gameData, screenshots, limitSize }) {
   const [averageRating, setAverageRating] = React.useState(null);
 
   React.useEffect(() => {
+    // If rating is passed as a prop, don't fetch it again
+    if (gameData.rating !== undefined) {
+      setAverageRating(gameData.rating);
+      return;
+    }
+
     if (gameData.id) {
       fetchReviewsByGameId(gameData.id).then((reviews) => {
         setAverageRating(calculateAverageRating(reviews));
@@ -18,8 +24,8 @@ export default function Featured1({ gameData, screenshots, limitSize }) {
 
   if (!gameData) {
     return (
-      <div class="image-cont rounded-corners">
-        <div class="image-container2">
+      <div className="image-cont rounded-corners">
+        <div className="image-container2">
           <img src={tempscreenshot} alt="Error Loading" />
         </div>
       </div>
@@ -32,22 +38,21 @@ export default function Featured1({ gameData, screenshots, limitSize }) {
     company = gameData.involved_companies[0].company.name;
   }
 
-  var rating = averageRating;
+  var rating = averageRating ? Math.round(averageRating) : averageRating;
 
   return (
-    <div class="image-cont rounded-corners">
-      <div class="image-container2">
+    <div className="image-cont rounded-corners card-gradient-border">
+      <div className="image-container2">
         <img
           src={imageUrl}
           alt="Error Loading"
-          class={limitSize ? "limited-height" : ""}
-          className="Featured2-image"
+          className={`Featured2-image ${limitSize ? "limited-height" : ""}`}
         />
       </div>
-      <div class="overlay"></div>
-      <div class="text-overlay">
-        <div class="game-name2">{gameData.name}</div>
-        <div class="developer">
+      <div className="overlay"></div>
+      <div className="text-overlay">
+        <div className="game-name2">{gameData.name}</div>
+        <div className="developer">
           {company} - {rating}
         </div>
       </div>

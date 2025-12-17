@@ -4,14 +4,15 @@ import Profile from "../components/Profile";
 import { getDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import "../styles/ProfilePage.css";
+
+import LoadingScreen from "../components/LoadingScreen";
 export default function ProfilePage({ userId }) {
   const [loading, setLoading] = useState(true);
 
-  var uid;
   useEffect(() => {
-    const fetchData = async (uid) => {
-      const docRef = doc(db, "profileData", uid);
+    let uid;
+    const fetchData = async (uidParam) => {
+      const docRef = doc(db, "profileData", uidParam);
       const snapshot = await getDoc(docRef);
 
       if (snapshot.exists()) {
@@ -30,6 +31,10 @@ export default function ProfilePage({ userId }) {
           notificationPreferences:
             docData.notificationPreferences ||
             defaultProfileData.notificationPreferences,
+          currentlyPlayingGame:
+            docData.currentlyPlayingGame ||
+            defaultProfileData.currentlyPlayingGame,
+          featuredList: docData.featuredList || defaultProfileData.featuredList,
         };
         setProfileData(data);
       } else {
@@ -46,11 +51,11 @@ export default function ProfilePage({ userId }) {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        uid = user.uid; // use the uid from the auth state change
+        uid = user.uid;
         if (userId) {
           uid = userId;
         }
-        await fetchData(uid); // fetch data here with the uid
+        await fetchData(uid);
       } else {
         if (userId) {
           uid = userId;
@@ -59,11 +64,12 @@ export default function ProfilePage({ userId }) {
           window.location.href = "/login";
         }
       }
-      setLoading(false); // set loading to false after auth check
+      setLoading(false);
     });
 
     // Cleanup the subscription on unmount
     return () => unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId]);
 
   const defaultProfileData = {
@@ -75,16 +81,17 @@ export default function ProfilePage({ userId }) {
     name: "",
     username: "",
     notificationPreferences: {
-      steam: true,
       xbox: true,
       playstation: true,
     },
+    currentlyPlayingGame: null,
+    featuredList: null,
   };
 
   const [profileData, setProfileData] = useState(defaultProfileData);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingScreen />;
   }
 
   return (

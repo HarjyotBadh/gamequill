@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { getDoc, doc } from "firebase/firestore";
 import EditProfile from "./EditProfile";
 import ProfileTitleCard from "./ProfileTitleCard";
 import EditGames from "./EditGames";
 import "../styles/Profile.css";
-import { db } from "../firebase";
 import { getAuth } from "firebase/auth";
 import EditGenre from "./EditGenre";
 import { Link } from "react-router-dom";
@@ -22,6 +20,7 @@ function Profile({ profileData, setProfileData, userId }) {
   const [gameIds, setGameIds] = useState([]);
   const [currentlyPlayingGame, setCurrentlyPlayingGame] = useState(null);
   const [featuredList, setFeaturedList] = useState(null);
+  const [loadingCovers, setLoadingCovers] = useState(true);
 
   const auth = getAuth();
   var isUser = false;
@@ -29,150 +28,237 @@ function Profile({ profileData, setProfileData, userId }) {
     isUser = true;
   }
   useEffect(() => {
-    // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
-    const apiUrl = "https://api.igdb.com/v4/covers";
-
     const fetchCovers = async () => {
-      if (auth.currentUser === null && userId === auth.currentUser.uid) {
+      if (auth.currentUser === null && userId === auth.currentUser?.uid) {
         window.location.href = "/login";
+        return;
       }
-      const docRef = doc(db, "profileData", userId);
-      const docSnapshot = await getDoc(docRef);
-      const favoriteGames = docSnapshot.data().favoriteGames || [];
-      setCurrentlyPlayingGame(docSnapshot.data().currentlyPlayingGame);
-      setFeaturedList(docSnapshot.data().featuredList || null);
-      const coverPromises = favoriteGames.map(async (id) => {
+
+      try {
+        const data = profileData;
+
+        if (!data || !data.favoriteGames) {
+          setLoadingCovers(false);
+          return;
+        }
+
+        const favoriteGames = data.favoriteGames || [];
+        setCurrentlyPlayingGame(data.currentlyPlayingGame);
+        setFeaturedList(data.featuredList || null);
+        setGenres(data.favoriteGenres || []);
+        setGameIds(favoriteGames);
+
+        const validGameIds = favoriteGames.filter((id) => id);
+
+        if (validGameIds.length === 0) {
+          setGameCovers([null, null, null, null]);
+          setLoadingCovers(false);
+          return;
+        }
+
+        const functionUrl =
+          "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBCovers";
+
         const ob = {
-          igdbquery: `
-          fields url;
-          where game = ${id};
-        `,
-      };
-      const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBCovers";
+          igdbquery: `fields game, url; where game = (${validGameIds.join(
+            ","
+          )});`,
+        };
 
-      const response = await fetch(functionUrl, {
-          method: "POST",
-          headers: {
+        try {
+          const response = await fetch(functionUrl, {
+            method: "POST",
+            headers: {
               "Content-Type": "application/json",
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-          },
-          body: JSON.stringify(ob),
-      });
-      const data = await response.json();
-      const igdbResponse = data.data;
-        // const response = await fetch(apiUrl, {
-        //   method: "POST",
-        //   headers: {
-        //     Accept: "application/json",
-        //     "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-        //     Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
-        //   },
-        //   body: `
-        //     fields url;
-        //     where game = ${id};
-        //   `,
-        // });
-        // const data = await response.json();
-        // return data[0]?.url || null;
-        return igdbResponse[0]?.url || null;
-      });
+            },
+            body: JSON.stringify(ob),
+          });
 
-      const covers = await Promise.all(coverPromises);
-      setGameCovers(covers);
+          if (!response.ok) {
+            console.error(`Error fetching covers: ${response.status}`);
+            setLoadingCovers(false);
+            return;
+          }
 
-      setGenres(profileData.favoriteGenres);
+          const responseData = await response.json();
+          const coversMap = {};
 
-      setGameIds(favoriteGames);
+          if (responseData.data) {
+            responseData.data.forEach((cover) => {
+              coversMap[cover.game] = cover.url;
+            });
+          }
+
+          const covers = favoriteGames.map((id) =>
+            id ? coversMap[id] || null : null
+          );
+
+          setGameCovers(covers);
+        } catch (err) {
+          console.error("Error fetching covers:", err);
+        }
+      } catch (error) {
+        console.error("Error fetching profile covers:", error);
+      } finally {
+        setLoadingCovers(false);
+      }
     };
 
-    fetchCovers();
-  }, [userId]);
+    if (profileData && profileData.name) {
+      fetchCovers();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, profileData]);
 
   return (
-    <div className="bg-white dark:bg-gray-500">
-      <div className="formattingBox h-16 dark:bg-gray-500 bg-white"></div>
-      <div className="profileScreen bg-white dark:bg-gray-500 flex flex-row">
-        <div className="profileAndFavorites dark:bg-gray-500 bg-white flex flex-col">
-          <div className="ProfileBox flex ml-20">
+    <div className="min-h-screen">
+      <div className="h-16"></div>
+
+      {/* Main content container - uses grid for two-column layout */}
+      <div className="w-full px-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left column - Profile info, favorites, and recent reviews */}
+        <div className="lg:col-span-2 flex flex-col gap-6">
+          {/* Profile header section */}
+          <div className="flex flex-row gap-6 card-global p-6">
             <div className="flex flex-col items-center">
-              <div className="Profile Picture">
-                <img
-                  className="rounded-full w-32 h-32 border-2 dark:border-white border-black"
-                  src={profileData.profilePicture}
-                  alt="Profile Picture"
-                />
-              </div>
-              <div className="name dark:text-white text-black">
+              <img
+                className="rounded-full w-32 h-32 border-2 border-[var(--primary)] object-cover"
+                src={profileData.profilePicture}
+                alt="Profile"
+              />
+              <div
+                className="name font-bold mt-2 text-xl"
+                style={{ color: "var(--text-color)" }}
+              >
                 {profileData.name}
               </div>
-              <div className="Pronouns dark:text-white text-black">
+              <div
+                className="text-sm"
+                style={{ color: "var(--secondary-text-color)" }}
+              >
                 {profileData.pronouns}
               </div>
-              <div className="follow-button">
-                {!isUser && <FollowUser target_uid={userId} />}
+              <div className="mt-2">
+                {isUser ? (
+                  <EditProfile
+                    profileData={profileData}
+                    setProfileData={setProfileData}
+                  />
+                ) : (
+                  <FollowUser target_uid={userId} />
+                )}
               </div>
             </div>
-            <div className="Bio border-2 dark:border-white border-black w-96 h-48 mx-4 p-2 dark:text-white text-black">
+            <div
+              className="flex-1 rounded-xl p-4 min-h-[150px]"
+              style={{ color: "var(--text-color)" }}
+            >
               {profileData.bio}
             </div>
           </div>
-          <div className="formattingBox h-16 dark:bg-gray-500 bg-white"></div>
-          <div className="ml-20 dark:text-white text-black flex gap-4">
-            Favorite Games
-            {isUser && (
-              <EditGames
-                gameCovers={gameCovers}
-                setGameCovers={setGameCovers}
-                gameIds={profileData.favoriteGames}
-              />
-            )}
+
+          {/* Favorite Games section */}
+          <div className="flex flex-col gap-2 card-global p-6">
+            <div className="flex gap-4 items-center font-semibold text-lg">
+              <span className="text-gradient">Favorite Games</span>
+              {isUser && (
+                <EditGames
+                  gameCovers={gameCovers}
+                  setGameCovers={setGameCovers}
+                  gameIds={profileData.favoriteGames}
+                />
+              )}
+            </div>
+            <div className="flex justify-center mt-4">
+              {loadingCovers ? (
+                <div
+                  className="flex items-center justify-center h-32"
+                  style={{ color: "var(--text-color)" }}
+                >
+                  Loading favorite games...
+                </div>
+              ) : gameIds && gameIds.filter((id) => id).length > 0 ? (
+                <div className="grid grid-cols-4 gap-4 w-full">
+                  {[0, 1, 2, 3].map((idx) => (
+                    <div
+                      key={idx}
+                      className="aspect-[3/4] rounded-lg overflow-hidden border border-[var(--glass-border)] transition-transform hover:scale-105"
+                    >
+                      {gameIds[idx] ? (
+                        <Link
+                          to={`/game?game_id=${gameIds[idx]}`}
+                          className="block w-full h-full"
+                        >
+                          <ProfileTitleCard gameData={gameCovers[idx]} />
+                        </Link>
+                      ) : (
+                        <div className="w-full h-full bg-black/20 flex items-center justify-center">
+                          <span className="text-xs text-white/30">Empty</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div
+                  className="flex items-center justify-center h-32 w-full text-center"
+                  style={{ color: "var(--secondary-text-color)" }}
+                >
+                  User has not selected favorite games
+                </div>
+              )}
+            </div>
           </div>
-          <div className="FavoriteGames flex justify-start ml-20 border-2 dark:border-white border-black w-96 h-36 p-2 gap-4 dark:text-white text-black">
-            <div className="GameCover1 w-30 h-32 text-center border dark:border-white border-black">
-              <Link to={`/game?game_id=${gameIds[0]}`}>
-                <ProfileTitleCard gameData={gameCovers[0]} />
-              </Link>
+
+          {/* Favorite Genres section */}
+          <div className="flex flex-col gap-2 card-global p-6">
+            <div className="flex gap-4 items-center font-semibold text-lg">
+              <span className="text-gradient">Favorite Genres</span>
+              {isUser && <EditGenre genres={genres} setGenres={setGenres} />}
             </div>
-            <div className="GameCover2 w-30 h-32 text-center border dark:border-white border-black">
-              <Link to={`/game?game_id=${gameIds[1]}`}>
-                <ProfileTitleCard gameData={gameCovers[1]} />
-              </Link>
-            </div>
-            <div className="GameCover3 w-30 h-32 text-center border dark:border-white border-black">
-              <Link to={`/game?game_id=${gameIds[2]}`}>
-                <ProfileTitleCard gameData={gameCovers[2]} />
-              </Link>
-            </div>
-            <div className="GameCover4 w-30 h-32 text-center border dark:border-white border-black">
-              <Link to={`/game?game_id=${gameIds[3]}`}>
-                <ProfileTitleCard gameData={gameCovers[3]} />
-              </Link>
-            </div>
-          </div>
-          <div className="ml-20 dark:text-white text-black flex gap-4">
-            Favorite Genres
-            {isUser && <EditGenre genres={genres} setGenres={setGenres} />}
-          </div>
-          <div className="FavoriteGenres flex justify-start ml-20 border-2 dark:border-white border-black w-96 p-2 gap-4 dark:text-whitetext-black">
-            {profileData.favoriteGenres.map((genre, index) => (
-              <div
-                key={index}
-                className="w-24 text-center border dark:border-white border-black"
-              >
-                <GenreIcon g={genre} />
-                {genre.charAt(0).toUpperCase() + genre.slice(1)}
+            <div className="mt-4">
+              <div className="flex flex-wrap gap-4 justify-center">
+                {profileData.favoriteGenres &&
+                profileData.favoriteGenres.filter((g) => g).length > 0 ? (
+                  profileData.favoriteGenres.map((genre, index) => {
+                    if (!genre) return null;
+                    return (
+                      <div
+                        key={index}
+                        className="flex flex-col items-center p-3 rounded-lg border border-[var(--glass-border)]"
+                        style={{ color: "var(--text-color)" }}
+                      >
+                        <GenreIcon g={genre} className="w-20 h-20" />
+                        <span className="text-sm mt-1">
+                          {genre.charAt(0).toUpperCase() + genre.slice(1)}
+                        </span>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <div
+                    className="flex items-center justify-center p-4 w-full text-center"
+                    style={{ color: "var(--secondary-text-color)" }}
+                  >
+                    User has not selected favorite genres
+                  </div>
+                )}
               </div>
-            ))}
+            </div>
           </div>
-          <div class="five-recent">
+
+          {/* Recent Reviews section */}
+          <div className="mt-4">
             <FiveRecentReviews user_id={userId} />
           </div>
         </div>
-        <div className="currentlyPlayingAndFeaturedList dark:text-white text-black flex flex-col">
-          <div className="currentlyPlaying dark:text-white text-black flex flex-col">
-            <div className="dark:text-white text-black flex gap-4">
-              Currently Playing:
+
+        {/* Right column - Currently Playing and Featured List */}
+        <div className="flex flex-col gap-6">
+          {/* Currently Playing section */}
+          <div className="flex flex-col gap-2 card-global p-6">
+            <div className="flex gap-4 items-center font-semibold text-lg">
+              <span className="text-gradient">Currently Playing</span>
               {isUser && (
                 <EditCurrentlyPlayingGame
                   currentlyPlayingGame={currentlyPlayingGame}
@@ -181,83 +267,36 @@ function Profile({ profileData, setProfileData, userId }) {
               )}
             </div>
             {currentlyPlayingGame ? (
-              <div className="currentlyPlayingFormat dark:text-white text-black flex flex-col w-50">
-                <div
-                  style={{
-                    width: "150px",
-                    height: "200px",
-                    border: "2px solid white",
-                    borderRadius: "20px",
-                  }}
+              <div className="w-[140px] aspect-[3/4] rounded-xl overflow-hidden self-center mt-4 border border-[var(--glass-border)] transition-transform hover:scale-105">
+                <Link
+                  to={`/game?game_id=${currentlyPlayingGame.id}`}
+                  className="block w-full h-full"
                 >
-                  <Link to={`/game?game_id=${currentlyPlayingGame.id}`}>
-                    <ProfileTitleCard
-                      className="currentlyPlayingGame"
-                      gameData={currentlyPlayingGame.cover.url}
-                    />
-                  </Link>
-                </div>
+                  <ProfileTitleCard gameData={currentlyPlayingGame.cover.url} />
+                </Link>
               </div>
             ) : (
-              "None"
+              <span className="text-gray-400 mt-2">None</span>
             )}
           </div>
-          <div className="featuredList dark:text-white text-black flex flex-col">
-            <div className="dark:text-white text-black flex gap-4">
-              Featured List:
+
+          {/* Featured List section */}
+          <div className="flex flex-col gap-2 card-global p-6">
+            <div className="flex gap-4 items-center font-semibold text-lg">
+              <span className="text-gradient">Featured List</span>
               {isUser && <EditFeaturedList setFeaturedList={setFeaturedList} />}
             </div>
             {featuredList ? (
-              <div className="featuredListFormat dark:text-white text-black flex flex-col w-50">
-                <div
-                  style={{
-                    width: "300px",
-                    height: "200px",
-                  }}
-                >
-                  <ListPreview list={featuredList} />
-                </div>
+              <div className="w-full mt-4">
+                <ListPreview list={featuredList} />
               </div>
             ) : (
-              "None"
+              <span className="text-gray-400 mt-2">None</span>
             )}
           </div>
         </div>
-
-        {isUser && (
-          <div className="menuButtons border-2 dark:border-white border-black w-72 h-100 ml-10 p-2 dark:text-white text-black flex flex-col mh">
-            <EditProfile
-              profileData={profileData}
-              setProfileData={setProfileData}
-            />
-            <p>
-              <Link to="/recent-reviews" className="button">
-                Recent Activity
-              </Link>
-            </p>
-            <p>
-              <Link to="/wishlist" className="button">
-                Wishlist
-              </Link>
-            </p>
-            <p>
-              <Link to="/likes" className="button">
-                Liked Games
-              </Link>
-            </p>
-            <p>
-              <Link to="/played" className="button">
-                Played Games
-              </Link>
-            </p>
-            <p>
-              <Link to="/lists" className="button">
-                My Lists
-              </Link>
-            </p>
-          </div>
-        )}
       </div>
+
       <Footer />
     </div>
   );

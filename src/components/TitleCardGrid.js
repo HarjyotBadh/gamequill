@@ -1,7 +1,5 @@
-// TitleCardGrid.jsx
 import React from "react";
 import GameCardList from "./GameCardList";
-import "../styles/ListPage.css";
 
 const TitleCardGrid = ({
   gameDataArray,
@@ -23,14 +21,18 @@ const TitleCardGrid = ({
     // Perform any other necessary actions
   };
   return (
-    <div className={`list ${viewMode === "list" ? "list-view" : ""}`}>
+    <>
       {gameDataArray.map((gameData, index) => (
         <div
           key={gameData.game.id}
-          className="game-item text-black dark:text-white"
+          className={`game-item flex flex-col items-center ${
+            viewMode === "list" ? "w-full" : ""
+          }`}
         >
           {listType === "ranked" && (
-            <span className="rank-number">{index + 1}</span>
+            <span className="text-2xl font-bold text-gradient mb-2">
+              {index + 1}
+            </span>
           )}
           <GameCardList
             key={gameData.game.id}
@@ -46,7 +48,7 @@ const TitleCardGrid = ({
           />
         </div>
       ))}
-    </div>
+    </>
   );
 };
 

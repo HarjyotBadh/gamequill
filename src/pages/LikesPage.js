@@ -53,6 +53,7 @@ const Likes = () => {
   // Effect for fetching game data when playedItems changes
   useEffect(() => {
     fetchGameDatas();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [likedItems]);
 
   return (

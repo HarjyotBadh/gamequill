@@ -7,6 +7,7 @@ import { getDoc, doc } from "firebase/firestore";
 function App() {
   const [genreRecommendations, setGenreRecommendations] = useState([]);
   const [favoriteGenres, setFavoriteGenres] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const genreMapping = {
     "Point-and-Click": 2,
@@ -35,86 +36,124 @@ function App() {
   };
 
   useEffect(() => {
-    const unsub = auth.onAuthStateChanged((authObj) => {
-      unsub();
-      if (authObj) {
-        const theuserId = authObj.uid;
-        getGenres(theuserId);
-      } else {
-        // not logged in
-      }
-    });
+    let isMounted = true;
 
     const getGenres = async (userId) => {
       try {
-        // const apiUrl = "http://localhost:8080/https://api.igdb.com/v4/games";
-        const apiUrl = "https://api.igdb.com/v4/games";
         const docRef = doc(db, "profileData", userId);
         const docSnapshot = await getDoc(docRef);
-        const genres = docSnapshot.data().favoriteGenres;
+        const data = docSnapshot.data();
 
-        setFavoriteGenres(genres);
+        if (!data || !data.favoriteGenres) {
+          console.log("No favorite genres found for user");
+          if (isMounted) setLoading(false);
+          return;
+        }
+
+        const genres = data.favoriteGenres.filter((g) => g && g !== "");
+
+        if (genres.length === 0) {
+          console.log("User has no valid favorite genres");
+          if (isMounted) setLoading(false);
+          return;
+        }
+
+        if (isMounted) setFavoriteGenres(genres);
 
         const genrePromises = genres.map(async (genre) => {
-          if (genre !== "") {
-            const genreNumber = genreMapping[genre];
-            const ob = {
-              igdbquery: `fields name, genres, cover.url, id; where rating>70 & total_rating_count>5 & category = (0,8,9) & genres = (${genreNumber}); sort rating desc; limit:100;`,
+          const genreNumber = genreMapping[genre];
+          if (!genreNumber) {
+            console.log(`Unknown genre: ${genre}`);
+            return [];
+          }
+
+          const ob = {
+            igdbquery: `fields name, genres, cover.url, id; where rating>75 & total_rating_count>50 & game_type = (0,8,9) & genres = (${genreNumber}); sort total_rating_count desc; limit:100;`,
           };
-          const functionUrl = "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
-  
-          const response = await fetch(functionUrl, {
+          const functionUrl =
+            "https://us-central1-gamequill-3bab8.cloudfunctions.net/getIGDBGames";
+
+          try {
+            const response = await fetch(functionUrl, {
               method: "POST",
               headers: {
-                  "Content-Type": "application/json",
-                  "Access-Control-Allow-Origin": "*",
-                  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+                "Content-Type": "application/json",
               },
               body: JSON.stringify(ob),
-          });
-          const data = await response.json();
-          const igdbResponse = data.data;
-            // const response = await fetch(apiUrl, {
-            //   method: "POST",
-            //   headers: {
-            //     Accept: "application/json",
-            //     "Client-ID": "71i4578sjzpxfnbzejtdx85rek70p6",
-            //     Authorization: "Bearer rgj70hvei3al0iynkv1976egaxg0fo",
-            //   },
-            //   body: `fields name, genres, cover.url, id; where rating>70 & total_rating_count>5 & category = (0,8,9) & genres = (${genreNumber}); sort rating desc; limit:100;`,
-            // });
-
-            // const data = await response.json();
-            // return data;
-            return igdbResponse;
+            });
+            const data = await response.json();
+            return data.data || [];
+          } catch (err) {
+            console.error(`Error fetching games for genre ${genre}:`, err);
+            return [];
           }
         });
 
         const genreResults = await Promise.all(genrePromises);
 
         const randomGenreRecommendations = genreResults.map((genreData) => {
-          let genreRandom = genreData.sort(() => Math.random() - 0.5);
-          genreRandom = genreData.slice(0, 3);
-          return genreRandom;
+          if (!genreData || genreData.length === 0) return [];
+          let genreRandom = [...genreData].sort(() => Math.random() - 0.5);
+          return genreRandom.slice(0, 3);
         });
 
-        setGenreRecommendations(randomGenreRecommendations);
+        if (isMounted) {
+          setGenreRecommendations(randomGenreRecommendations);
+          setLoading(false);
+        }
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching genre recommendations:", error);
+        if (isMounted) setLoading(false);
       }
     };
+
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      getGenres(currentUser.uid);
+    } else {
+      const unsub = auth.onAuthStateChanged((authObj) => {
+        if (authObj && isMounted) {
+          getGenres(authObj.uid);
+        }
+        unsub();
+      });
+    }
+
+    return () => {
+      isMounted = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const formatCoverUrl = (url) => {
     return url ? url.replace("/t_thumb/", "/t_cover_big/") : "";
   };
 
+  if (loading) {
+    return (
+      <div className="recommend-container">
+        <h1 className="trending-head">BASED ON YOUR FAVORITE GENRES</h1>
+        <div className="recommend-grid">
+          <div style={{ padding: "20px", color: "var(--text-color)" }}>
+            Loading recommendations...
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (favoriteGenres.length === 0) {
+    return null;
+  }
+
   return (
     <div className="recommend-container">
-      <h1 className="trending-head">BASED ON YOUR FAVORITE GENRES</h1>
+      <h1 className="trending-head text-gradient">
+        BASED ON YOUR FAVORITE GENRES
+      </h1>
       <div className="recommend-grid">
         {genreRecommendations.map((genreData, index) => (
-          <div key={index}>
+          <div key={favoriteGenres[index] || index}>
             <UserRecommend
               genre={favoriteGenres[index]}
               c1={formatCoverUrl(genreData[0]?.cover?.url)}
